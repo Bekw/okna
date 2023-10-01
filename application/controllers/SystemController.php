@@ -138,12 +138,47 @@ class SystemController extends ParentController{
             }
             $this->view->result = $result;
         }
+
         if($mode == "del-menu"){
             $ob = new Application_Model_DbTable_System();
             $menu_id = $this->_getParam('menu_id', 0);
             $result = $ob->del_menu($menu_id);
             $this->view->result = $result;
         }
+
+        if($mode == "upd-grant"){
+            $ob = new Application_Model_DbTable_System();
+            $a = $this->_getAllParams();
+            $result = $ob->upd_grant($a);
+            if ($result['status'] == false){
+                $a['status'] = false;
+                $a['error'] = $result['error'];
+                $this->view->result = $a;
+                return;
+            }
+            $this->view->result = $result;
+        }
+
+        if($mode == "del-grant"){
+            $ob = new Application_Model_DbTable_System();
+            $grant_id = $this->_getParam('grant_id', 0);
+            $result = $ob->del_grant($grant_id);
+            $this->view->result = $result;
+        }
+
+        if($mode == "upd-city"){
+            $ob = new Application_Model_DbTable_System();
+            $a = $this->_getAllParams();
+            $result = $ob->upd_city($a);
+            if ($result['status'] == false){
+                $a['status'] = false;
+                $a['error'] = $result['error'];
+                $this->view->result = $a;
+                return;
+            }
+            $this->view->result = $result;
+        }
+
         if($mode == "group-menu-link"){
             $ob = new Application_Model_DbTable_System();
             $group_id = $this->_getParam('group_id', 0);
@@ -158,6 +193,22 @@ class SystemController extends ParentController{
             $row = $ob->menu_read($group_id);
             $this->view->result = $row;
         }
+
+        if($mode == "group-grant-link"){
+            $ob = new Application_Model_DbTable_System();
+            $group_id = $this->_getParam('group_id', 0);
+            $grant_id = $this->_getParam('grant_id', 0);
+            $result = $ob->group_grant_link($group_id, $grant_id);
+            $this->view->result = $result;
+        }
+
+        if($mode == "grant-read-by-group"){
+            $ob = new Application_Model_DbTable_System();
+            $group_id = $this->_getParam('group_id', 0);
+            $row = $ob->grant_read($group_id);
+            $this->view->result = $row;
+        }
+
         if($mode == "employee-group-link"){
             $ob = new Application_Model_DbTable_System();
             $group_id = $this->_getParam('group_id', 0);
@@ -165,23 +216,95 @@ class SystemController extends ParentController{
             $result = $ob->employee_group_link($group_id, $employee_id);
             $this->view->result = $result;
         }
+
         if($mode == "group-read-by-employee"){
             $ob = new Application_Model_DbTable_System();
             $employee_id = $this->_getParam('employee_id', 0);
             $row = $ob->group_read($employee_id);
             $this->view->result = $row;
         }
+
         if($mode == "reset-password"){
             $ob = new Application_Model_DbTable_System();
             $employee_id = $this->_getParam('employee_id', 0);
             $result = $ob->reset_password($employee_id);
             $this->view->result = $result;
         }
+        if($mode == "grant-read-by-func"){
+            $ob = new Application_Model_DbTable_System();
+            $func_id = $this->_getParam('func_id', 0);
+            $row = $ob->grant_func_read($func_id);
+            $this->view->result = $row;
+        }
+        if($mode == "func-grant-link"){
+            $ob = new Application_Model_DbTable_System();
+            $func_id = $this->_getParam('func_id', 0);
+            $grant_id = $this->_getParam('grant_id', 0);
+            $result = $ob->func_grant_link($func_id, $grant_id);
+            $this->view->result = $result;
+        }
+        if($mode == "fill-func-tab"){
+            $ob = new Application_Model_DbTable_System();
+            $result = $ob->fill_func_tab();
+            $this->view->result = $result;
+        }
+        if($mode == "employee-company-link"){
+            $ob = new Application_Model_DbTable_System();
+            $company_id = $this->_getParam('company_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_company_link($company_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "employee-city-link"){
+            $ob = new Application_Model_DbTable_System();
+            $city_id = $this->_getParam('city_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_city_link($city_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "employee-taxopark-link"){
+            $ob = new Application_Model_DbTable_System();
+            $taxopark_id = $this->_getParam('taxopark_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_taxopark_link($taxopark_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "employee-department-link"){
+            $ob = new Application_Model_DbTable_System();
+            $department_id = $this->_getParam('department_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_department_link($department_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "employee-department-role-link"){
+            $ob = new Application_Model_DbTable_System();
+            $department_role_id = $this->_getParam('department_role_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_department_role_link($department_role_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "employee-contractor-link"){
+            $ob = new Application_Model_DbTable_System();
+            $contractor_id = $this->_getParam('contractor_id', 0);
+            $employee_id = $this->_getParam('employee_id', 0);
+            $result = $ob->employee_contractor_link($contractor_id, $employee_id);
+            $this->view->result = $result;
+        }
+        if($mode == "company-read-by-employee"){
+            $ob = new Application_Model_DbTable_System();
+            $employee_id = $this->_getParam('employee_id', 0);
+            $row = $ob->company_read($employee_id);
+            $this->view->result = $row;
+        }
+        if($mode == "city-read-by-employee"){
+            $ob = new Application_Model_DbTable_System();
+            $employee_id = $this->_getParam('employee_id', 0);
+            $row = $ob->city_read($employee_id);
+            $this->view->result = $row;
+        }
     }
 
     public function blankAction(){
-        //$this->_helper->layout()->disableLayout();
-        //$this->_helper->viewRenderer->setNoRender(true);
     }
 
     private function login($login, $password, $by_token = false){
@@ -248,7 +371,7 @@ class SystemController extends ParentController{
         if($row != null){
             $validate = $this->login($row['email'], $row['password'], true);
             if ($validate == 'valid'){
-                //$ob->employee_set_last_login();
+                $ob->employee_set_last_login();
                 $this->_redirect('/system/blank/');
             }else{
                 Zend_Auth::getInstance()->clearIdentity();
@@ -279,6 +402,13 @@ class SystemController extends ParentController{
             $this->view->result = $ob->read_menu_json($a['group_id']);
             return;
         }
+        if ($mode == "grant-json"){
+            $a = $this->_getAllParams();
+            $this->_helper->AjaxContext()->addActionContext('menu-list', 'json')->initContext('json');
+            $this->view->result = $ob->read_grant_json($a['group_id']);
+            return;
+        }
+
         $row = $ob->read_group();
         $this->view->row_group = $row['value'];
         $row = $ob->menu_read(0);
@@ -315,8 +445,9 @@ class SystemController extends ParentController{
         $this->_helper->layout->disableLayout();
         $this->view->employee_id = $this->_getParam('employee_id', 0);
         $ob = new Application_Model_DbTable_System();
+        $row = $ob->read_position();
+        $this->view->row_position = $row['value'];
         $row = $ob->get_employee($this->view->employee_id);
-
         $this->view->row = $row['value'];
 
     }
@@ -327,6 +458,8 @@ class SystemController extends ParentController{
         $this->view->row_employee = $row['value'];
         $row = $ob->group_read(0);
         $this->view->row_group = $row['value'];
+        $row = $ob->city_read(0);
+        $this->view->row_city = $row['value'];
     }
 
     public function changePasswordAction(){
@@ -394,14 +527,7 @@ class SystemController extends ParentController{
 
         $this->view->user_right_item_id = $user_right_item_id = $this->_getParam("user_right_item_id", 0);
         $this->view->user_right_id = $user_right_item_id = $this->_getParam("user_right_id", 0);
-        $this->view->row_employee = $ob->employee_read_user_rights($this->view->user_right_id)['value'];
-    }
-    public function select2Action(){
-        $this->view->a = $this->_getAllParams();
-        $layout = $this->_getParam('layout', false);
-        if($layout == false){
-            $this->_helper->layout->disableLayout();
-        }
+        $this->view->row_employee = $ob->employee_read_fr($this->view->user_right_id)['value'];
     }
 }
 

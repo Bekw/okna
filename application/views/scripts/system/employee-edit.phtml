@@ -1,8 +1,3 @@
-<style>
-    .chosen-container {
-        width: 100% !important;
-    }
-</style>
 <div class="modal-body" id="modal_body">
     <form id="form_id" enctype="multipart/form-data">
         <input type="hidden" value="<?=$this->employee_id?>" name="employee_id">
@@ -20,13 +15,6 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-        <div class="form-group">
-            <label class="control-label " for="password">Пароль</label><br>
-            <div class="d-flex align-items-center">
-                <input name="password" type="text" class="form-control" placeholder="Пароль" spellcheck="false" id="password" aria-describedby="passwordHelp" autocomplete="off"/>
-            </div>
-            <small id="passwordHelp" class="form-text text-muted">При редактировании существующего пользователя данное поле можно оставить пустым. Пароль не изменится</small>
-        </div>
         <div>
             <div class="form-group">
                 <label class="control-label " for="email">Телефон</label>
@@ -41,7 +29,7 @@
                     <?
                     $active = "";
                     $not_active = "";
-                    if($this->row['is_active'] === true){
+                    if($this->row['is_active'] > 0){
                         $active = ' selected';
                     }else{
                         $not_active = ' selected';
@@ -66,11 +54,6 @@
 <script>
     $(document).ready(function() {
         $("#phone").inputmask("+7(999) 999 99 99");
-
-        $(".chosen-select").chosen({
-            allow_single_deselect: true,
-            no_results_text: "Ничего не найдено..."
-        });
     });
 
     function updEmployee(){
