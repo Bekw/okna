@@ -1,0 +1,108 @@
+<style>
+    .select2-container .select2-selection--single{
+        height: 34px;
+        border-radius: 0px;
+    }
+    .select2-container--classic .select2-selection--single .select2-selection__rendered{
+        line-height: 33px;
+    }
+    .select2-container--classic .select2-selection--single .select2-selection__arrow{
+        height: 32px;
+    }
+    .select2-container--classic .select2-selection--single .select2-selection__clear{
+        font-size: 20px;
+    }
+</style>
+<?
+$uniqid = uniqid('s2_');
+$uniqid_jq = '#'.$uniqid;
+$label = isset($this->a['label']) ? $this->a['label'] : "Список";
+$name = isset($this->a['name']) ? $this->a['name'] : "select2_id";
+$name_jq = isset($this->a['name']) ? '.'.$this->a['name'] : ".select2_id";
+$url = isset($this->a['url']) ? $this->a['url'] : '/path/to/mode/example_mode/';
+$url_single = isset($this->a['url_single']) ? $this->a['url_single'] : '/path/to/mode/example_mode/';
+$selected_id = isset($this->a['selected_id']) ? '@'.$this->a['selected_id'] : 0;
+$dropdown_parent = isset($this->a['dropdown_parent']) ? $this->a['dropdown_parent'] : 'body';
+?>
+<div id="<?=$uniqid?>">
+    <div class="form-group m-0">
+        <label class="control-label " for="<?=$name?>"><?=$label?></label>
+        <div class="no-padding no-border">
+            <select class="form-control select2 <?=$name?>" id="<?=$name?>" name="<?=$name?>"></select>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        <?
+        $int = (int) filter_var($selected_id, FILTER_SANITIZE_NUMBER_INT);
+        if(intval($int) > 0){?>
+            <?=$uniqid?>_setSelectedMaterial();
+            <?
+        }?>
+
+        $("<?=$uniqid_jq. ' ' .$name_jq?>").select2({
+            ajax: {
+                url: "<?=$url?>",
+                dataType: 'json',
+                delay: 250,
+                global: false,
+                data: function (params) {
+                    return {
+                        search: params.term, // search term
+                        page: params.page
+                    };
+                },
+                processResults: function (data, params) {
+                    params.page = params.page || 1;
+
+                    return {
+                        results: data.result,
+                        pagination: {
+                            more: data.more
+                        }
+                    };
+                },
+                cache: true
+            },
+            placeholder: 'Выберите из списка...',
+            language: 'ru',
+            dropdownAutoWidth : false,
+            width: '100%',
+            theme: 'classic',
+            allowClear: true,
+            minimumInputLength: 0,
+            dropdownParent: $('<?=$dropdown_parent?>')
+        });
+
+        $("<?=$uniqid_jq. ' ' .$name_jq?>").on('select2:select', function (e) {
+            var data = e.params.data;
+            var option = $('<option/>');
+            option.attr({ 'value': data.id, 'selected': true}).text(data.text);
+            $(this).empty().append(option);
+        });
+
+        $("<?=$uniqid_jq. ' ' .$name_jq?>").on('select2:unselect', function (e) {
+            $(this).empty();
+        });
+    });
+
+    function <?=$uniqid?>_setSelectedMaterial() {
+        var mySelect = $('<?=$uniqid_jq. ' ' .$name_jq?>');
+        var url = '<?=$url_single?>';
+        var selected_id = '<?=$selected_id?>';
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {
+                page: 0,
+                search: selected_id
+            },
+        }).then(function (data) {
+            data = data.result[0];
+            var option = new Option(data['selected_text'], data['id'], true, true);
+            mySelect.append(option).trigger('change');
+        });
+    }
+</script>

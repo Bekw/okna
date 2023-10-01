@@ -1,0 +1,174 @@
+<?
+$this->headTitle('Привилегии');
+$this->placeholder('page-header')->set("Привилегии");
+?>
+<input type="hidden" id="employee_id" name="employee_id">
+<input type="hidden" id="reload_type" name="reload_type">
+
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card dcard mb-3 h-100" id="employee_widget" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Пользователи
+                </h5>
+            </div><!-- /.card-header -->
+
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered hover-table" id="employee_table">
+                            <thead>
+                            <tr>
+                                <th>ФИО</th>
+                                <th>Активный</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_employee) > 0){
+                                foreach ($this->row_employee as $key => $value){?>
+                                    <tr>
+                                        <td class="text-left" onclick="getEmployeeId(<?=$value['employee_id']?>, this);"><?=$value['fio']?></td>
+                                        <td class="text-center">
+                                            <?
+                                            if($value['is_active'] == 1){?>
+                                                <i class="fas fa-check-square fa-lg text-success"></i>
+                                                <?
+                                            }?>
+                                        </td>
+                                    </tr>
+                                    <?
+                                }
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="card dcard mb-3 h-100 loading-widget" id="group_widget" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Роли
+                </h5>
+            </div><!-- /.card-header -->
+
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered hover-table" id="group_table">
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_group) > 0){
+                                foreach ($this->row_group as $key => $value){?>
+                                    <tr>
+                                        <td>
+                                            <div class="checkbox no-margin">
+                                                <label>
+                                                    <input type="checkbox" class="ace" id="group_<?=$value['group_id']?>" value="<?=$value['group_id']?>"  onchange="employeeGroupLink(<?=$value['group_id']?>, this)">
+                                                    <span class="lbl margin-right-5"><?=$value['group_name']?></span>
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <?
+                                }
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+    });
+
+    function getEmployeeId(employee_id, ob) {
+        $('#employee_id').attr('value', employee_id);
+        $('#reload_type').attr('value', 'all');
+        $('#employee_table tbody tr').removeClass('selected-td');
+        $(ob).closest('tr').addClass('selected-td');
+
+        groupReadByEmployee(employee_id);
+    }
+
+    function employeeGroupLink(group_id, ob) {
+        var employee_id = $('#employee_id').val();
+        $('#reload_type').attr('value', 'group');
+        if(employee_id == ''){
+            alert('Необходимо выбрать Пользователя!');
+            $(ob).prop('checked', false);
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/employee-group-link/group_id/" + group_id + "/employee_id/" + employee_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    toastError(data.result['error']);
+                    alert(data.result['error']);
+                }
+                else{
+                    groupReadByEmployee(employee_id);
+                }
+            }
+        });
+    }
+
+    function groupReadByEmployee(employee_id) {
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/group-read-by-employee/employee_id/" + employee_id,
+            success: function(data){
+                if(data.result['status'] == false){
+                    toastError(data.result['error']);
+                    alert(data.result['error']);
+                }
+                else{
+                    //обновить checkbox в меню
+                    $.each(data.result.value, function(i,item){
+                        if(item.is_checked > 0){
+                            $("#group_" + item.group_id).prop("checked",true);
+                            $("#group_" + item.group_id).closest('tr').addClass('selected-td');
+                        }
+                        else{
+                            $("#group_" + item.group_id).prop("checked",false);
+                            $("#group_" + item.group_id).closest('tr').removeClass('selected-td');
+                        }
+                    });
+                }
+            }
+        });
+    }
+    function startReload() {
+        if($('#reload_type').val() == 'all'){
+            $('.loading-widget').aceCard('reload');
+        }else if($('#reload_type').val() == 'group'){
+            $('#group_widget').aceCard('reload');
+        }
+        $('#reload_type').attr('value', '');
+    }
+
+    function stopReload() {
+        $('.loading-widget').aceCard('stopLoading');
+    }
+
+    $(document).ajaxStart(function() {
+        startReload();
+    });
+
+    $(document).ajaxStop(function() {
+        stopReload();
+    });
+</script>

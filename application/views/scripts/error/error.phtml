@@ -1,0 +1,21 @@
+﻿<div class="page-header">
+    <h1 class="pull-left">Возникла ошибка</h1>
+    <div class="clearfix"></div>
+</div>
+<div class="col-lg-12">
+    <h2 class="red"><?php echo $this->message ?></h2>
+    <?
+    if (getHttpHost() != 'https://smartremont.kz') {
+        if (isset($this->exception)) {
+            ?>
+            <h3>Stack trace:</h3>
+            <pre><?php echo $this->exception->getTraceAsString() ?>
+            </pre>
+
+            <h3>Request Parameters:</h3>
+            <pre><?php echo $this->escape(var_export($this->request->getParams(), true)) ?>
+            </pre>
+            <?
+        }
+    }?>
+</div>

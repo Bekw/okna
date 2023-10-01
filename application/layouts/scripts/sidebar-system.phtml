@@ -1,0 +1,109 @@
+<?
+$controller_name = $this->controller_name;
+$action_name = $this->action_name;
+
+$menu_global_id = $this->menu_global_id;
+?>
+<div id="sidebar" class="sidebar sidebar-dark sidebar-color sidebar-fixed sidebar-backdrop has-open hoverable"
+     data-swipe="true" data-dismiss="true">
+    <div class="sidebar-inner">
+        <div class="ace-scroll flex-grow-1 mt-1px" data-ace-scroll="{}">
+            <!-- all sidebar header is inside scrollable area -->
+            <!-- .navbar-brand inside sidebar, only shown in desktop view -->
+            <div class="d-none d-xl-flex sidebar-section-item fadeable-left fadeable-top">
+                <div class="fadeinable">
+                    <!-- shown when sidebar is collapsed -->
+                    <div class="py-2 mx-1" id="sidebar-header-brand1">
+                        <a class="navbar-brand text-140">
+                            <i class="fas fa-ghost rd-color"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="fadeable w-100">
+                    <!-- shown when sidebar is full-width -->
+                    <div class="py-2 text-center mx-3" id="sidebar-header-brand2">
+                        <a class="navbar-brand ml-n2 text-140 text-white" href="#">
+                            <i class="fas fa-subway mr-1 rd-color"></i>
+                            <span>App</span>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /.sidebar-section-item  -->
+            <!-- optional `nav` tag -->
+            <nav aria-label="Main">
+                <ul class="nav flex-column mt-2 has-active-border active-on-top">
+                    <li class="nav-item-caption">
+                        <span class="fadeable pl-3">Меню</span>
+                        <span class="fadeinable mt-n2 text-125">&hellip;</span>
+                    </li>
+                    <?
+                    create_menu(0, $menu_global_id);
+                    function create_menu($menu_pid, $menu_global_id){
+                        $ob = new Application_Model_DbTable_System();
+                        $row = $ob->menu_read_recursive($menu_pid, $menu_global_id);
+                        $row = $row['value'];
+                        foreach ($row as $value){
+                            if ($value['cnt'] > 0){?>
+                                <li class="nav-item <?if($value['is_open'] == 1) { echo ' active open ';}?>">
+                                    <?
+                                    if ($value['menu_action'] == ""){?>
+                                        <a href="#" class="nav-link dropdown-toggle">
+                                        <?
+                                    }else{?>
+                                        <a href="<?=$value['menu_action']?>menu_global_id/<?=$value['menu_id']?>" class="nav-link dropdown-toggle">
+                                        <?
+                                    }?>
+                                    <i class="nav-icon fa <?=$value['icon']?>"></i>
+                                    <span class="nav-text fadeable">
+                                        <span><?=$value['menu_name']?></span>
+                                    </span>
+                                    <b class="caret fa fa-angle-left rt-n90"></b>
+                                    </a>
+                                    <div class="hideable submenu collapse <?if($value['is_open'] == 1) { echo ' show ';}?>">
+                                        <ul class="submenu-inner">
+                                            <?
+                                            create_menu($value['menu_id'], $menu_global_id);
+                                            ?>
+                                        </ul>
+                                    </div>
+                                    <b class="sub-arrow"></b>
+                                </li>
+                                <?
+                            }
+                            //Если верхний уровень меню, но без дочерних элементов
+                            if ($value['cnt'] == 0 && $menu_pid == 0){?>
+                                <li class="nav-item <?if($value['is_open'] == 1) { echo ' active ';}?>">
+                                    <a href="<?=$value['menu_action']?>menu_global_id/<?=$value['menu_id']?>" class="nav-link">
+                                        <i class="nav-icon fa <?=$value['icon']?>"></i>
+                                        <span class="nav-text fadeable">
+                                            <span><?=$value['menu_name']?></span>
+                                        </span>
+                                    </a>
+                                    <b class="sub-arrow"></b>
+                                </li>
+                                <?
+                            }
+                            //Если дочерний элемент
+                            if ($value['cnt'] == 0 && $menu_pid > 0){?>
+                                <li class="nav-item <?if($value['is_open'] == 1) { echo ' active ';}?>">
+                                    <a href="<?=$value['menu_action']?>menu_global_id/<?=$value['menu_id']?>" class="nav-link">
+                                      <span class="nav-text">
+                                          <span><?=$value['menu_name']?></span>
+                                      </span>
+                                    </a>
+                                </li>
+                                <?
+                            }
+                        }
+                    }?>
+                </ul>
+            </nav>
+        </div><!-- /.ace-scroll -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-item fadeable-left fadeable-top">
+            </div>
+        </div>
+
+    </div>
+</div>

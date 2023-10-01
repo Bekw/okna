@@ -1,0 +1,392 @@
+<?
+$this->headTitle('Роли');
+$this->placeholder('page-header')->set("Роли");
+$this->headScript()->appendFile('/dist/fancytree/jquery.fancytree-all.min.js');
+$this->headLink()->appendStylesheet('/dist/fancytree/skin-win8/ui.fancytree.css')
+?>
+<style>
+    .fancytree-container,
+    span.fancytree-focused span.fancytree-title{
+        outline: 0 !important;
+    }
+    .fancytree-selected{
+        background-color: #cbe8f6 !important;
+    }
+    .fancytree-has-children .fancytree-icon{
+        background-position: -80px -16px !important;
+    }
+</style>
+<input type="hidden" name="group_id" id="group_id" value="0">
+<input type="hidden" name="reload_type" id="reload_type">
+<div class="row">
+    <div class="col-lg-3">
+        <div class="card dcard mb-3" id="card-5" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Роли
+                </h5>
+                <div class="card-toolbar">
+                    <div class="card-toolbar no-border">
+                        <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="showModalGroup(0)">
+                            <i class="fas fa-plus w-2 mx-1px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /.card-header -->
+
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-bordered hover-table" id="group_table">
+                            <thead>
+                            <tr>
+                                <th>Название</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_group) > 0){
+                                foreach ($this->row_group as $key => $value){?>
+                                    <tr>
+                                        <td onclick="getGroupId(<?=$value['group_id']?>, this);"><?=$value['group_name']?></td>
+                                        <td class="text-center">
+                                            <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-success" onclick="showModalGroup(<?=$value['group_id']?>)">
+                                                <i class="fa fa-pencil-alt"></i>
+                                            </a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger" onclick="delGroup(<?=$value['group_id']?>, '<?=$value['group_name']?>', this)">
+                                                <i class="fa fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <?
+                                }
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+        <div class="card dcard mb-3 loading-widget" id="card-5" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Меню
+                </h5>
+                <div class="card-toolbar">
+                    <div class="card-toolbar no-border">
+                        <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="showModalMenu(0)">
+                            <i class="fas fa-plus w-2 mx-1px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /.card-header -->
+
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table id="treegrid" class="table table-bordered no-margin-bottom">
+                            <colgroup>
+                                <col width="30px"></col>
+                                <col width="*"></col>
+                                <col width="70px"></col>
+                                <col width="50px"></col>
+                                <col width="30px"></col>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Название</th>
+                                <th>Ссылка</th>
+                                <th>ID</th>
+                                <th>№</th>
+                                <th>#</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <!-- Optionally define a row that serves as template, when new nodes are created: -->
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="text-right"></td>
+                                <td class="text-right"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center">
+                                    <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-success" data-action="upd">
+                                        <i class="fa fa-pencil-alt"></i>
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger" data-action="del">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        groupMenuJson(0);
+
+        $("#treegrid").on("click", "a[data-action=upd]", function(e){
+            var node = $.ui.fancytree.getNode(e);
+            showModalMenu(node.data.menu_id);
+        });
+
+        $("#treegrid").on("click", "a[data-action=del]", function(e){
+            var node = $.ui.fancytree.getNode(e);
+            delMenu(node.data.menu_id, node.data.menu_name, '');
+        });
+    });
+
+    function showModalGroup(group_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-sm');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        if(group_id > 0){
+            $('#modal-header-container').append('Редактирование роли');
+        }else{
+            $('#modal-header-container').append('Добавление роли');
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/group-edit/group_id/" + group_id + "/",
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function delGroup(group_id, group_name, ob){
+        if (!confirm("Вы действительно хотите удалить роль " + group_name + " ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/del-group/group_id/" + group_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Роль ' + group_name + ' удалена');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+
+    function showModalMenu(menu_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-sm');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        if(menu_id > 0){
+            $('#modal-header-container').append('Редактирование меню');
+        }else{
+            $('#modal-header-container').append('Добавление меню');
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/menu-edit/menu_id/" + menu_id + "/",
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function delMenu(menu_id, menu_name, ob){
+        if (!confirm("Вы действительно хотите удалить меню " + menu_name + " ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/del-menu/menu_id/" + menu_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Меню ' + menu_name + ' удален');
+                    $(ob).closest("tr").remove();
+                    groupMenuJson(0);
+                }
+            }
+        });
+    }
+
+    function getGroupId(group_id, ob) {
+        $('#group_id').attr('value', group_id);
+        $('#reload_type').attr('value', 'all');
+        $('#group_table tbody tr').removeClass('selected-td');
+        $(ob).closest('tr').addClass('selected-td');
+        groupMenuJson(group_id);
+    }
+    
+    function groupMenuLink(menu_id, ob) {
+        $('#reload_type').attr('value', 'menu');
+        var group_id = $('#group_id').val();
+        if(group_id == ''){
+            bootboxAlert('Необходимо выбрать Роль!');
+            groupMenuJson(0);
+           $(ob).prop('checked', false);
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/group-menu-link/group_id/" + group_id + "/menu_id/" + menu_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    menuReadByGroup(group_id);
+                    groupMenuJson(group_id);
+                }
+            }
+        });
+    }
+
+    function menuReadByGroup(group_id) {
+        $.ajax({
+            type: 'POST',
+            async: true,
+            url: "/system/index-json/mode/menu-read-by-group/group_id/" + group_id,
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    //обновить checkbox в меню
+                    $.each(data.result.value, function(i,item){
+                        if(item.is_checked > 0){
+                            $("#menu_" + item.menu_id).prop("checked",true);
+                            $("#menu_" + item.menu_id).closest('tr').addClass('selected-td');
+                        }
+                        else{
+                            $("#menu_" + item.menu_id).prop("checked",false);
+                            $("#menu_" + item.menu_id).closest('tr').removeClass('selected-td');
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function startReload() {
+        if($('#reload_type').val() == 'all'){
+            $('.loading-widget').aceCard('reload');
+            $('#reload_type').attr('value', '');
+        }else if($('#reload_type').val() == 'menu'){
+            $('#menu_widget').aceCard('reload');
+            $('#reload_type').attr('value', '');
+        }
+    }
+
+    function stopReload() {
+        $('.loading-widget').aceCard('stopLoading');
+    }
+
+    $(document).ajaxStart(function() {
+        startReload();
+    });
+
+    $(document).ajaxStop(function() {
+        stopReload();
+    });
+
+    function groupMenuJson(group_id){
+        $.ajax({
+            type: 'POST',
+            url: "/system/menu-list/mode/menu-json/",
+            data: {"group_id" : group_id},
+            async: true,
+            success: function(data){
+                if(data.result['status']){
+                    var newSourceOption = jQuery.parseJSON(data.result['value']);
+                    var treeOptions = {
+                        extensions: ["table"],
+                        checkbox: true,
+                        selectMode: 2,
+                        tooltip: true,
+                        table: {
+                            indentation: 15,      // indent 20px per node level
+                            nodeColumnIdx: 1,     // render the node title into the 2nd column
+                            checkboxColumnIdx: 0  // render the checkboxes into the 1st column
+                        },
+                        renderColumns: function(event, data) {
+                            var node = data.node,
+                                $tdList = $(node.tr).find(">td");
+                            $tdList.eq(2).text(node.data.action);
+                            $tdList.eq(3).text(node.data.menu_id);
+                            $tdList.eq(4).text(node.data.order_num);
+                            if(node.data.active_menu == 1){
+                                $tdList.eq(5).html('<i class="fas fa-check-square fa-lg text-success"></i>');
+                            }else{
+                                $tdList.eq(5).html('');
+                            }
+                        }
+                    };
+
+                    $("#treegrid").fancytree(treeOptions);
+                    var tree = $('#treegrid').fancytree('getTree');
+                    tree.reload(newSourceOption);
+
+                    var tree_expanded = localStorage.getItem('tree_expanded');
+                    if($.trim(tree_expanded).length > 0){
+                        var numbersArray = tree_expanded.split(',');
+                        tree.visit(function(node){
+                            $.each($(numbersArray), function (i, item) {
+                                if('menu_id_' + node.data.menu_id == item){
+                                    node.setExpanded(true);
+                                }
+                            });
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    var arr_expanded = [];
+    $(document).on('click', $('#treegrid'), function(event) {
+        var node = $.ui.fancytree.getNode(event),
+            // 'title' | 'prefix' | 'expander' | 'checkbox' | 'icon'
+            tt = $.ui.fancytree.getEventTargetType(event);
+        if(tt == 'checkbox'){
+            if(node.data.menu_id > 0){
+                groupMenuLink(node.data.menu_id, node.tr);
+            }
+        }
+        if(tt == 'expander'){
+            if(node.data.menu_id > 0){
+                if(node.expanded){
+                    arr_expanded.push('menu_id_' + node.data.menu_id);
+                    localStorage.setItem('tree_expanded', arr_expanded);
+                }else{
+                    arr_expanded.splice( $.inArray('menu_id_' + node.data.menu_id, arr_expanded) ,1);
+                    localStorage.setItem('tree_expanded', arr_expanded)
+                }
+            }
+        }
+    });
+</script>

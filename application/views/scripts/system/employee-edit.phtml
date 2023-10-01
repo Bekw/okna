@@ -1,0 +1,108 @@
+<style>
+    .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<div class="modal-body" id="modal_body">
+    <form id="form_id" enctype="multipart/form-data">
+        <input type="hidden" value="<?=$this->employee_id?>" name="employee_id">
+        <div>
+            <div class="form-group">
+                <label class="control-label " for="fio">ФИО</label>
+                <input type="text" id="fio" placeholder="ФИО" class="form-control" value="<?=htmlspecialchars($this->row['fio'])?>" name="fio">
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label class="control-label " for="email">Email</label>
+                <input type="email" id="email" placeholder="Email" class="form-control" value="<?=$this->row['email']?>" name="email">
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="password">Пароль</label><br>
+            <div class="d-flex align-items-center">
+                <input name="password" type="text" class="form-control" placeholder="Пароль" spellcheck="false" id="password" aria-describedby="passwordHelp" autocomplete="off"/>
+            </div>
+            <small id="passwordHelp" class="form-text text-muted">При редактировании существующего пользователя данное поле можно оставить пустым. Пароль не изменится</small>
+        </div>
+        <div>
+            <div class="form-group">
+                <label class="control-label " for="email">Телефон</label>
+                <input type="text" id="phone" placeholder="Телефон" class="form-control" value="<?=$this->row['phone']?>" name="phone">
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label class="control-label " for="is_active">Активный</label>
+                <div>
+                    <?
+                    $active = "";
+                    $not_active = "";
+                    if($this->row['is_active'] === true){
+                        $active = ' selected';
+                    }else{
+                        $not_active = ' selected';
+                    }
+                    ?>
+                    <select class="form-control" id="is_active" name="is_active" required>
+                        <option value="0" <?=$not_active?>>Нет</option>
+                        <option value="1" <?=$active?>>Да</option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updEmployee()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#phone").inputmask("+7(999) 999 99 99");
+
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function updEmployee(){
+        var send_data = $('#form_id').serializeArray();
+        var dataObj = {};
+        $(send_data).each(function(i, field){
+            dataObj[field.name] = field.value;
+        });
+        var fd = new FormData($("#form_id")[0]);
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            data: fd,
+            url: "/system/index-json/mode/upd-employee/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('#load').load('/system/employee-list #tab');
+                    $('.modal').modal('hide');
+                    if(dataObj['employee_id'] > 0){
+                        toastSucces('Пользователь отредактирован');
+                    }else{
+                        toastSucces('Пользователь добавлен');
+                    }
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

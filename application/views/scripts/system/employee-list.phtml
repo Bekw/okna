@@ -1,0 +1,220 @@
+<?
+$this->headTitle('Пользователи');
+$this->placeholder('page-header')->set("Пользователи");
+?>
+<div class="float-right mb-3">
+    <a href="javascript:void(0);" class="btn btn-xs btn-primary" onclick="showModal(0)">Добавить пользователя</a>
+</div>
+<div class="clearfix"></div>
+<form method="post" class="mb-3">
+    <div class="float-left mr-2">
+        <div class="input-group">
+            <input type="text" class="form-control" id="email" name="email" inputmode="text" value="<?=$this->email?>" placeholder="Поиск по email...">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fas fa-at"></i></span>
+            </div>
+        </div>
+    </div>
+    <div class="float-left mr-2">
+        <div class="input-group">
+            <input type="text" class="form-control" id="fio" name="fio" inputmode="text" value="<?=$this->fio?>" placeholder="Поиск по ФИО...">
+            <div class="input-group-append">
+                <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+        </div>
+    </div>
+    <button type="submit" name="search_employee" class="btn btn-primary float-left">
+        <i class="ace-icon fa fa-search bigger-125"></i>
+        Поиск
+    </button>
+    <div class="pos-rel ml-sm-auto order-last order-sm-0 float-right">
+        <i class="fa fa-search position-lc ml-25 text-primary-m1"></i>
+        <input type="text" class="form-control w-100 pl-45 radius-1 brc-primary-m4" id="employee_search" placeholder="Быстрый поиск ...">
+    </div>
+    <div class="clearfix"></div>
+</form>
+<div class="hr hr-10 dotted hr-double"></div>
+<div class="bcard p-3" id="load">
+    <div id="tab">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top" id="employee_table">
+                <thead>
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th class="text-center">ФИО</th>
+                    <th class="text-center">Телефон</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">
+                        Ссылка на авторизацию<br>
+                        <span class="text-info">Нажмите чтобы войти</span>
+                    </th>
+                    <th class="text-center">Активный</th>
+                    <th class="text-center">Последний вход</th>
+                    <th class="text-center">Дата и время</br>изменения</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?
+                if(mycount($this->row) > 0){
+                    foreach ($this->row as $key => $value){?>
+                        <tr>
+                            <td class="text-right"><?=$value['employee_id']?></td>
+                            <td class="text-left"><a href="javascript:void(0);" onclick="showModal(<?=$value['employee_id']?>)"><?=$value['fio']?></a></td>
+                            <td class="text-left"><?=$value['phone']?></td>
+                            <td class="text-left"><?=$value['email']?></td>
+                            <td class="text-left"><a href="/system/login-url/token/<?=$value['token']?>/"><?=$value['token']?></a></td>
+                            <td class="text-center">
+                                <?
+                                if($value['is_active'] == 1){?>
+                                    <i class="fas fa-check-square fa-lg text-success"></i>
+                                    <?
+                                }?>
+                            </td>
+                            <td class="text-center"><?=$value['last_login']?></td>
+                            <td class="text-center"><?=$value['rowversion']?></td>
+                            <td>
+                                <div class="d-flex">
+                                    <a href="javascript:void(0);" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-success" onclick="resetPassword(<?=$value['employee_id']?>)">
+                                        <i class="fas fa-key"></i>
+                                    </a>
+                                    <?
+                                    if($value['is_active'] > 0){?>
+                                        <a href="javascript:void(0);" onclick="blockEmployee(<?=$value['employee_id']?>, '<?=$value['fio']?>')" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-success">
+                                            <i class="fas fa-ban"></i>
+                                        </a>
+                                        <?
+                                    }else{?>
+                                        <a href="javascript:void(0);" onclick="unblockEmployee(<?=$value['employee_id']?>, '<?=$value['fio']?>')" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-success">
+                                            <i class="far fa-circle"></i>
+                                        </a>
+                                        <?
+                                    }?>
+                                    <a href="javascript:void(0);" onclick="delEmployee(<?=$value['employee_id']?>, '<?=$value['fio']?>', this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-warning btn-a-lighter-danger">
+                                        <i class="fa fa-trash-alt"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        <?
+                    }
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#modal').on('shown.bs.modal', function (e) {
+            $(document).keypress(function(e) {
+                var keycode = (e.keyCode ? e.keyCode : e.which);
+                if (keycode == '13') {
+                    updEmployee();
+                }
+            });
+        });
+
+        $("#employee_search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#employee_table tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    function blockEmployee(employee_id, fio){
+        if (!confirm("Вы действительно хотите заблокировать пользователя " + fio + " ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/block-employee/employee_id/" + employee_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Пользователь ' + fio + ' заблокирован');
+                }
+            }
+        });
+    }
+
+    function unblockEmployee(employee_id, fio){
+        if (!confirm("Вы действительно хотите разблокировать пользователя " + fio + " ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/unblock-employee/employee_id/" + employee_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Пользоваьтель ' + fio + ' разблокирован');
+                }
+            }
+        });
+    }
+
+    function delEmployee(employee_id, fio, ob){
+        if (!confirm("Вы действительно хотите удалить пользователя " + fio + " ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/del-employee/employee_id/" + employee_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Пользователь ' + fio + ' удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+
+    function resetPassword(employee_id){
+        if (!confirm("Вы действительно хотите сбросить пароль пользователя?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/system/index-json/mode/reset-password/",
+            data: {"employee_id" : employee_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Пароль успешно сброшен');
+                    window.location.href = window.location.href;
+                }
+            }
+        });
+    }
+
+    function showModal(employee_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование пользователя');
+        $.ajax({
+            type: 'POST',
+            url: "/system/employee-edit/",
+            data: {employee_id : employee_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+                $( "#fio" ).focus();
+            }
+        });
+        $(".modal").modal('show');
+    }
+</script>

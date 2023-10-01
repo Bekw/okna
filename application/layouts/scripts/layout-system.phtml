@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en" style="--scrollbar-width:17px; --moz-scrollbar-thin:17px; font-size: 0.925rem;">
+<?=$this->partial('top-system.phtml');?>
+<?
+$controller_name = Zend_Controller_Front::getInstance()->getRequest()->getControllerName();
+$action_name = Zend_Controller_Front::getInstance()->getRequest()->getActionName();
+
+$ob = new Application_Model_DbTable_System();
+$row = $ob->get_employee(getCurUser());
+$row = $row['value'];
+?>
+<body class="font-montserrat">
+<div class="body-container">
+    <div class="main-container">
+
+        <?=$this->partial(
+                'sidebar-system.phtml',
+                array (
+                    'menu_global_id' => $this->menu_global_id,
+                    'action_name' => $action_name,
+                    'controller_name' => $controller_name
+                )
+        );
+        ?>
+
+        <div role="main" class="main-content">
+            <nav class="navbar navbar-sm navbar-expand-lg navbar-fixed navbar-white">
+                <div class="navbar-inner shadow-md">
+
+                    <button type="button"
+                            class="btn btn-burger align-self-center ml-25 mr-2 d-none d-xl-flex btn-h-lighter-blue"
+                            data-toggle="sidebar" data-target="#sidebar" aria-controls="sidebar" aria-expanded="true"
+                            aria-label="Toggle sidebar">
+                        <span class="bars text-default"></span>
+                    </button><!-- sidebar toggler button -->
+
+
+                    <div class="d-flex h-100 justify-content-xl-between align-items-center">
+                        <button type="button"
+                                class="btn btn-burger burger-arrowed static collapsed ml-2 d-flex d-xl-none btn-h-lighter-blue"
+                                data-toggle-mobile="sidebar" data-target="#sidebar" aria-controls="sidebar"
+                                aria-expanded="false" aria-label="Toggle sidebar">
+                            <span class="bars text-default"></span>
+                        </button><!-- mobile sidebar toggler button -->
+
+                        <a class="navbar-brand d-xl-none mx-1 text-dark-m3 text-130" href="#">
+                            <i class="fas fa-ghost mr-2px rd-color text-105"></i>
+                            ITP App
+                        </a>
+                        <div class="d-inline-flex">
+                            <h2 class="d-none d-xl-inline-block text-140 text-dark-m2 mb-0 pb-1"><? echo $this->placeholder('page-header');?></h2>
+                        </div>
+                    </div>
+                    <!-- #navbarMenu toggler -->
+                    <button class="navbar-toggler ml-1 mr-2 px-1" type="button" data-toggle="collapse"
+                            data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false"
+                            aria-label="Toggle navbar menu 1">
+                        <img class="radius-round border-2 brc-primary-tp3 p-1px" src="/assets/default-user.png"
+                             width="36">
+                    </button>
+
+
+                    <div class="ml-auto mr-xl-3 navbar-menu collapse navbar-collapse navbar-backdrop" id="navbarMenu">
+                        <div class="navbar-nav">
+                            <ul class="nav has-active-border">
+                                <li class="nav-item dropdown order-first order-lg-last">
+                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                                        <img id="id-navbar-user-image" class="d-none d-lg-inline-block radius-round border-2 brc-white-tp1 mr-2 w-6" src="/assets/default-user.png">
+                                        <span class="d-inline-block d-lg-none d-xl-inline-block">
+                                            <span class="text-90" id="id-user-welcome">Привет,</span>
+                                            <span class="nav-user-name"><?=$row['fio']?></span>
+                                        </span>
+                                        <i class="caret fa fa-angle-down d-none d-xl-block"></i>
+                                        <i class="caret fa fa-angle-left d-block d-lg-none"></i>
+                                    </a>
+
+                                    <div class="dropdown-menu dropdown-caret dropdown-menu-right dropdown-animated brc-primary-m3 py-1">
+                                        <div class="d-none d-lg-block d-xl-none">
+                                            <div class="dropdown-header">
+                                                Привет, <?=$row['fio']?>
+                                            </div>
+                                            <div class="dropdown-divider"></div>
+                                        </div>
+                                        <div class="dropdown-divider brc-primary-l2"></div>
+
+                                        <a class="dropdown-item btn btn-outline-grey bgc-h-secondary-l3 btn-h-light-secondary btn-a-light-secondary" href="/system/logout/">
+                                            <i class="fa fa-power-off text-warning-d1 text-105 mr-1"></i>
+                                            Выйти
+                                        </a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="page-content">
+                <!-- page header -->
+                <div class="d-lg-none page-header py-0">
+                    <h1 class="text-dark-m3 pb-0 mb-0 text-125">
+                        <? echo $this->placeholder('page-header');?>
+                    </h1>
+
+                    <!-- page tools -->
+                    <div class="page-tools d-none">
+                        <div class="action-buttons text-nowrap">
+                            <a class="btn bgc-white btn-light-secondary mx-0" href="#" data-toggle="tooltip"
+                               title="Details">
+                                <i class="fa fa-search-plus text-blue"></i>
+                            </a>
+                            <a class="btn bgc-white btn-light-secondary mx-0" href="#" data-toggle="tooltip"
+                               title="Print">
+                                <i class="fa fa-print text-purple"></i>
+                            </a>
+                            <a class="btn bgc-white btn-light-secondary mx-0" href="#" data-toggle="tooltip"
+                               title="Remove">
+                                <i class="fa fa-trash-alt text-danger"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <?=$this->layout()->content;?>
+            </div>
+            <?=$this->partial('dict/modal-container.phtml');?>
+            <?=$this->partial('footer-system.phtml');?>
+        </div>
+    </div>
+</div>
+
+<div class="loader-smr request-loader-smr">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="loader-smr__circle">
+        <g fill="none" fill-rule="evenodd">
+            <path fill="#DCDCE1" d="M12 0c6.627 0 12 5.373 12 12s-5.373 12-12 12S0 18.627 0 12 5.373 0 12 0zm0 3a9 9 0 100 18 9 9 0 000-18z"></path>
+            <path fill="#20888A" d="M12 0c3.314 0 6.315 1.344 8.486 3.516l-2.121 2.121A9 9 0 105.637 18.365l-2.121 2.121A11.962 11.962 0 010 12C0 5.373 5.373 0 12 0z"></path>
+        </g>
+    </svg>
+</div>
+
+<!-- include common vendor scripts used in demo pages -->
+<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js" integrity="sha256-hlKLmzaRlE8SCJC1Kw8zoUbU8BxA+8kR3gseuKfMjxA=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chosen-js@1.8.7/chosen.jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/inputmask@5.0.5/dist/jquery.inputmask.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootbox@5.5.2/bootbox.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/code-prettify@0.1.0/src/run_prettify.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/i18n/ru.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.18/dist/js/bootstrap-select.min.js"></script>
+<!-- include ace.js -->
+<script src="/dist/js/ace.min.js"></script>
+<!-- demo.js is only for Ace's demo and you shouldn't use it -->
+<script src="/dist/js/demo.min.js"></script>
+<?php echo $this->headScript() ?>
+</body>
+</html>
+
+<script>
+    $(document).ready(function(){
+        $.datepicker.regional['ru'] = {
+            closeText: 'Закрыть',
+            prevText: '&#x3c;Пред',
+            nextText: 'След&#x3e;',
+            currentText: 'Сегодня',
+            monthNames: ['Январь','Февраль','Март','Апрель','Май','Июнь',
+                'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+            monthNamesShort: ['Янв','Фев','Мар','Апр','Май','Июн',
+                'Июл','Авг','Сен','Окт','Ноя','Дек'],
+            dayNames: ['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'],
+            dayNamesShort: ['вск','пнд','втр','срд','чтв','птн','сбт'],
+            dayNamesMin: ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+            weekHeader: 'Нед',
+            dateFormat: 'dd.mm.yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+        $.datepicker.setDefaults($.datepicker.regional['ru']);
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+5"
+        });
+    });
+    function main_loader_show(){
+        $('.request-loader-smr').css('top', '45px');
+    }
+
+    function main_loader_hide(){
+        $('.request-loader-smr').css('top', '-45px');
+    }
+
+    function toastSucces(text){
+        $.aceToaster.add({
+            placement: 'tr',
+            body: `
+                   <p class='p-3 mb-0 text-center text-white'>
+                        <span class='d-inline-block mb-3'>
+                            <i class='fa fa-check fa-2x'></i>
+                        </span><br />
+                        <span class='text-125'>${text}</span>
+                   </p>`,
+
+            width: 360,
+            delay: 4000,
+            close: true,
+            className: 'bgc-green-d2 shadow ',
+            bodyClass: 'border-0 p-0',
+            headerClass: 'd-none',
+            progress: 'position-bl bgc-black-tp6 py-2px m-1px'
+        });
+    }
+    function toastError(text){
+        $.aceToaster.add({
+            placement: 'br',
+            body: `<div class='p-3 m-2 d-flex'>
+                     <span class='align-self-center text-center mr-3 py-2 px-1 border-1 bgc-danger radius-round'>
+                        <i class='fa fa-times text-180 w-4 text-white mx-2px'></i>
+                     </span>
+                     <div>
+                        <h4 class='text-dark-tp3'>Ошибка</h4>
+                        <span class='text-dark-tp3 text-110'>${text}</span>
+                     </div>
+                    </div>
+                    <button data-dismiss='toast' class='btn text-grey btn-h-light-danger position-tr mr-1 mt-1'><i class='fa fa-times'></i></button>`,
+
+            width: 480,
+            delay: 5000,
+            close: false,
+            className: 'shadow border-none radius-0 border-l-4 brc-danger',
+            bodyClass: 'border-0 p-0',
+            headerClass: 'd-none',
+            progress: 'position-bl bgc-black-tp6 py-2px m-1px'
+        });
+    }
+
+    function bootboxAlert(text, callback) {
+        bootbox.alert({
+            title: 'Внимание!',
+            message: `<pre class="prettyprint linenums p-3 pb-0 mb-0 ace-scrollbar ace-scroll-grey text-wrap">${text}</pre>`,
+            onEscape: true,
+            backdrop: true,
+            scrollable: true,
+            size: 'md',
+            callback: function() {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        })
+    }
+    document.addEventListener("wheel", function(event) {
+        if (document.activeElement.type === "number" &&
+            document.activeElement.classList.contains("noscroll")) {
+            document.activeElement.blur();
+        }
+    });
+
+    async function copyToClipboard(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log('Text copied to clipboard');
+            toastSucces('Скопировано');
+        } catch (err) {
+            console.error('Error in copying text: ', err);
+            toastError(err);
+        }
+    }
+</script>
+</body>
+</html>
