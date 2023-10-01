@@ -82,7 +82,7 @@ class Api_AuthController extends Zend_Controller_Action {
             $encryptedValue = encryptCookie($originalValue, $key);
 
             if($this->debug){
-                setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".localhost", true, true);
+                setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".localhost", false, false);
             }else{
                 setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".i-helath.kz", true, true);
             }
@@ -130,7 +130,7 @@ class Api_AuthController extends Zend_Controller_Action {
             // Шифрование нового refresh token и сохранение в cookie
             $encryptedNewRefreshToken = encryptCookie($newRefreshToken['refresh_token'], $key);
             if($this->debug){
-                setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".localhost", true, true);
+                setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".localhost", false, false);
             }else{
                 setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".i-helath.kz", true, true);
             }
