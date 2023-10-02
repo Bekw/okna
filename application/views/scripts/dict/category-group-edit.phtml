@@ -1,0 +1,67 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->category_group_id?>" name="category_group_id">
+        <div class="form-group">
+            <label class="control-label " for="category_group_name">Название</label>
+            <input type="text" id="category_group_name" placeholder="Название" class="form-control" value="<?=$this->row['category_group_name']?>" name="category_group_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="category_group_code">Код</label>
+            <input type="text" id="category_group_code" placeholder="Код" class="form-control" value="<?=$this->row['category_group_code']?>" name="category_group_code">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="is_active">Активный</label>
+            <div>
+                <select class="form-control" id="is_active" name="is_active" required>
+                    <option value="0" <?=is_selected_html(0, $this->row['is_active'] ?? null)?>>Нет</option>
+                    <option value="1" <?=is_selected_html(1, $this->row['is_active'] ?? null)?>>Да</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="discount_percent">Фото</label>
+            <div class="form-control no-padding">
+                <input type="file" name="upload" id="upload" >
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="categoryGroupUpd()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function categoryGroupUpd(){
+        var send_data = new FormData($("#form_id")[0]);
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/category-list/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Группа категории успешно отредактирован');
+                    location.reload();
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

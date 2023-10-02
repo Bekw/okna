@@ -1,0 +1,215 @@
+<?
+$this->headTitle('Категория');
+$this->placeholder('page-header')->set("Категория");
+?>
+
+<input type="hidden" id="reload_type" name="reload_type">
+<input type="hidden" id="category_group_id" name="category_group_id">
+
+<style>
+    .product-img{
+        object-fit: contain;
+        border: 1px solid #f2f2f2;
+        width: 100px;
+        height: 100px;
+        padding: 3px;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="card dcard mb-3" id="card-5" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Группы категории
+                </h5>
+                <div class="card-toolbar">
+                    <div class="card-toolbar no-border">
+                        <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="showModalCategory(0)">
+                            <i class="fas fa-plus w-2 mx-1px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="category_group_table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th  style="width: 300px;">Название</th>
+                                <th>Код</th>
+                                <th>Фото</th>
+                                <th>Активный</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            foreach ($this->row as $key => $value){?>
+                                <tr>
+                                    <td onclick="showCategory(<?=$value['category_group_id']?>, this)" class="text-right">
+                                        <?=$value['category_group_id']?>
+                                    </td>
+                                    <td onclick="showCategory(<?=$value['category_group_id']?>, this)" class="text-left"><?=$value['category_group_name']?></td>
+                                    <td onclick="showCategory(<?=$value['category_group_id']?>, this)" class="text-left"><?=$value['category_group_code']?></td>
+                                    <td class="text-center">
+                                        <img src="<?=$value['category_group_img']?>" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block product-img"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <input type="checkbox" id="is_active" class="ace-switch ace-switch-bars bgc-success-d2 ml-2" <?if($value['is_active'] == 'checked'){?>checked<?}?> onchange="set_is_active(<?=$value['category_group_id']?>, this)">
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-success" onclick="showModalCategory(<?=$value['category_group_id']?>)">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger" onclick="delCategoryGroup(<?=$value['category_group_id']?>, this)">
+                                            <i class="fa fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div id="category_list">
+
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+
+    });
+    function delCategoryGroup(category_group_id, ob){
+        if (!confirm('Вы действительно хотите?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/category-list/mode/del/",
+            data:{"category_group_id" : category_group_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Право удалено');
+                    $('#category_list').empty();
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function showCategoryTable(category_group_id){
+        $("#category_list").load("/dict/category-form/", {category_group_id: category_group_id});
+    }
+
+    function set_is_active(category_group_id, ob) {
+        var isChecked = $(ob).is(':checked');
+
+        $.ajax({
+            type: 'POST',
+            url: "/dict/category-list/mode/set-active/",
+            data:{category_group_id: category_group_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                    $(ob).prop('checked', false);
+                }else{
+                    if(isChecked != false){
+                        toastSucces('Бренд активный');
+                    }else{
+                        toastSucces('Бренд неактивный');
+                    }
+                }
+            }
+        });
+    }
+
+    function showModalCategory(category_group_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-sm');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        if(category_group_id > 0){
+            $('#modal-header-container').append('Редактирование группы');
+        }else{
+            $('#modal-header-container').append('Добавление группы');
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/category-group-edit/",
+            data:{category_group_id: category_group_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+    function showModalCategoryItem(category_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-sm');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование категории');
+
+        var category_group_id = $('#category_group_id').val()
+        if(category_group_id == 0){
+            alert('Выберите право!');
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/category-edit/",
+            data:{
+                category_group_id: category_group_id,
+                category_id: category_id
+            },
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function showCategory(category_group_id, ob){
+        $('#reload_type').attr('value', 'all');
+        $('#category_group_id').val(category_group_id);
+        $('#category_group_table tbody tr').removeClass('selected-td');
+        $(ob).closest('tr').addClass('selected-td');
+        showCategoryTable(category_group_id);
+    }
+
+    function startReload() {
+        if($('#reload_type').val() == 'all'){
+            $('.loading-widget').aceCard('reload');
+            $('#reload_type').attr('value', '');
+        }else if($('#reload_type').val() == 'menu'){
+            $('#menu_widget').aceCard('reload');
+            $('#reload_type').attr('value', '');
+        }
+    }
+
+    function stopReload() {
+        $('.loading-widget').aceCard('stopLoading');
+    }
+
+    $(document).ajaxStart(function() {
+        startReload();
+    });
+
+    $(document).ajaxStop(function() {
+        stopReload();
+    });
+</script>

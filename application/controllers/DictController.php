@@ -57,4 +57,133 @@ class DictController extends ParentController{
         $mode = $this->_getParam('mode', '');
         $this->view->mode = $mode;
     }
+    public function stockListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('stock-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->stock_tab__modify($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('stock-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->stock_tab__delete($a['stock_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->stock_tab__read()['value'];
+    }
+    public function stockEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->stock_id = $this->_getParam('stock_id', 0);
+
+        $this->view->row = $ob->stock_tab__get($this->view->stock_id)['value'];
+    }
+    public function categoryListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('category-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->category_group_tab__modify($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('category-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->category_group_tab__delete($a['category_group_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-active'){
+            $this->_helper->AjaxContext()->addActionContext('category-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->category_group_tab__is_active($a['category_group_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->category_group_tab__read()['value'];
+
+    }
+    public function categoryGroupEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->category_group_id = $this->_getParam('category_group_id', 0);
+
+        $this->view->row = $ob->category_group_tab__get($this->view->category_group_id)['value'];
+    }
+    function categoryFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->category_group_id = $category_group_id = $this->_getParam("category_group_id", 0);
+
+        $mode = $this->_getParam('mode', '');
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('category-form', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->category_tab__modify($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('category-form', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->category_tab__delete($a['category_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-active'){
+            $this->_helper->AjaxContext()->addActionContext('category-form', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->category_tab__is_active($a['category_id']);
+            $this->view->result = $result;
+        }
+
+        $this->view->row = $ob->category_tab__read($category_group_id)['value'];
+    }
+    function categoryEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->category_group_id = $category_group_id = $this->_getParam("category_group_id", 0);
+        $this->view->category_id = $category_id = $this->_getParam("category_id", 0);
+        $this->view->row = $ob->category_tab__get($this->view->category_id)['value'];
+    }
+    public function brandListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('brand-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->brand_tab__modify($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('brand-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->brand_tab__delete($a['brand_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-active'){
+            $this->_helper->AjaxContext()->addActionContext('brand-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->brand_tab__is_active($a['brand_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->brand_tab__read()['value'];
+    }
+    public function brandEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->brand_id = $this->_getParam('brand_id', 0);
+
+        $this->view->row = $ob->brand_tab__get($this->view->brand_id)['value'];
+    }
 }
