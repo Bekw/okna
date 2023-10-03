@@ -84,7 +84,7 @@ class Api_AuthController extends Zend_Controller_Action {
             if($this->debug){
                 setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".localhost", false, false);
             }else{
-                setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".i-helath.kz", true, true);
+                setcookie("secureCookie", $encryptedValue, time() + (7 * 24 * 60 * 60), "/", ".i-health.kz", true, true);
             }
             $this->sendResponse([
                 'access_token' => $accessToken,
@@ -132,7 +132,7 @@ class Api_AuthController extends Zend_Controller_Action {
             if($this->debug){
                 setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".localhost", false, false);
             }else{
-                setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".i-helath.kz", true, true);
+                setcookie("secureCookie", $encryptedNewRefreshToken, time() + (7 * 24 * 60 * 60), "/", ".i-health.kz", true, true);
             }
 
             // Отправка новых токенов клиенту
