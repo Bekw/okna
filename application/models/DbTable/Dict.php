@@ -164,4 +164,61 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "back_office.category_group_tab__is_active(:category_group_id)", $p);
         return $result;
     }
+    public function product_tab__read(){
+        $result = $this->readSP(__FUNCTION__, "back_office.product_tab__read('cur')");
+        return $result;
+    }
+    public function product_tab__get($product_id){
+        $p['product_id'] = $product_id;
+        $result = $this->getSP(__FUNCTION__, "back_office.product_tab__get('cur', :product_id)", $p);
+        return $result;
+    }
+    public function product_tab__delete($product_id){
+        $p['product_id'] = $product_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.product_tab__delete(:product_id)", $p);
+        return $result;
+    }
+    public function product_tab__modify($a){
+        $p['product_id'] = $a['product_id'];
+        $p['product_name'] = $a['product_name'];
+        $p['product_desc'] = $a['product_desc'];
+        $p['brand_id'] = $a['brand_id'];
+        $p['price'] = $a['price'];
+        $p['price_old'] = $a['price_old'];
+        $p['is_avail'] = $a['is_avail'] ?? false;
+        if (isset($a['category_id_arr'])){
+            $p['category_id_arr'] = '{'.implode(",", zeroToNull($a['category_id_arr'])).'}';
+        }else{
+            $p['category_id_arr'] = '{}';
+        }
+        if (isset($a['tag_id_arr'])){
+            $p['tag_id_arr'] = '{'.implode(",", zeroToNull($a['tag_id_arr'])).'}';
+        }else{
+            $p['tag_id_arr'] = '{}';
+        }
+        $result = $this->execSP(__FUNCTION__, "back_office.product_tab__modify(:product_id, :product_name, :product_desc, :brand_id, :price, :price_old, :is_avail, :category_id_arr, :tag_id_arr) res", $p, 'res');
+        return $result;
+    }
+    public function product_tab__is_avail($product_id){
+        $p['product_id'] = $product_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.product_tab__is_avail(:product_id)", $p);
+        return $result;
+    }
+    public function product_img_tab__read($product_id){
+        $p['product_id'] = $product_id;
+        $result = $this->readSP(__FUNCTION__, "back_office.product_img_tab__read('cur', :product_id)", $p);
+        return $result;
+    }
+    public function brand__read_fs(){
+        $result = $this->readSP(__FUNCTION__, "back_office.brand__read_fs('cur')");
+        return $result;
+    }
+    public function category__read_fs(){
+        $result = $this->readSP(__FUNCTION__, "back_office.category__read_fs('cur')");
+        return $result;
+    }
+    public function tag__read_fs(){
+        $result = $this->readSP(__FUNCTION__, "back_office.tag__read_fs('cur')");
+        return $result;
+    }
 }
