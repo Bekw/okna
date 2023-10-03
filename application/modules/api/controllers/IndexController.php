@@ -5,24 +5,16 @@
  * Date: 24.09.2023
  * Time: 16:44
  */
+require_once 'ParentController.php';
 
-class Api_IndexController extends Zend_Controller_Action
+class Api_IndexController extends Api_ParentController
 {
-    public function init()
-    {
-        $this->_helper->viewRenderer->setNoRender(true);
-        $this->_helper->getHelper('layout')->disableLayout();
+    public function init(){
+        parent::init();
     }
 
-    public function indexAction()
-    {
-        $this->getResponse()
-            ->setHttpResponseCode(200)
-            ->appendBody(json_encode([
-                'message' => 'Welcome to the iHealth API',
-                'status'  => 'success'
-            ]))
-            ->setHeader('Content-Type', 'application/json');
+    public function indexAction(){
+        $this->sendResponse(['api' => 'iHealth']);
     }
 }
 

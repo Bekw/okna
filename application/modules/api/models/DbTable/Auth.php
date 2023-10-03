@@ -7,37 +7,33 @@ use Jose\Component\Signature\Algorithm\HS256;
 use Jose\Component\Signature\Serializer\CompactSerializer;
 
 class Api_Model_DbTable_Auth extends Application_Model_DbTable_Parent {
-    protected $_name = 'client_tab';
-    protected $_primary = 'client_id';
-    private $secret_key;
-    private $access_exp;
-    private $refresh_exp;
-
     public function __construct() {
         parent::__construct();
-        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
-        $this->secret_key = $config->auth->secretKey;
-        $this->access_exp = $config->auth->accessExp;
-        $this->refresh_exp = $config->auth->refreshExp;
     }
 
-    public function generateJwt($client_id, $client_fio) {
+    public function generateJwt($client_id, $client_fio, $cart_id = null) {
         try {
             $algorithmManager = new \Jose\Component\Core\AlgorithmManager([new HS256()]);
             $jwsBuilder = new JWSBuilder($algorithmManager);
 
             $payload = json_encode([
+                'iss' => 'https://i-health.kz',  // Issuer
+                'aud' => 'iHealth_Users',  // Audience
+                'exp' => time() + $this->access_exp,
+                'iat' => time(),
+                'nbf' => time(),  // Not Before
+                'sub' => $client_id,  // Subject
+                'role' => 'customer',  // Role
                 'client_id' => $client_id,
                 'client_fio' => $client_fio,
-                'iat' => time(),
-                'exp' => time() + $this->access_exp
+                'cart_id' => $cart_id
             ]);
 
             $jwk = JWK::createFromJson(json_encode(['k' => $this->secret_key, 'kty' => 'oct']));
 
             $jws = $jwsBuilder
                 ->create()->withPayload($payload)
-                ->addSignature($jwk, ['alg' => 'HS256'])
+                ->addSignature($jwk, ['alg' => 'HS256', 'typ' => 'JWT'])
                 ->build();
 
             $serializer = new CompactSerializer();
@@ -103,6 +99,13 @@ class Api_Model_DbTable_Auth extends Application_Model_DbTable_Parent {
         $p['client_id'] = $client_id;
         $p['refresh_token'] = $refresh_token;
         $result = $this->execSP(__FUNCTION__, "public.client__login(:client_id, :refresh_token) id", $p, 'id');
+        return $result;
+    }
+    public function client__register($fio, $phone, $passwd){
+        $p['fio'] = $fio;
+        $p['phone'] = $phone;
+        $p['passwd'] = $passwd;
+        $result = $this->execSP(__FUNCTION__, "public.client__register(:fio, :phone, :passwd) id", $p, 'id');
         return $result;
     }
 }

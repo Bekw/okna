@@ -2,6 +2,28 @@
 
 class Application_Model_DbTable_Parent extends Zend_Db_Table_Abstract
 {
+    public function __construct(){
+        $config = new Zend_Config_Ini(APPLICATION_PATH . '/configs/application.ini', APPLICATION_ENV);
+
+        $this->debug = $config->constants->debug;
+        $this->secret_key = $config->auth->secretKey;
+        $this->access_exp = $config->auth->accessExp;
+        $this->refresh_exp = $config->auth->refreshExp;
+        $this->refresh_key = $config->auth->refreshKey;
+    }
+
+    public function getConfigs(){
+        $data = [
+            'debug' => $this->debug,
+            'secret_key' => $this->secret_key,
+            'access_exp' => $this->access_exp,
+            'refresh_exp' => $this->refresh_exp,
+            'refresh_key' => $this->refresh_key
+        ];
+
+        return $data;
+    }
+
     public function get_new_db_factory(){
         $config = new Zend_Config_Ini(APPLICATION_PATH.'/configs/application.ini', 'production');
         $host = $config->resources->db->params->host;
