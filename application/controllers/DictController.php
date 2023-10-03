@@ -186,4 +186,48 @@ class DictController extends ParentController{
 
         $this->view->row = $ob->brand_tab__get($this->view->brand_id)['value'];
     }
+
+    public function productListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('product-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->product_tab__modify($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('product-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->product_tab__delete($a['product_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-avail'){
+            $this->_helper->AjaxContext()->addActionContext('product-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->product_tab__is_avail($a['product_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->product_tab__read()['value'];
+    }
+    public function productEditAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->product_id = $this->_getParam('product_id', 0);
+        if (isset($_POST["save"])) {
+            $a = $this->_getAllParams();
+            $result = $ob->product_tab__modify($a);
+            if ($result['status'] == false) {
+                $this->view->globalError = $result['error'];
+                $this->view->row = $a;
+                return;
+            }
+            $this->_redirector->gotoUrl('/dict/product-edit/product_id/'.$result['value']);
+        }
+        $this->view->row = $ob->product_tab__get($this->view->product_id)['value'];
+        $this->view->row_img = $ob->product_img_tab__read($this->view->product_id)['value'];
+        $this->view->row_category = $ob->category__read_fs()['value'];
+        $this->view->row_tag = $ob->tag__read_fs()['value'];
+        $this->view->row_brand = $ob->brand__read_fs()['value'];
+    }
 }
