@@ -69,14 +69,47 @@ class Api_ProductController extends Api_ParentController
         $this->sendResponse($data);
     }
 
-    public function productListAction(){
+    public function productSearchAction(){
         $ob = new Api_Model_DbTable_Product();
-        $row = $ob->product__read();
+        $rawData = $this->getRequest()->getRawBody();
+        $raw = json_decode($rawData, true);
+        $row = $ob->product__search($rawData);
+        if(!$row['status']){
+            $this->sendResponse(null, self::HTTP_NOT_FOUND, $row['error']);
+            return;
+        }
+        $data['products'] = $row['value'];
+        $data['total_count'] = $row['scalar'];
+        $data['total_pages'] = ceil($row['scalar'] / (isset($raw['limit']) && $raw['limit'] > 0 ? $raw['limit'] : 1));
+        $this->sendResponse($data);
+    }
+
+    public function productByTagListAction(){
+        $ob = new Api_Model_DbTable_Product();
+        $tag = $this->_getParam('tag', 'NEW');
+        $row = $ob->product_by_tag__read($tag);
         if(!$row['status']){
             $this->sendResponse(null, self::HTTP_NOT_FOUND, $row['error']);
             return;
         }
         $this->sendResponse($row['value']);
+    }
+
+    public function productListAction(){
+        $ob = new Api_Model_DbTable_Product();
+        $row_popular = $ob->product_by_tag__read('POPULAR');
+        if(!$row_popular['status']){
+            $this->sendResponse(null, self::HTTP_NOT_FOUND, $row_popular['error']);
+            return;
+        }
+        $row_new = $ob->product_by_tag__read('NEW');
+        if(!$row_new['status']){
+            $this->sendResponse(null, self::HTTP_NOT_FOUND, $row_new['error']);
+            return;
+        }
+        $data['popular'] = $row_popular['value'];
+        $data['new'] = $row_new['value'];
+        $this->sendResponse($data);
     }
 
     public function productAction(){

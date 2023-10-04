@@ -36,6 +36,16 @@ class Api_DictController extends Api_ParentController
         }
         $this->sendResponse($row['value']);
     }
+
+    public function cityListAction(){
+        $ob = new Api_Model_DbTable_Dict();
+        $row = $ob->city__read();
+        if(!$row['status']){
+            $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $row['error']);
+            return;
+        }
+        $this->sendResponse($row['value']);
+    }
 }
 
 

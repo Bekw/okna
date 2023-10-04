@@ -9,6 +9,11 @@ class Api_Model_DbTable_Product extends Application_Model_DbTable_Parent {
         $result = $this->getSP(__FUNCTION__, "public.product__get('cur', :product_id)", $p);
         return $result;
     }
+    public function product_by_tag__read($tag_code){
+        $p['tag_code'] = $tag_code;
+        $result = $this->readSP(__FUNCTION__, "public.product_by_tag__read('cur', :tag_code)", $p);
+        return $result;
+    }
     public function product_img__read($product_id){
         $p['product_id'] = $product_id;
         $result = $this->readSP(__FUNCTION__, "public.product_img__read('cur', :product_id)", $p);
@@ -37,6 +42,11 @@ class Api_Model_DbTable_Product extends Application_Model_DbTable_Parent {
     public function product_catalog__read($filter_json){
         $p['filter_json'] = $filter_json ?? null;
         $result = $this->readSP(__FUNCTION__, "public.product_catalog__read('cur', :filter_json)", $p);
+        return $result;
+    }
+    public function product__search($filter_json){
+        $p['filter_json'] = $filter_json ?? null;
+        $result = $this->readSP(__FUNCTION__, "public.product__search('cur', :filter_json)", $p);
         return $result;
     }
 }
