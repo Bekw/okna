@@ -123,15 +123,17 @@ $this->placeholder('page-header')->set("Редактирование проду�
                         <br>
                         <h4>Фото продукта</h4>
                         <hr>
-                        <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" style="width: 100px;">
-                            <a href="#" class="show-lightbox">
-                                <img src="assets/image/gallery/thumb6.jpg" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block w-100 d-zoom-2 product-img"/>
-                            </a>
-                            <div class="mr-hover position-tr h-100 bgc-black-tp4 p-25">
-                                <div class="d-flex flex-md-column justify-content-center action-buttons text-110">
-                                    <a href="#" class="my-2">
-                                        <i class="fa fa-times text-danger-l1"></i>
-                                    </a>
+                        <div class="py-3 mt-3" id="gallery">
+                            <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" style="width: 100px;">
+                                <a href="#" class="show-lightbox">
+                                    <img src="assets/image/gallery/thumb6.jpg" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block w-100 d-zoom-2 product-img"/>
+                                </a>
+                                <div class="mr-hover position-tr h-100 bgc-black-tp4 p-25">
+                                    <div class="d-flex flex-md-column justify-content-center action-buttons text-110">
+                                        <a href="#" class="my-2">
+                                            <i class="fa fa-times text-danger-l1"></i>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -169,71 +171,4 @@ $this->placeholder('page-header')->set("Редактирование проду�
         });
     });
 
-</script>
-
-<script>
-    jQuery(function($) {
-        // set pointer-events to none for dark layers that appear on hover above dark images
-        $('#gallery .h-100.w-100').css('pointer-events', 'none');
-        //.pswp__button, .pswp__button--arrow--left::before, .pswp__button--arrow--right::before {background-image: svg;}
-
-        var pswpElement = document.querySelector('.pswp');
-
-        var items = null; // the items to be used in the lightbox
-
-        var triggerBtns = document.querySelectorAll('.show-lightbox'); // these are the buttons/images that are supposed to trigger lightbox for each image when clicked
-
-        // and each time we click an image/button to open lightbox, it should be initialized ... this is how the plugin works
-        $(triggerBtns)
-            .on('click', function(e) {
-                e.preventDefault();
-
-                if (items == null) {
-                    items = [];
-                    $('#gallery img[data-size]').each(function(index, img) {
-                        var size = img.getAttribute('data-size').split(/\D/);
-                        items.push({
-                            src: img.src.replace('/thumb', '/'),
-                            w: size[0],
-                            h: size[1],
-                            ref: img,
-                            title: img.getAttribute('alt') || 'Image ' + (index + 1) + ' caption'
-                        });
-                        triggerBtns[index].setAttribute('data-index', index)
-                    })
-                }
-
-                var options = {
-                    index: +this.getAttribute('data-index'),
-
-                    bgOpacity: 0.8,
-                    history: false,
-                    closeOnScroll: false,
-
-                    getThumbBoundsFn: function(index) {
-                        var thumbnail = items[index].ref,
-                            pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
-                            rect = thumbnail.getBoundingClientRect();
-
-                        return {
-                            x: rect.left,
-                            y: rect.top + pageYScroll,
-                            w: rect.width
-                        }
-                    },
-                    addCaptionHTMLFn: function(item, captionEl) {
-                        if (!item.title) {
-                            return false
-                        }
-                        captionEl.children[0].innerHTML = item.title;
-                        return true
-                    }
-
-                };
-
-                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
-                gallery.init()
-            }) // click
-
-    });
 </script>

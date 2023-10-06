@@ -221,4 +221,24 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "back_office.tag__read_fs('cur')");
         return $result;
     }
+    public function product_tab_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "back_office.product_tab_read_fs('cur')");
+        return $result;
+    }
+    public function product_stock__read($stock_id){
+        $p['stock_id'] = $stock_id;
+        $result = $this->readSP(__FUNCTION__, "back_office.product_stock__read('cur', :stock_id)", $p);
+        return $result;
+    }
+    public function product_stock__modify($a){
+        $p['stock_id'] = $a['stock_id'];
+        $p['product_id'] = $a['product_id'];
+        $result = $this->execSP(__FUNCTION__, "back_office.product_stock__modify(:stock_id, :product_id)", $p);
+        return $result;
+    }
+    public function product_stock__del($product_stock_id){
+        $p['product_stock_id'] = $product_stock_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.product_stock__del(:product_stock_id)", $p);
+        return $result;
+    }
 }

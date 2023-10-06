@@ -67,6 +67,18 @@ class DictController extends ParentController{
             $this->view->result = $ob->stock_tab__modify($params);
             return;
         }
+        if ($mode == 'upd-product'){
+            $this->_helper->AjaxContext()->addActionContext('stock-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->product_stock__modify($params);
+            return;
+        }
+        if($mode == 'del-product'){
+            $this->_helper->AjaxContext()->addActionContext('stock-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->product_stock__del($a['product_stock_id']);
+            $this->view->result = $result;
+        }
         if($mode == 'del'){
             $this->_helper->AjaxContext()->addActionContext('stock-list', 'json')->initContext('json');
             $a = $this->_getAllParams();
@@ -229,5 +241,21 @@ class DictController extends ParentController{
         $this->view->row_category = $ob->category__read_fs()['value'];
         $this->view->row_tag = $ob->tag__read_fs()['value'];
         $this->view->row_brand = $ob->brand__read_fs()['value'];
+    }
+    public function stockProductFormAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->stock_id = $this->_getParam('stock_id', 0);
+
+        $this->view->row = $ob->product_stock__read($this->view->stock_id)['value'];
+    }
+    function stockProductEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->stock_id = $this->_getParam("stock_id", 0);
+        $this->view->row_product = $ob->product_tab_read_fs()['value'];
     }
 }
