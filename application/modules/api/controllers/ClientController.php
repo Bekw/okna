@@ -39,6 +39,25 @@ class Api_ClientController extends Api_ParentController
         }
         $this->sendResponse($row['value']);
     }
+
+    public function clientProfileModifyAction(){
+        $ob = new Api_Model_DbTable_Client();
+        $rawData = $this->getRequest()->getRawBody();
+        $jsonData = json_decode($rawData, true);
+
+        if ($jsonData === null && json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Invalid JSON format', 'The request body is not a valid JSON format.');
+            return;
+        }
+
+        $result = $ob->client_profile__modify($rawData);
+
+        if(!$result['status']){
+            $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $result['error']);
+            return;
+        }
+        $this->sendResponse($result['value']);
+    }
 }
 
 
