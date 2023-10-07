@@ -1,7 +1,7 @@
 <?php
 
 class Api_ParentController extends Zend_Controller_Action{
-    protected $skipAuthActions = ['login', 'register', 'getHash', 'refresh-token'];
+    protected $skipAuthActions = ['login', 'register', 'getHash', 'refresh-token', 'sms-send', 'reset-password'];
 
     // 1xx Информационные
     const HTTP_CONTINUE = 100; // Продолжить, клиент должен продолжить запрос
@@ -17,6 +17,7 @@ class Api_ParentController extends Zend_Controller_Action{
     const HTTP_MULTIPLE_CHOICES = 300; // Несколько вариантов выбора для ресурса
     const HTTP_MOVED_PERMANENTLY = 301; // Ресурс перемещен на постоянную основу
     const HTTP_FOUND = 302; // Ресурс временно перемещен
+    const HTTP_UNUSED = 306; // Ресурс временно перемещен
 
     // 4xx Ошибка клиента
     const HTTP_BAD_REQUEST = 400; // Плохой, некорректный запрос от клиента
@@ -24,6 +25,7 @@ class Api_ParentController extends Zend_Controller_Action{
     const HTTP_FORBIDDEN = 403; // Запрещено, нет прав на выполнение операции
     const HTTP_NOT_FOUND = 404; // Ресурс не найден
     const HTTP_METHOD_NOT_ALLOWED = 405; // Метод не поддерживается для данного ресурса
+    const HTTP_GONE = 410; // Истек
 
     // 5xx Ошибка сервера
     const HTTP_INTERNAL_SERVER_ERROR = 500; // Внутренняя ошибка сервера

@@ -101,6 +101,28 @@ class Api_Model_DbTable_Auth extends Application_Model_DbTable_Parent {
         $result = $this->execSP(__FUNCTION__, "public.client__login(:client_id, :refresh_token) id", $p, 'id');
         return $result;
     }
+    public function sms_verify__create($phone, $verify_code){
+        $p['phone'] = $phone;
+        $p['verify_code'] = $verify_code;
+        $result = $this->execSP(__FUNCTION__, "public.sms_verify__create(:phone, :verify_code) id", $p, 'id');
+        return $result;
+    }
+    public function sms_verify_by_uuid__get($uuid){
+        $p['uuid'] = $uuid;
+        $result = $this->getSP(__FUNCTION__, "public.sms_verify_by_uuid__get('cur', :uuid)", $p);
+        return $result;
+    }
+    public function sms_verify__set($sms_verify_id){
+        $p['sms_verify_id'] = $sms_verify_id;
+        $result = $this->execSP(__FUNCTION__, "public.sms_verify__set(:sms_verify_id) id", $p, 'id');
+        return $result;
+    }
+    public function client_password__reset($client_id, $passwd){
+        $p['client_id'] = $client_id;
+        $p['passwd'] = $passwd;
+        $result = $this->execSP(__FUNCTION__, "public.client_password__reset(:client_id, :passwd) id", $p, 'id');
+        return $result;
+    }
     public function client__register($fio, $phone, $passwd){
         $p['fio'] = $fio;
         $p['phone'] = $phone;

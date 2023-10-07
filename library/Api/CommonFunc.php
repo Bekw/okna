@@ -81,41 +81,6 @@ function json_fix_cyr($json_str) {
     return $json_str;
 }
 
-function send_to_post_express($result){
-    $opts = array(
-        'http'=>array(
-            'method'  => 'POST',
-            'header'  => 'Content-type: text/xml',
-            'charset' => 'utf-8',
-            'content' => $result
-        )
-    );
-
-    $context = stream_context_create($opts);
-    if (!$contents = @file_get_contents('https://home.courierexe.ru/api/', false, $context)) {
-        if (!$curl = curl_init()) {
-            $this->errors = 'Возможно не поддерживается передача по HTTPS. Проверьте наличие open_ssl';
-            return false;
-        }
-        curl_setopt($curl, CURLOPT_URL, 'https://home.courierexe.ru/api/');
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $result);
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-type: text/xml; charset=utf-8'));
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_HEADER, false);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        $contents = curl_exec($curl);
-        curl_close($curl);
-    }
-
-    if (!$contents) {
-        $this->errors = 'Ошибка сервиса';
-        return false;
-    }
-    return $contents;
-}
-
 function sizeFilter( $bytes ){
     $label = array( 'B', 'KB', 'MB', 'GB', 'TB', 'PB' );
     for( $i = 0; $bytes >= 1024 && $i < ( count( $label ) -1 ); $bytes /= 1024, $i++ );
@@ -154,132 +119,6 @@ function nvl($s, $r){
         return $r;
     else
         return $s;
-}
-
-
-function log_kkb($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_kkb/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }
-}
-function log_sql($func, $str, $p, $error){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log_sql/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$func."\n\n".$error." \n\n".$str."\n\n".json_encode($p)."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$func."\n\n".$error." \n\n".$str."\n\n".json_encode($p)."\n\n", FILE_APPEND);
-    }
-}
-
-function log_unisender($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log_unisender/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }
-}
-
-function log_sync($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log_sync/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". mb_substr($error, 0, 1000)."\n\n", FILE_APPEND);
-    }
-}
-
-function log_1C($what, $response = "", $request = ""){
-    $dir = $_SERVER['DOCUMENT_ROOT']. '/log/log_1c';
-    if (!file_exists($dir)) {
-        mkdir($dir, 0777, true);
-    }
-    $file_name = $dir . "/" . date('Y.m.d H') . ".log";
-    $timezone  = 5;
-    $cur_time = gmdate("d.m.Y H:i:s", time() + 3600*($timezone+date("I")));
-    file_put_contents($file_name, $cur_time.";".$what.";\n".$request.";\n".$response.";\n", FILE_APPEND);
-
-}
-
-function log_warehouse($what, $response = "", $request = ""){
-    $dir = $_SERVER['DOCUMENT_ROOT']. '/log/log_warehouse';
-    if (!file_exists($dir)) {
-        mkdir($dir, 0777, true);
-    }
-    $file_name = $dir . "/" . date('Y.m.d H') . ".log";
-    $timezone  = 5;
-    $cur_time = gmdate("d.m.Y H:i:s", time() + 3600*($timezone+date("I")));
-    file_put_contents($file_name, $cur_time.";".$what.";\n".$request.";\n".$response.";\n", FILE_APPEND);
-
-}
-
-function log_cp($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_cp/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-
-function log_kaspi($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_kaspi/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-
-function send_to_unisender($post, $type){
-    $url = '';
-    if($type == 1){
-        $url = 'https://api.unisender.com/ru/api/sendEmail?format=json';
-    }else if($type == 2){
-        $url = 'https://api.unisender.com/ru/api/checkEmail?format=json';
-    }
-    // Устанавливаем соединение
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-    curl_setopt($ch, CURLOPT_URL,$url);
-    $result = curl_exec($ch);
-    return $result;
-}
-
-function stage_status_color($stage_status_color){
-    $color_stage = '';
-    switch ($stage_status_color){
-        case -1: $color_stage = ''; break;
-        case 1: $color_stage = 'yellow'; break;
-        case 2: $color_stage = 'red'; break;
-        case 3: $color_stage = 'orange'; break;
-        case 4: $color_stage = 'lightgreen'; break;
-    }
-    return $color_stage;
-}
-
-
-
-function buildTree(array $elements, $parentId = 0) {
-    $branch = array();
-
-    foreach ($elements as $element) {
-        if ($element['check_list_pid'] == $parentId) {
-            $children = buildTree($elements, $element['check_list_id']);
-            if ($children) {
-                $element['child'] = $children;
-            }
-            $branch[] = $element;
-        }
-    }
-
-    return $branch;
 }
 
 function num_padezh($num){
@@ -436,14 +275,6 @@ function short_fio($fio){
     return $short_fio;
 }
 
-function mb_ucfirst($string, $encoding)
-{
-    $strlen = mb_strlen($string, $encoding);
-    $firstChar = mb_substr($string, 0, 1, $encoding);
-    $then = mb_substr($string, 1, $strlen - 1, $encoding);
-    return mb_strtoupper($firstChar, $encoding) . $then;
-}
-
 function formatSizeUnits($url){
     if (file_exists($_SERVER['DOCUMENT_ROOT'].$url)) {
         $bytes = filesize($_SERVER['DOCUMENT_ROOT'].$url);
@@ -487,164 +318,6 @@ function isJson($string) {
     return (json_last_error() == JSON_ERROR_NONE);
 }
 
-function save_image($inPath,$outPath){
-    //Download images from remote server
-    $in = fopen($inPath, "rb");
-    $out = fopen($outPath, "wb");
-
-    while ($chunk = fread($in,8192)) {
-        fwrite($out, $chunk, 8192);
-    }
-    fclose($in);
-    fclose($out);
-}
-function does_url_exists($url) {
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_NOBODY, true);
-    curl_exec($ch);
-    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
-    if ($code == 200) {
-        $status = true;
-    } else {
-        $status = false;
-    }
-    curl_close($ch);
-    return $status;
-}
-function log_flats($what, $response = "", $request = ""){
-    $dir = $_SERVER['DOCUMENT_ROOT']. '/log/log_flats';
-    if (!file_exists($dir)) {
-        mkdir($dir, 0777, true);
-    }
-    $file_name = $dir . "/" . date('Y.m.d H') . ".log";
-    $timezone  = 5;
-    $cur_time = gmdate("d.m.Y H:i:s", time() + 3600*($timezone+date("I")));
-    file_put_contents($file_name, $cur_time.";".$what.";\n".$request.";\n".$response.";\n", FILE_APPEND);
-
-}
-function log_internal_images($what, $response = "", $request = ""){
-    $dir = $_SERVER['DOCUMENT_ROOT']. '/log/log_internal_images';
-    if (!file_exists($dir)) {
-        mkdir($dir, 0777, true);
-    }
-    $file_name = $dir . "/" . date('Y.m.d H') . ".log";
-    $timezone  = 5;
-    $cur_time = gmdate("d.m.Y H:i:s", time() + 3600*($timezone+date("I")));
-    file_put_contents($file_name, $cur_time.";".$what.";\n".$request.";\n".$response.";\n", FILE_APPEND);
-
-}
-function log_images($id){
-    $dir = $_SERVER['DOCUMENT_ROOT']. '/log/log_images';
-    if (!file_exists($dir)) {
-        mkdir($dir, 0777, true);
-    }
-    $file_name = $dir . "/" . date('Y.m.d H') . ".log";
-    $timezone  = 5;
-    file_put_contents($file_name, $id.",\n", FILE_APPEND);
-
-}
-function log_bi_redirect($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_bi_redirect/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_sberbank($what, $error, $status = ""){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_sberbank/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_tilda_form($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_tilda_form/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_fb_form($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_fb_form/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_bigapp_form($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_bigapp_form/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_send_request($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_send_request/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_bigcrm_form($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_bigcrm_form/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_sr_render_avail($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_sr_render_avail/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_sr_stage($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_sr_stage/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function log_tilda_api($what, $error, $status = "ERROR"){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_tilda_api/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-function get_bi_flat_img_url($real_estate_guid, $flat_guid, $size = 400){
-    $bi_url = 'https://s3.bi.group/biclick';
-    $result['status'] = true;
-    $result['error'] = null;
-    $result['value'] = null;
-    if($real_estate_guid == ''){
-        $result['status'] = false;
-        $result['error'] = 'Пустой REALESTATE_GUID';
-        return $result;
-    }
-    if($flat_guid == ''){
-        $result['status'] = false;
-        $result['error'] = 'Пустой FLAT_GUID';
-        return $result;
-    }
-
-    $result['value'] = $bi_url.'/'.$real_estate_guid.'/'.$flat_guid.'_'.$size.'.png';
-
-    return $result;
-}
-
 function check_ob_content(){
     if (ob_get_length() > 0){
         echo ob_get_contents();
@@ -662,11 +335,6 @@ function createDirectory($newFile){
 }
 
 function move_uploaded_file_smart($tmpFile, $newFile){
-    /*
-    $str = $_SERVER['DOCUMENT_ROOT'].'/documents/';
-    if (strpos($newFile, $str) !== false){
-        $newFile = str_replace($str, $str . date('Y.m.d').'/', $newFile);
-    }*/
     $path_parts = pathinfo($newFile);
     if (!file_exists($path_parts['dirname'])) {
         mkdir($path_parts['dirname'], 0777, true);
@@ -679,157 +347,6 @@ function move_uploaded_file_smart($tmpFile, $newFile){
 
 }
 
-function log_camunda($what, $error, $status = ""){
-    $file = $_SERVER['DOCUMENT_ROOT']."/log/log_camunda/".date("Y.m.d H")."-00.txt";
-    if (file_exists($file)){
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }  else {
-        file_put_contents($file, date("d.m.y H:i:s").":" .$what." ".$status." ". $error ."\n\n", FILE_APPEND);
-    }
-}
-
-function planoplanAuth(){
-    $data = array('grant_type' => 'client_credentials', 'scope' => 'team');
-    $payload = http_build_query($data);
-    $headers = array(
-        'Authorization: Basic '. base64_encode("DxmWCrCJPQSb92rP:BBg9kCpvvbbe374MRSYNcv"),
-        'Content-Type : application/x-www-form-urlencoded'
-    );
-
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => "https://api.planoplan.com/team/v2/auth/token",
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_SSL_VERIFYPEER => FALSE,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_POSTFIELDS => $payload,
-        CURLOPT_HTTPHEADER => $headers,
-    ));
-
-    $result = curl_exec($curl);
-
-    if($errno = curl_errno($curl)) {
-        $error_message = curl_strerror($errno);
-        echo "cURL error ({$errno}):\n {$error_message}";
-    }
-
-    curl_close($curl);
-
-    return $result;
-}
-
-function planoplanGet($bearer_token, $url, $step){
-    if($step > 3){
-        $row['value'] = '';
-        $row['token'] = $bearer_token;
-        $row['error'] = 'Лимит исчерпан';
-        $row['code'] = 302;
-        return $row;
-    }
-
-    $headers = array(
-        'Authorization: Bearer '. $bearer_token
-    );
-
-    $curl = curl_init();
-
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_SSL_VERIFYPEER => FALSE,
-        CURLOPT_CUSTOMREQUEST => "GET",
-        CURLOPT_HTTPHEADER => $headers,
-    ));
-
-    $response = curl_exec($curl);
-    $header_data= curl_getinfo($curl);
-
-    if (curl_errno($curl)) {
-        $row['value'] = '';
-        $row['token'] = $bearer_token;
-        $row['error'] = curl_error($curl);
-        $row['code'] = 302;
-        return $row;
-    }
-
-    curl_close($curl);
-
-    $row['value'] = json_decode($response, true);
-    $row['error'] = '';
-    $row['code'] = 200;
-
-    if(in_array($header_data['http_code'], array(400, 401))){
-        $auth = planoplanAuth();
-        $auth = json_decode($auth, true);
-        $response = planoplanGet($auth['access_token'], $url, $step + 1);
-
-        $row = $response;
-    }
-
-    return $row;
-}
-function getClientActiveMenu($action_name, $url){
-    $tmp = '';
-    if($action_name == $url){
-        $tmp = ' active';
-    }
-    return $tmp;
-}
-
-function get_from_remarket($token, $url){
-    $authorization = "Authorization: Bearer ".$token; // Prepare the authorisation token
-
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json' , $authorization )); // Inject the token into the header
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $result = curl_exec($ch);
-    curl_close($ch);
-
-    return $result;
-}
-
-function request_to_remarket($token, $url, $data){
-    $authorization = "Authorization: Bearer ".$token;
-
-    $ch = curl_init();
-    //$payload = json_encode( array( "customer"=> $data ) );
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
-    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json', $authorization));
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-
-    $result = curl_exec($ch);
-    curl_close($ch);
-
-    return $result;
-}
-
-function request_to_remarket_without_token($url, $data){
-    $ch = curl_init();
-    //$payload = json_encode( array( "customer"=> $data ) );
-    curl_setopt( $ch, CURLOPT_POSTFIELDS, $data );
-    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-
-    $result = curl_exec($ch);
-    curl_close($ch);
-
-    return $result;
-}
-
 function getSecret(){
     $ob = new Application_Model_DbTable_Parent();
     $row = $ob->scalarSP(__FUNCTION__, "public.get_secret() id", array(), 'id');
@@ -839,57 +356,9 @@ function get_url_http_code($theURL) {
     $headers = get_headers($theURL);
     return substr($headers[0], 9, 3);
 }
-function progressShow($str){
-    if (ob_get_level()) {
-        echo $str.'<br/>';
-        ob_flush();
-    }
-    flush();
-}
 
 function filter_arr(&$value) {
     $value = htmlspecialchars($value);
-}
-
-function get_api_url(){
-    $config = new Zend_Config_Ini(APPLICATION_PATH.'/configs/application.ini', 'production');
-    $host = $config->constants->api_url;
-    return $host;
-}
-function get_remarket_url(){
-    $config = new Zend_Config_Ini(APPLICATION_PATH.'/configs/application.ini', 'production');
-    $host = $config->constants->remarket_url;
-    return $host;
-}
-function get_account_url(){
-    $config = new Zend_Config_Ini(APPLICATION_PATH.'/configs/application.ini', 'production');
-    $host = $config->constants->account_url;
-    return $host;
-}
-function downloadFileFormTilda($url, $file_name, $dir){
-    // Initialize the cURL session
-    $ch = curl_init($url);
-    // Save file into file location
-    $save_file_loc = $dir . $file_name;
-    // Open file
-    $fp = fopen($save_file_loc, 'wb');
-    // It set an option for a cURL transfer
-    curl_setopt($ch, CURLOPT_FILE, $fp);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    // Perform a cURL session
-    curl_exec($ch);
-    // Closes a cURL session and frees all resources
-    curl_close($ch);
-    // Close file
-    fclose($fp);
-}
-function createHtmlTilda($filename, $html){
-    $myfile = fopen($filename, "w") or die("Unable to open file!");
-    fwrite($myfile, $html);
-    fclose($myfile);
-}
-function myFilter($var){
-    return ($var !== NULL && $var !== FALSE && $var !== "");
 }
 function isBool($s){
     if (intval($s) > 0 || $s === true || $s === 'true')
@@ -913,4 +382,24 @@ function isBoolSelect($s){
 
     return null;
 }
-?>
+function formatPhoneNumber($phone_number) {
+    // Удаление всех нецифровых символов
+    $just_numbers = preg_replace('/[^\d]/', '', $phone_number);
+
+    // Замена первой цифры с '8' на '7'
+    if (substr($just_numbers, 0, 1) === '8') {
+        $just_numbers = '7' . substr($just_numbers, 1);
+    }
+
+    // Добавление '7', если длина равна 10
+    if (strlen($just_numbers) === 10) {
+        $just_numbers = '7' . $just_numbers;
+    }
+
+    // Обрезка до 11 символов, если нужно
+    if (strlen($just_numbers) > 11) {
+        $just_numbers = substr($just_numbers, 0, 11);
+    }
+
+    return $just_numbers;
+}

@@ -7,6 +7,15 @@ class Api_AuthController extends Api_ParentController {
         parent::init();
     }
 
+    private function smsCodeGen() {
+        try{
+            $code = $this->debug ? '000000' : random_int(100000, 999999);
+        }catch (Exception $e){
+            return false;
+        }
+        return $code;
+    }
+
     private function setRefreshTokenCookie($token) {
         $encryptedValue = encryptCookie($token, $this->refresh_key);
         $domain = $this->debug ? ".localhost" : ".i-health.kz";
@@ -32,9 +41,37 @@ class Api_AuthController extends Api_ParentController {
         $phone = $jsonData['phone'] ?? null;
         $password = $jsonData['password'] ?? null;
         $confirmPassword = $jsonData['confirm_password'] ?? null;
+        $verify_code = $jsonData['verify_code'] ?? null;
+        $uuid = $jsonData['uuid'] ?? null;
 
-        if (!$phone || !$password || !$confirmPassword || !$fio) {
-            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number, password, or confirmation password is missing.');
+        if (!$phone || !$password || !$confirmPassword || !$fio || !$verify_code || !$uuid) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number, password, confirmation password, verify code, or uuid is missing.');
+            return;
+        }
+
+        $phone = formatPhoneNumber($phone);
+
+        $row_verify = $authModel->sms_verify_by_uuid__get($uuid);
+
+        if(!$row_verify['status']){
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Registration Failed', $row_verify['error']);
+            return;
+        }
+
+        $row_verify = $row_verify['value'];
+
+        if($row_verify['is_expired']){
+            $this->sendResponse(null, self::HTTP_GONE, 'Registration Failed', 'Verification code has expired. Please request a new code');
+            return;
+        }
+
+        if($row_verify['is_verify']){
+            $this->sendResponse(null, self::HTTP_UNUSED, 'Registration Failed', 'Verification code is unused. Please request a new code');
+            return;
+        }
+
+        if (!password_verify($verify_code, $row_verify['verify_code'])) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Registration Failed', 'Invalid verification code. Please request a new code');
             return;
         }
 
@@ -71,6 +108,8 @@ class Api_AuthController extends Api_ParentController {
         }
 
         $this->setRefreshTokenCookie($refreshToken['refresh_token']);
+
+        $authModel->sms_verify__set($row_verify['sms_verify_id']);
 
         $this->sendResponse([
             'access_token' => $accessToken,
@@ -129,6 +168,96 @@ class Api_AuthController extends Api_ParentController {
         }
     }
 
+    public function resetPasswordAction() {
+        $authModel = new Api_Model_DbTable_Auth();
+        $rawData = $this->getRequest()->getRawBody();
+        $jsonData = json_decode($rawData, true);
+
+        if ($jsonData === null && json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Invalid JSON format', 'The request body is not a valid JSON format.');
+            return;
+        }
+
+        $phone = $jsonData['phone'] ?? null;
+        $password = $jsonData['password'] ?? null;
+        $confirmPassword = $jsonData['confirm_password'] ?? null;
+        $verify_code = $jsonData['verify_code'] ?? null;
+        $uuid = $jsonData['uuid'] ?? null;
+
+        if (!$phone || !$password || !$confirmPassword || !$verify_code || !$uuid) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number, password, confirmation password, verify code, or uuid is missing.');
+            return;
+        }
+
+        $phone = formatPhoneNumber($phone);
+
+        $row_verify = $authModel->sms_verify_by_uuid__get($uuid);
+
+        if(!$row_verify['status']){
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Registration Failed', $row_verify['error']);
+            return;
+        }
+
+        $row_verify = $row_verify['value'];
+
+        if($row_verify['is_expired']){
+            $this->sendResponse(null, self::HTTP_GONE, 'Registration Failed', 'Verification code has expired. Please request a new code');
+            return;
+        }
+
+        if($row_verify['is_verify']){
+            $this->sendResponse(null, self::HTTP_UNUSED, 'Registration Failed', 'Verification code is unused. Please request a new code');
+            return;
+        }
+
+        if (!password_verify($verify_code, $row_verify['verify_code'])) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Registration Failed', 'Invalid verification code. Please request a new code');
+            return;
+        }
+
+        if ($password !== $confirmPassword) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Password mismatch', 'Password and confirmation password do not match.');
+            return;
+        }
+
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $client = $authModel->client__get($phone);
+
+        if($client['status'] === false){
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Registration Failed', $client['error']);
+            return;
+        }
+
+        $client_id = $client['value']['client_id'];
+        $client_fio = $client['value']['client_fio']; // or any default value you want
+
+        $resetResult = $authModel->client_password__reset($client_id, $hashedPassword);
+
+        if($resetResult['status'] === false){
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Password reset Failed', $resetResult['error']);
+            return;
+        }
+
+        $accessToken = $authModel->generateJwt($client_id, $client_fio);
+        $refreshToken = $authModel->generateRefreshToken($client_id);
+
+        if ($refreshToken['status'] === false) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Token Generation Failed', $refreshToken['error']);
+            return;
+        }
+
+        $this->setRefreshTokenCookie($refreshToken['refresh_token']);
+
+        $authModel->sms_verify__set($row_verify['sms_verify_id']);
+
+        $this->sendResponse([
+            'access_token' => $accessToken,
+            'token_type' => 'bearer',
+            'expires_in' => $this->access_exp
+        ]);
+    }
+
     public function refreshTokenAction() {
         $authModel = new Api_Model_DbTable_Auth();
 
@@ -170,6 +299,50 @@ class Api_AuthController extends Api_ParentController {
             ]);
         } else {
             $this->sendResponse(null, self::HTTP_NOT_FOUND, 'Invalid refresh token', 'The provided refresh token is invalid or expired.');
+        }
+    }
+
+    public function smsSendAction(){
+        $authModel = new Api_Model_DbTable_Auth();
+        $rawData = $this->getRequest()->getRawBody();
+        $jsonData = json_decode($rawData, true);
+
+        if ($jsonData === null && json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Invalid JSON format', 'The request body is not a valid JSON format.');
+            return;
+        }
+
+        $phone = $jsonData['phone'] ?? null;
+
+        if (!$phone) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number, password, or confirmation password is missing.');
+            return;
+        }
+
+        $phone = formatPhoneNumber($phone);
+
+        try{
+            $code = $this->smsCodeGen();
+
+            if(!$code){
+                $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, 'Verify code generate error');
+                return;
+            }
+
+            $hashedCode = password_hash($code, PASSWORD_DEFAULT);
+
+            //SEND SMS METHOD
+            //SEND SMS METHOD
+
+            $result = $authModel->sms_verify__create($phone, $hashedCode);
+
+            if(!$result['status']){
+                $this->sendResponse(null, self::HTTP_BAD_REQUEST, $result['error']);
+            }
+
+            $this->sendResponse(['uuid' => $result['value']]);
+        }catch (Exception $e){
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, $e->getMessage());
         }
     }
 
