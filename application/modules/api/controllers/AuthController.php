@@ -313,10 +313,25 @@ class Api_AuthController extends Api_ParentController {
         }
 
         $phone = $jsonData['phone'] ?? null;
+        $type = $jsonData['type'] ?? null;
 
-        if (!$phone) {
-            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number, password, or confirmation password is missing.');
+        if (!$phone || !$type) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Missing required fields', 'Phone number or type is missing.');
             return;
+        }
+
+        if(strtoupper(trim($type)) === 'RESET_PASSWD'){
+            $client = $authModel->client__get($phone);
+
+            if($client['status'] === false){
+                $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'SMS send Failed', $client['error']);
+                return;
+            }
+
+            if(is_null($client['value'])){
+                $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'SMS send Failed', 'user not found');
+                return;
+            }
         }
 
         $phone = formatPhoneNumber($phone);
