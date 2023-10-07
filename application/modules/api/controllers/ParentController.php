@@ -1,7 +1,25 @@
 <?php
 
 class Api_ParentController extends Zend_Controller_Action{
-    protected $skipAuthActions = ['login', 'register', 'getHash', 'refresh-token', 'sms-send', 'reset-password'];
+    protected $skipAuthActions = [
+        'login',
+        'register',
+        'getHash',
+        'refresh-token',
+        'sms-send',
+        'reset-password',
+        'stock-list',
+        'category-list',
+        'product-list',
+        'product-by-tag-list',
+        'product',
+        'product-stock-list',
+        'product-catalog-list',
+        'product-search',
+        'brand-list',
+        'banner-list',
+        'city-list'
+    ];
 
     // 1xx Информационные
     const HTTP_CONTINUE = 100; // Продолжить, клиент должен продолжить запрос
