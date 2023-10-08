@@ -9,9 +9,12 @@ require_once 'ParentController.php';
 
 class Api_ClientController extends Api_ParentController
 {
-    public function init()
-    {
+    public function init(){
         parent::init();
+
+        $authModel = new Api_Model_DbTable_Auth();
+
+        $this->payload = $authModel->validateJwt($this->bearer_token);
     }
 
     public function indexAction(){
@@ -20,7 +23,7 @@ class Api_ClientController extends Api_ParentController
 
     public function orderHistoryAction(){
         $ob = new Api_Model_DbTable_Client();
-        $client_id = $this->_getParam('client_id', 0);
+        $client_id = $this->payload['client_id'] ?? 0;
         $row = $ob->client_order_hist__read($client_id);
         if(!$row['status']){
             $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $row['error']);
@@ -31,7 +34,7 @@ class Api_ClientController extends Api_ParentController
 
     public function clientProfileAction(){
         $ob = new Api_Model_DbTable_Client();
-        $client_id = $this->_getParam('client_id', 0);
+        $client_id = $this->payload['client_id'] ?? 0;
         $row = $ob->client_profile__get($client_id);
         if(!$row['status']){
             $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $row['error']);
@@ -60,7 +63,7 @@ class Api_ClientController extends Api_ParentController
     }
     public function clientAddressListAction(){
         $ob = new Api_Model_DbTable_Client();
-        $client_id = $this->_getParam('client_id', 0);
+        $client_id = $this->payload['client_id'] ?? 0;
         $row = $ob->client_address__read($client_id);
         if(!$row['status']){
             $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $row['error']);
