@@ -107,12 +107,15 @@ class Api_AuthController extends Api_ParentController {
             return;
         }
 
-        $this->setRefreshTokenCookie($refreshToken['refresh_token']);
+        //$this->setRefreshTokenCookie($refreshToken['refresh_token']);
+
+        $encryptedValue = encryptCookie($refreshToken['refresh_token'], $this->refresh_key);
 
         $authModel->sms_verify__set($row_verify['sms_verify_id']);
 
         $this->sendResponse([
             'access_token' => $accessToken,
+            'refresh_token' => $encryptedValue,
             'token_type' => 'bearer',
             'expires_in' => $this->access_exp
         ]);
@@ -156,10 +159,13 @@ class Api_AuthController extends Api_ParentController {
                 return;
             }
 
-            $this->setRefreshTokenCookie($refreshToken['refresh_token']);
+            //$this->setRefreshTokenCookie($refreshToken['refresh_token']);
+
+            $encryptedValue = encryptCookie($refreshToken['refresh_token'], $this->refresh_key);
 
             $this->sendResponse([
                 'access_token' => $accessToken,
+                'refresh_token' => $encryptedValue,
                 'token_type' => 'bearer',
                 'expires_in' => $this->access_exp
             ]);
@@ -247,12 +253,14 @@ class Api_AuthController extends Api_ParentController {
             return;
         }
 
-        $this->setRefreshTokenCookie($refreshToken['refresh_token']);
+        //$this->setRefreshTokenCookie($refreshToken['refresh_token']);
+        $encryptedValue = encryptCookie($refreshToken['refresh_token'], $this->refresh_key);
 
         $authModel->sms_verify__set($row_verify['sms_verify_id']);
 
         $this->sendResponse([
             'access_token' => $accessToken,
+            'refresh_token' => $encryptedValue,
             'token_type' => 'bearer',
             'expires_in' => $this->access_exp
         ]);
@@ -289,11 +297,14 @@ class Api_AuthController extends Api_ParentController {
             }
 
             // Шифрование нового refresh token и сохранение в cookie
-            $this->setRefreshTokenCookie($newRefreshToken['refresh_token']);
+            //$this->setRefreshTokenCookie($newRefreshToken['refresh_token']);
+
+            $encryptedValue = encryptCookie($newRefreshToken['refresh_token'], $this->refresh_key);
 
             // Отправка новых токенов клиенту
             $this->sendResponse([
                 'access_token' => $newAccessToken,
+                'refresh_token' => $encryptedValue,
                 'token_type' => 'bearer',
                 'expires_in' => 3600
             ]);
