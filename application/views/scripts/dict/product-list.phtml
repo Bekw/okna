@@ -40,7 +40,6 @@ $this->placeholder('page-header')->set("Продукты");
                                 <th class="text-center">Категория</th>
                                 <th class="text-center">Тэги</th>
                                 <th class="text-center">Цена</th>
-                                <th class="text-center">Старая цена</th>
                                 <th class="text-center">Доступность</th>
                                 <th class="text-center"></th>
                             </tr>
@@ -60,7 +59,6 @@ $this->placeholder('page-header')->set("Продукты");
                                         <td class="text-left"><?=$value['category_list']?></td>
                                         <td class="text-left"><?=$value['tag_list']?></td>
                                         <td class="text-right"><?=tenge_text($value['price'])?></td>
-                                        <td class="text-right"><?=tenge_text($value['price_old'])?></td>
                                         <td class="text-center">
                                             <input type="checkbox" id="is_avail" class="ace-switch ace-switch-bars bgc-success-d2 ml-2" <?if($value['is_avail'] == 'checked'){?>checked<?}?> onchange="set_is_avail(<?=$value['product_id']?>, this)">
                                         </td>

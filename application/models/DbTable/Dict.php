@@ -184,7 +184,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $p['product_desc'] = $a['product_desc'];
         $p['brand_id'] = $a['brand_id'];
         $p['price'] = $a['price'];
-        $p['price_old'] = $a['price_old'];
+        //$p['price_old'] = $a['price_old'];
         $p['is_avail'] = $a['is_avail'] ?? false;
         if (isset($a['category_id_arr'])){
             $p['category_id_arr'] = '{'.implode(",", zeroToNull($a['category_id_arr'])).'}';
@@ -196,7 +196,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         }else{
             $p['tag_id_arr'] = '{}';
         }
-        $result = $this->execSP(__FUNCTION__, "back_office.product_tab__modify(:product_id, :product_name, :product_desc, :brand_id, :price, :price_old, :is_avail, :category_id_arr, :tag_id_arr) res", $p, 'res');
+        $result = $this->execSP(__FUNCTION__, "back_office.product_tab__modify(:product_id, :product_name, :product_desc, :brand_id, :price, :is_avail, :category_id_arr, :tag_id_arr) res", $p, 'res');
         return $result;
     }
     public function product_tab__is_avail($product_id){
