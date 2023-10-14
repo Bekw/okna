@@ -18,7 +18,9 @@ class Api_ParentController extends Zend_Controller_Action{
         'product-search',
         'brand-list',
         'banner-list',
-        'city-list'
+        'city-list',
+        'add-to-cart',
+        'cart-plus-minus'
     ];
 
     // 1xx Информационные
@@ -68,7 +70,7 @@ class Api_ParentController extends Zend_Controller_Action{
         $this->refresh_exp = $config['refresh_exp'];
         $this->refresh_key = $config['refresh_key'];
         $this->bearer_token = null;
-        
+
         $bearerToken = $this->getBearerToken();
         if (!in_array($currentAction, $this->skipAuthActions)) {
             $auth = new Api_Model_DbTable_Auth();
