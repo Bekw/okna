@@ -20,7 +20,9 @@ class Api_ParentController extends Zend_Controller_Action{
         'banner-list',
         'city-list',
         'add-to-cart',
-        'cart-plus-minus'
+        'cart-plus-minus',
+        'cart',
+
     ];
 
     // 1xx Информационные
