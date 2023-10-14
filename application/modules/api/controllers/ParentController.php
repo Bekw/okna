@@ -68,11 +68,11 @@ class Api_ParentController extends Zend_Controller_Action{
         $this->refresh_exp = $config['refresh_exp'];
         $this->refresh_key = $config['refresh_key'];
         $this->bearer_token = null;
-        $bearerToken = null;
+        
+        $bearerToken = $this->getBearerToken();
         if (!in_array($currentAction, $this->skipAuthActions)) {
             $auth = new Api_Model_DbTable_Auth();
 
-            $bearerToken = $this->getBearerToken();
             if ($bearerToken === null || !$auth->validateJwt($bearerToken)) {
                 $this->sendResponse(null, self::HTTP_UNAUTHORIZED, 'Invalid or missing token');
             }
