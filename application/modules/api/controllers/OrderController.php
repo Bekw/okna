@@ -107,6 +107,46 @@ class Api_OrderController extends Api_ParentController
         $this->sendResponse($cart_data);
     }
 
+    public function cartProductDelAction(){
+        $ob = new Api_Model_DbTable_Order();
+        $rawData = $this->getRequest()->getRawBody();
+
+        if ($rawData === null && json_last_error() !== JSON_ERROR_NONE) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Неверный формат JSON', 'Тело запроса должен быть в формате JSON');
+            return;
+        }
+
+        $jsonData = json_decode($rawData, true);
+
+        $order_item_id = $jsonData['order_item_id'] ?? null;
+
+        if (!$order_item_id) {
+            $this->sendResponse(null, self::HTTP_BAD_REQUEST, 'Ошибка при удалении товара в корзине', 'Товар не выбран');
+            return;
+        }
+
+        $result = $ob->cart_product__del($order_item_id);
+
+        if(!$result['status']){
+            $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $result['error']);
+            return;
+        }
+        $order_id = $result['value'];
+
+        $result = $ob->cart__read($order_id);
+
+        if(!$result['status']){
+            $this->sendResponse(null, self::HTTP_INTERNAL_SERVER_ERROR, $result['error']);
+            return;
+        }
+
+        $cart_data['order_id'] = $order_id;
+        $cart_data['sum'] = $result['scalar'];
+        $cart_data['products'] = $result['value'];
+
+        $this->sendResponse($cart_data);
+    }
+
     public function cartClearAction(){
         $ob = new Api_Model_DbTable_Order();
         $rawData = $this->getRequest()->getRawBody();

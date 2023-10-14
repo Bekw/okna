@@ -24,4 +24,9 @@ class Api_Model_DbTable_Order extends Application_Model_DbTable_Parent {
         $result = $this->execSP(__FUNCTION__, "public.cart__clear(:order_id) id", $p, 'id');
         return $result;
     }
+    public function cart_product__del($order_item_id){
+        $p['order_item_id'] = $order_item_id;
+        $result = $this->execSP(__FUNCTION__, "public.cart_product__del(:order_item_id) id", $p, 'id');
+        return $result;
+    }
 }

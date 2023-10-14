@@ -22,6 +22,7 @@ class Api_ParentController extends Zend_Controller_Action{
         'add-to-cart',
         'cart-plus-minus',
         'cart',
+        'cart-product-del',
 
     ];
 
