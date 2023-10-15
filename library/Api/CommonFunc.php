@@ -403,3 +403,55 @@ function formatPhoneNumber($phone_number) {
 
     return $just_numbers;
 }
+function optimize($inputPath, $outputPath, $newWidth, $newHeight, $maxQuality = 90, $minWidth = 600, $minHeight = 600) {
+    $info = getimagesize($inputPath);
+    $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/product_photo_thumb/";
+    if (!file_exists($dir)) {
+        mkdir($dir, 0777, true);
+    }
+    // Проверка минимальных размеров
+    if ($info[0] < $minWidth || $info[1] < $minHeight) {
+        throw new Exception("Очень маленький размер фото. Минимальный размер {$minWidth}x{$minHeight}.");
+    }
+
+    switch ($info['mime']) {
+        case 'image/jpeg':
+            $image = imagecreatefromjpeg($inputPath);
+            $outputFormat = 'jpg';
+            break;
+        case 'image/png':
+            $image = imagecreatefrompng($inputPath);
+            $outputFormat = 'png';
+            break;
+        default:
+            throw new Exception('Данный формат изображения не поддерживается.');
+    }
+
+    $newImage = imagecreatetruecolor($newWidth, $newHeight);
+
+    if ($outputFormat == 'png') {
+        imagealphablending($newImage, false);
+        imagesavealpha($newImage, true);
+    }
+
+    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $newWidth, $newHeight, $info[0], $info[1]);
+
+    // Адаптивное качество
+    $quality = $maxQuality - (($newWidth * $newHeight) / (1000 * 1000));
+    $quality = max(10, min($maxQuality, $quality));
+
+    switch ($outputFormat) {
+        case 'jpg':
+            imagejpeg($newImage, $outputPath, $quality);
+            break;
+        case 'png':
+            $pngQuality = 9 - (($quality * 9) / 100);
+            imagepng($newImage, $outputPath, $pngQuality);
+            break;
+        default:
+            throw new Exception('Данный формат изображения не поддерживается.');
+    }
+
+    imagedestroy($newImage);
+    imagedestroy($image);
+}

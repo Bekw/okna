@@ -225,6 +225,7 @@ class DictController extends ParentController{
     }
     public function productEditAction(){
         $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
         $this->view->product_id = $this->_getParam('product_id', 0);
         if (isset($_POST["save"])) {
             $a = $this->_getAllParams();
@@ -235,6 +236,24 @@ class DictController extends ParentController{
                 return;
             }
             $this->_redirector->gotoUrl('/dict/product-edit/product_id/'.$result['value']);
+        }
+        if ($mode == 'upd-img'){
+            $this->_helper->AjaxContext()->addActionContext('product-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->product_img_tab__upd($params);
+            return;
+        }
+        if ($mode == 'del-img'){
+            $this->_helper->AjaxContext()->addActionContext('product-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->product_img_tab__del($params['product_img_id']);
+            return;
+        }
+        if ($mode == 'set-main'){
+            $this->_helper->AjaxContext()->addActionContext('product-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->product_img_tab__set_main($params['product_img_id']);
+            return;
         }
         $this->view->row = $ob->product_tab__get($this->view->product_id)['value'];
         $this->view->row_img = $ob->product_img_tab__read($this->view->product_id)['value'];
@@ -257,5 +276,11 @@ class DictController extends ParentController{
 
         $this->view->stock_id = $this->_getParam("stock_id", 0);
         $this->view->row_product = $ob->product_tab_read_fs()['value'];
+    }
+    public function productImgEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->product_id = $this->_getParam("product_id", 0);
     }
 }

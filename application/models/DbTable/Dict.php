@@ -241,4 +241,44 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "back_office.product_stock__del(:product_stock_id)", $p);
         return $result;
     }
+    public function product_img_tab__del($product_img_id){
+        $p['product_img_id'] = $product_img_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.product_img_tab__del(:product_img_id)", $p);
+        return $result;
+    }
+    public function product_img_tab__set_main($product_img_id){
+        $p['product_img_id'] = $product_img_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.product_img_tab__set_main(:product_img_id)", $p);
+        return $result;
+    }
+    public function product_img_tab__upd($a){
+        $p['product_id'] = $a['product_id'];
+        $p['img_url'] = null;
+        $p['img_thumb_url'] = null;
+
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/product_photo/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/product_photo/".uniqid('product_photo',true)."." . $ext;
+            $filename_thumb = "documents/".date('Y.m.d')."/product_photo_thumb/".uniqid('product_photo_thumb',true)."." . $ext;
+            $p['img_url'] = $filename;
+            $p['img_thumb_url'] = '/'.$filename_thumb;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+            try {
+                optimize($tmpFilePath, $filename_thumb, 300, 300);
+            } catch (Exception $e) {
+                $result['status'] = false;
+                $result['error'] = 'Ошибка при загрузке файла. '.$e->getMessage();
+                return $result;
+            }
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "back_office.product_img_tab__upd(:product_id, :img_url, :img_thumb_url)", $p);
+        return $result;
+    }
 }

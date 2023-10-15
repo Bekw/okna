@@ -121,23 +121,36 @@ $this->placeholder('page-header')->set("Редактирование проду�
                     </div>
                     <?if($this->product_id <> 0){?>
                         <br>
-                        <h4>Фото продукта</h4>
+                        <h4>
+                            Фото продукта
+                            <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-primary mx-2px" draggable="false" onclick="showImgAddForm(<?=$this->product_id?>)">
+                                <i class="fas fa-plus w-2 mx-1px"></i>
+                            </a>
+                        </h4>
                         <hr>
                         <div class="py-3 mt-3" id="gallery">
-                            <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" style="width: 100px;">
-                                <a href="#" class="show-lightbox">
-                                    <img src="assets/image/gallery/thumb6.jpg" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block w-100 d-zoom-2 product-img"/>
-                                </a>
-                                <div class="mr-hover position-tr h-100 bgc-black-tp4 p-25">
-                                    <div class="d-flex flex-md-column justify-content-center action-buttons text-110">
-                                        <a href="#" class="my-2">
-                                            <i class="fa fa-times text-danger-l1"></i>
+                            <?if(mycount($this->row_img) > 0){
+                                foreach ($this->row_img as $value){?>
+                                    <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" id="image" style="width: 100px; float: left; margin-right: 10px;">
+                                        <a href="<?=$value['img_url']?>" target="_blank" class="show-lightbox">
+                                            <img src="<?=$value['img_thumb_url']?>" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block product-img"/>
                                         </a>
+                                        <div class="mr-hover position-tr h-100 bgc-black-tp4 p-25">
+                                            <div class="d-flex flex-md-column justify-content-center action-buttons text-110">
+                                                <a href="#" class="my-2" onclick="delImg(<?=$value['product_img_id']?>, this)">
+                                                    <i class="fa fa-times text-danger-l1"></i>
+                                                </a>
+                                                <a href="#" class="my-2" onclick="setMain(<?=$value['product_img_id']?>, this)">
+                                                    <i class="fa fa-check text-primary-d1"></i>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                <?}
+                            }?>
                         </div>
                     <?}?>
+                    <div class="clearfix"></div>
                     <a href="/dict/product-list/" class="btn btn-danger pull-right"  name="save">Назад</a>
                     <button type="submit" class="btn btn-success pull-right"  name="save">Сохранить</button>
                 </form>
@@ -170,5 +183,62 @@ $this->placeholder('page-header')->set("Редактирование проду�
             }
         });
     });
+    function showImgAddForm(product_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-sm');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить изображение');
+
+        $.ajax({
+            type: 'POST',
+            url: "/dict/product-img-edit/",
+            data:{
+                product_id: product_id
+            },
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+    function delImg(product_img_id, ob){
+        if (!confirm('Вы действительно хотите?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/product-edit/mode/del-img/",
+            data:{"product_img_id" : product_img_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Изображение удалено');
+                    $(ob).closest("div#image").remove();
+                }
+            }
+        });
+    }
+    function setMain(product_img_id, ob){
+        if (!confirm('Вы действительно хотите изменить основное изображение?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/product-edit/mode/set-main/",
+            data:{"product_img_id" : product_img_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Изображение выбрано основным');
+                    location.reload();
+                }
+            }
+        });
+    }
 
 </script>
