@@ -130,18 +130,25 @@ $this->placeholder('page-header')->set("Редактирование проду�
                         <hr>
                         <div class="py-3 mt-3" id="gallery">
                             <?if(mycount($this->row_img) > 0){
-                                foreach ($this->row_img as $value){?>
-                                    <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" id="image" style="width: 100px; float: left; margin-right: 10px;">
+                                foreach ($this->row_img as $value){
+                                    $is_main_border = '';
+                                    $is_main_text = '';
+                                    if($value['is_main'] == true){
+                                        $is_main_border = 'border: 2px solid #2564a9;';
+                                        $is_main_text = 'Основное изображение';
+                                    }
+                                    ?>
+                                    <div class="pos-rel d-style my-3 radius-1 shadow-sm overflow-hidden bgc-purple-m3" id="image" title="<?=$is_main_text?>" style="width: 100px; float: left; margin-right: 10px;">
                                         <a href="<?=$value['img_url']?>" target="_blank" class="show-lightbox">
-                                            <img src="<?=$value['img_thumb_url']?>" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block product-img"/>
+                                            <img src="<?=$value['img_thumb_url']?>" onerror="imgErrorHref(this);" style="<?=$is_main_border?>" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block product-img"/>
                                         </a>
                                         <div class="mr-hover position-tr h-100 bgc-black-tp4 p-25">
                                             <div class="d-flex flex-md-column justify-content-center action-buttons text-110">
                                                 <a href="#" class="my-2" onclick="delImg(<?=$value['product_img_id']?>, this)">
                                                     <i class="fa fa-times text-danger-l1"></i>
                                                 </a>
-                                                <a href="#" class="my-2" onclick="setMain(<?=$value['product_img_id']?>, this)">
-                                                    <i class="fa fa-check text-primary-d1"></i>
+                                                <a href="#" class="my-2" onclick="setMain(<?=$value['product_img_id']?>, this)" title="Сделать основным">
+                                                    <i class="fa fa-check text-success"></i>
                                                 </a>
                                             </div>
                                         </div>
