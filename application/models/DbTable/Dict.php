@@ -26,7 +26,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
     public function stock_tab__modify($a){
         $p['stock_id'] = $a['stock_id'];
         $p['stock_name'] = $a['stock_name'];
-        $p['discount_percent'] = $a['discount_percent'];
+        $p['discount_percent'] = zeroToNull($a['discount_percent']);
         $p['stock_start'] = zeroToNull($a['stock_start']);
         $p['stock_end'] = zeroToNull($a['stock_end']);
         $p['stock_img'] = null;
@@ -182,8 +182,8 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $p['product_id'] = $a['product_id'];
         $p['product_name'] = $a['product_name'];
         $p['product_desc'] = $a['product_desc'];
-        $p['brand_id'] = $a['brand_id'];
-        $p['price'] = $a['price'];
+        $p['brand_id'] = zeroToNull($a['brand_id']);
+        $p['price'] = zeroToNull($a['price']);
         //$p['price_old'] = $a['price_old'];
         $p['is_avail'] = $a['is_avail'] ?? false;
         if (isset($a['category_id_arr'])){
@@ -298,7 +298,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
     public function banner_tab__modify($a){
         $p['banner_id'] = $a['banner_id'];
         $p['banner_text'] = $a['banner_text'];
-        $p['order_num'] = $a['order_num'];
+        $p['order_num'] = zeroToNull($a['order_num']);
         $p['is_active'] = $a['is_active'] ?? false;
         $p['banner_img'] = null;
 

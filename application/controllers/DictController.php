@@ -227,6 +227,13 @@ class DictController extends ParentController{
         $ob = new Application_Model_DbTable_Dict();
         $mode = $this->_getParam('mode', '');
         $this->view->product_id = $this->_getParam('product_id', 0);
+
+        $this->view->row = $ob->product_tab__get($this->view->product_id)['value'];
+        $this->view->row_img = $ob->product_img_tab__read($this->view->product_id)['value'];
+        $this->view->row_category = $ob->category__read_fs()['value'];
+        $this->view->row_tag = $ob->tag__read_fs()['value'];
+        $this->view->row_brand = $ob->brand__read_fs()['value'];
+
         if (isset($_POST["save"])) {
             $a = $this->_getAllParams();
             $result = $ob->product_tab__modify($a);
@@ -255,11 +262,6 @@ class DictController extends ParentController{
             $this->view->result = $ob->product_img_tab__set_main($params['product_img_id']);
             return;
         }
-        $this->view->row = $ob->product_tab__get($this->view->product_id)['value'];
-        $this->view->row_img = $ob->product_img_tab__read($this->view->product_id)['value'];
-        $this->view->row_category = $ob->category__read_fs()['value'];
-        $this->view->row_tag = $ob->tag__read_fs()['value'];
-        $this->view->row_brand = $ob->brand__read_fs()['value'];
     }
     public function stockProductFormAction(){
         $this->_helper->layout->disableLayout();

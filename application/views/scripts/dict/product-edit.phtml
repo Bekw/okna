@@ -68,7 +68,7 @@ $this->placeholder('page-header')->set("Редактирование проду�
                     </div>
 
                     <?
-                        $arr_category = str_replace("{", "",  $this->row['category_id_arr']);
+                        $arr_category = str_replace("{", "",  $this->row['category_id_arr'] ?? null );
                         $arr_category = str_replace("}", "",  $arr_category);
                         $arr_category = explode(',', $arr_category);
                     ?>
@@ -89,7 +89,7 @@ $this->placeholder('page-header')->set("Редактирование проду�
                     </div>
 
                     <?
-                        $arr_tags = str_replace("{", "",  $this->row['tag_id_arr']);
+                        $arr_tags = str_replace("{", "",  $this->row['tag_id_arr'] ?? null);
                         $arr_tags = str_replace("}", "",  $arr_tags);
                         $arr_tags = explode(',', $arr_tags);
                     ?>
