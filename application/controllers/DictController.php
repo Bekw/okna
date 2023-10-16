@@ -283,4 +283,37 @@ class DictController extends ParentController{
 
         $this->view->product_id = $this->_getParam("product_id", 0);
     }
+    public function bannerListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('banner-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->banner_tab__modify($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('banner-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->banner_tab__delete($a['banner_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-active'){
+            $this->_helper->AjaxContext()->addActionContext('banner-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->banner_tab__is_active($a['banner_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->banner_tab__read()['value'];
+    }
+    public function bannerEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->banner_id = $this->_getParam('banner_id', 0);
+
+        $this->view->row = $ob->banner_tab__get($this->view->banner_id)['value'];
+    }
 }

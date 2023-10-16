@@ -281,4 +281,47 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "back_office.product_img_tab__upd(:product_id, :img_url, :img_thumb_url)", $p);
         return $result;
     }
+    public function banner_tab__read(){
+        $result = $this->readSP(__FUNCTION__, "back_office.banner_tab__read('cur')");
+        return $result;
+    }
+    public function banner_tab__get($banner_id){
+        $p['banner_id'] = $banner_id;
+        $result = $this->getSP(__FUNCTION__, "back_office.banner_tab__get('cur', :banner_id)", $p);
+        return $result;
+    }
+    public function banner_tab__delete($banner_id){
+        $p['banner_id'] = $banner_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.banner_tab__delete(:banner_id)", $p);
+        return $result;
+    }
+    public function banner_tab__modify($a){
+        $p['banner_id'] = $a['banner_id'];
+        $p['banner_text'] = $a['banner_text'];
+        $p['order_num'] = $a['order_num'];
+        $p['is_active'] = $a['is_active'] ?? false;
+        $p['banner_img'] = null;
+
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/banner_photo/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/banner_photo/".uniqid('banner_photo',true)."." . $ext;
+            $p['banner_img'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "back_office.banner_tab__modify(:banner_id, :banner_img, :banner_text, :is_active, :order_num)", $p);
+        return $result;
+    }
+    public function banner_tab__is_active($banner_id){
+        $p['banner_id'] = $banner_id;
+        $result = $this->execSP(__FUNCTION__, "back_office.banner_tab__is_active(:banner_id)", $p);
+        return $result;
+    }
 }
