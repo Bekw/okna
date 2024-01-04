@@ -1,0 +1,53 @@
+<style>
+    .modal-body .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->brief_type_id?>" name="brief_type_id">
+        <input type="hidden" value="<?=$this->brief_item_id?>" name="brief_item_id">
+        <div class="form-group">
+            <label class="control-label " for="brief_item_name">Название</label>
+            <input type="text" id="brief_item_name" placeholder="Название" class="form-control" value="<?=$this->row['brief_item_name']?>" name="brief_item_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="brief_item_code">Код</label>
+            <input type="text" id="brief_item_code" placeholder="Код" class="form-control" value="<?=$this->row['brief_item_code']?>" name="brief_item_code">
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="itemEdit()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function itemEdit(){
+        var send_data = $('#form_id').serializeArray();
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/brief-item-form/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Вариант успешно обновлен');
+                    showItemTable($('#brief_type_id').val());
+                    $(".modal").modal('hide');
+                }
+            }
+        });
+    }
+</script>

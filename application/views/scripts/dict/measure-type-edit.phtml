@@ -1,0 +1,55 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->measure_type_id?>" name="measure_type_id">
+
+        <div class="form-group">
+            <label class="control-label " for="measure_type_name">Наименование</label>
+            <input type="text" id="measure_type_name" placeholder="Наименование" class="form-control" value="<?=$this->row['measure_type_name'] ?? null?>" name="measure_type_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="measure_type_code">Код</label>
+            <input type="text" id="measure_type_code" placeholder="Код" class="form-control" value="<?=$this->row['measure_type_code'] ?? null?>" name="measure_type_code">
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="upd_measure_type()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function upd_measure_type(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/measure-type-list/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

@@ -1,0 +1,139 @@
+<?php
+
+class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
+
+    public function create_client_request($a){
+        $p['first_name'] = $a['first_name'];
+        $p['second_name'] = $a['second_name'];
+        $p['last_name'] = $a['last_name'];
+        $p['client_phone'] = $a['client_phone'];
+        $p['client_email'] = $a['client_email'];
+        $p['address'] = $a['address'];
+        $p['area_house'] = $a['area_house'];
+        $p['area_field'] = $a['area_field'];
+        $p['house_type'] = $a['house_type'];
+        $p['iin'] = $a['iin'];
+        $result = $this->execSP(__FUNCTION__, "public.create_client_request(:first_name, :second_name, :last_name, :client_phone, :client_email, :address, :area_house, :area_field, :house_type, :iin) res", $p, 'res');
+        return $result;
+    }
+    public function client_request_read($client_request_status){
+        $p['client_request_status_id'] = $client_request_status;
+        $result = $this->readSP(__FUNCTION__, "public.client_request_read('cur', :client_request_status_id)", $p);
+        return $result;
+    }
+    public function client_request_get($client_request_id){
+        $p['client_request_id'] = $client_request_id;
+        $result = $this->getSP(__FUNCTION__, "public.client_request_get('cur', :client_request_id)", $p);
+        return $result;
+    }
+    public function read_employee_fs($code){
+        $p['position_code'] = $code;
+        $result = $this->readSP(__FUNCTION__, "admin.read_employee_fs('cur', :position_code)", $p);
+        return $result;
+    }
+    public function upd_client_request($a){
+        $p['client_request_id'] = $a['client_request_id'];
+        $p['measure_date'] = zeroToNull($a['measure_date']);
+        $p['mp_employee_id'] = zeroToNull($a['mp_employee_id']);
+        $p['total_price'] = $a['total_price'];
+        $result = $this->execSP(__FUNCTION__, "public.upd_client_request(:client_request_id, :measure_date, :mp_employee_id, :total_price)", $p);
+        return $result;
+    }
+    public function upd_client_wish($a){
+        $p['client_request_id'] = $a['client_request_id'];
+        $p['client_wants'] = $a['client_wants'];
+        $result = $this->execSP(__FUNCTION__, "public.upd_client_wish(:client_request_id, :client_wants)", $p);
+        return $result;
+    }
+    public function document_read($client_request_id){
+        $p['client_request_id'] = $client_request_id;
+        $result = $this->readSP(__FUNCTION__, "public.document_read('cur', :client_request_id)", $p);
+        return $result;
+    }
+    public function document_get($document_id){
+        $p['document_id'] = $document_id;
+        $result = $this->getSP(__FUNCTION__, "public.document_get('cur', :document_id)", $p);
+        return $result;
+    }
+    public function document_del($document_id){
+        $p['document_id'] = $document_id;
+        $result = $this->execSP(__FUNCTION__, "public.document_del(:document_id)", $p);
+        return $result;
+    }
+    public function document_upd($a){
+        $p['document_id'] = 0;
+        $p['document_name'] = $a['document_name'];
+        $p['document_type_id'] = $a['document_type_id'];
+        $p['client_request_id'] = $a['client_request_id'];
+        $p['document_url'] = '';
+
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/request_documents/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/request_documents/".uniqid('doc_',true)."." . $ext;
+            $p['document_url'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "public.document_upd(:document_id, :document_name, :document_type_id, :document_url, :client_request_id)", $p);
+        return $result;
+    }
+    public function document_type_read(){
+        $result = $this->readSP(__FUNCTION__, "public.document_type_read('cur')");
+        return $result;
+    }
+    public function payment_type_read(){
+        $result = $this->readSP(__FUNCTION__, "public.payment_type_read('cur')");
+        return $result;
+    }
+    public function payment_read($client_request_id){
+        $p['client_request_id'] = $client_request_id;
+        $result = $this->readSP(__FUNCTION__, "public.payment_read('cur', :client_request_id)", $p);
+        return $result;
+    }
+    public function payment_get($payment_id){
+        $p['payment_id'] = $payment_id;
+        $result = $this->getSP(__FUNCTION__, "public.payment_get('cur', :payment_id)", $p);
+        return $result;
+    }
+    public function payment_del($payment_id){
+        $p['payment_id'] = $payment_id;
+        $result = $this->execSP(__FUNCTION__, "public.payment_del(:payment_id)", $p);
+        return $result;
+    }
+    public function payment_upd($a){
+        $p['payment_id'] = 0;
+        $p['payment_type_id'] = $a['payment_type_id'];
+        $p['payment_sum'] = $a['payment_sum'];
+        $p['payment_comment'] = $a['payment_comment'];
+        $p['client_request_id'] = $a['client_request_id'];
+        $p['payment_url'] = '';
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/payment_documents/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/payment_documents/".uniqid('payment_',true)."." . $ext;
+            $p['payment_url'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "public.payment_upd(:payment_id, :payment_type_id, :payment_sum, :payment_comment, :client_request_id, :payment_url)", $p);
+        return $result;
+    }
+    public function create_remont($client_request_id){
+        $p['client_request_id'] = $client_request_id;
+        $result = $this->execSP(__FUNCTION__, "public.create_remont(:client_request_id) res", $p, 'res');
+        return $result;
+    }
+}

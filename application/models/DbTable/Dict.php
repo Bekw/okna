@@ -118,4 +118,87 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "back_office.category_group_tab__is_active(:category_group_id)", $p);
         return $result;
     }
+
+    public function brief_type_read(){
+        $result = $this->readSP(__FUNCTION__, "public.brief_type_read('cur')");
+        return $result;
+    }
+    public function brief_type_get($brief_type_id){
+        $p['brief_type_id'] = $brief_type_id;
+        $result = $this->getSP(__FUNCTION__, "public.brief_type_get('cur', :brief_type_id)", $p);
+        return $result;
+    }
+    public function brief_type_del($brief_type_id){
+        $p['brief_type_id'] = $brief_type_id;
+        $result = $this->execSP(__FUNCTION__, "public.brief_type_del(:brief_type_id)", $p);
+        return $result;
+    }
+    public function brief_type_upd($a){
+        $p['brief_type_id'] = $a['brief_type_id'];
+        $p['brief_type_name'] = $a['brief_type_name'];
+        $p['brief_type_code'] = $a['brief_type_code'];
+        $p['brief_type'] = $a['brief_type'];
+
+        $result = $this->execSP(__FUNCTION__, "public.brief_type_upd(:brief_type_id, :brief_type_name, :brief_type_code, :brief_type)", $p);
+        return $result;
+    }
+    public function brief_item_read($brief_type_id){
+        $p['brief_type_id'] = $brief_type_id;
+        $result = $this->readSP(__FUNCTION__, "public.brief_item_read('cur', :brief_type_id)", $p);
+        return $result;
+    }
+    public function brief_item_get($brief_item_id){
+        $p['brief_item_id'] = $brief_item_id;
+        $result = $this->getSP(__FUNCTION__, "public.brief_item_get('cur', :brief_item_id)", $p);
+        return $result;
+    }
+    public function brief_item_del($brief_item_id){
+        $p['brief_item_id'] = $brief_item_id;
+        $result = $this->execSP(__FUNCTION__, "public.brief_item_del(:brief_item_id)", $p);
+        return $result;
+    }
+    public function brief_item_upd($a){
+        $p['brief_item_id'] = $a['brief_item_id'];
+        $p['brief_type_id'] = $a['brief_type_id'];
+        $p['brief_item_name'] = $a['brief_item_name'];
+        $p['brief_item_code'] = $a['brief_item_code'];
+
+        $result = $this->execSP(__FUNCTION__, "public.brief_item_upd(:brief_item_id, :brief_type_id, :brief_item_name, :brief_item_code)", $p);
+        return $result;
+    }
+    public function measure_type_read(){
+        $result = $this->readSP(__FUNCTION__, "public.measure_type_read('cur')");
+        return $result;
+    }
+    public function measure_type_get($measure_type_id){
+        $p['measure_type_id'] = $measure_type_id;
+        $result = $this->getSP(__FUNCTION__, "public.measure_type_get('cur', :measure_type_id)", $p);
+        return $result;
+    }
+    public function measure_type_del($measure_type_id){
+        $p['measure_type_id'] = $measure_type_id;
+        $result = $this->execSP(__FUNCTION__, "public.measure_type_del(:measure_type_id)", $p);
+        return $result;
+    }
+    public function measure_type_upd($a){
+        $p['measure_type_id'] = $a['measure_type_id'];
+        $p['measure_type_name'] = $a['measure_type_name'];
+        $p['measure_type_code'] = $a['measure_type_code'];
+
+        $result = $this->execSP(__FUNCTION__, "public.measure_type_upd(:measure_type_id, :measure_type_name, :measure_type_code)", $p);
+        return $result;
+    }
+    public function create_client_request($a){
+        $p['first_name'] = $a['first_name'];
+        $p['second_name'] = $a['second_name'];
+        $p['last_name'] = $a['last_name'];
+        $p['client_phone'] = $a['client_phone'];
+        $p['client_email'] = $a['client_email'];
+        $p['address'] = $a['address'];
+        $p['area_house'] = $a['area_house'];
+        $p['area_field'] = $a['area_field'];
+        $p['house_type'] = $a['house_type'];
+        $result = $this->execSP(__FUNCTION__, "public.create_client_request(:first_name, :second_name, :last_name, :client_phone, :client_email, :address, :area_house, :area_field, :house_type)", $p);
+        return $result;
+    }
 }

@@ -1,0 +1,134 @@
+<?
+$this->headTitle('Новая заявка');
+$this->placeholder('page-header')->set("Новая заявка");
+?>
+
+<style>
+    .text-md-right {font-size: 15px;}
+</style>
+
+<form id="form" class="d-active mt-4 text-dark-m1">
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Имя:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="first_name" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Фамилия:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="last_name" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Отчество:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="second_name" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            ИИН:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="iin" class="form-control col-11 col-sm-8 col-md-5 iin" id="iin">
+        </div>
+    </div>
+    <hr />
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Телефон:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input required type="text" name="client_phone" class="form-control col-11 col-sm-8 col-md-3" id="phone" placeholder="" />
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Почта:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="client_email" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Адрес:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="text" name="address" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Площадь дома:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="number" step="any" name="area_house" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Площадь участка:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <input type="number" step="any" name="area_field" class="form-control col-11 col-sm-8 col-md-5">
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+            Тип дома:
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+            <select class="form-control col-11 col-sm-4" id="platform" name="house_type">
+                <option value="1">Квартира</option>
+                <option value="2">Дом</option>
+                <option value="3">Бизнес помещение</option>
+            </select>
+        </div>
+    </div>
+    <hr>
+    <div class="form-group row">
+        <div class="col-sm-3 col-form-label text-md-right pr-0">
+        </div>
+        <div class="col-sm-9 pr-0 pr-sm-3">
+        <button data-dismiss="dropdown" type="button" onclick="create_request()" class="btn btn-outline-primary btn-bgc-white px-3 btn-bold btn-text-slide-x" style="width: 8rem;">
+            Создать<i class="btn-text-2  move-right fa fa-arrow-right text-120 align-text-bottom ml-1"></i>
+        </button>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function() {
+        $("#phone").inputmask("+7(999) 999-9999");
+        $(".iin").inputmask("999999999999");
+    });
+
+    function create_request(){
+        var fd = new FormData($("#form")[0]);
+        $.ajax({
+            type: 'POST',
+            url: "/remont/create-request/mode/upd/",
+            data: fd,
+            success: function(data){
+                if(data.result['status'] == false){
+                    alert(data.result['error']);
+                    toastError('Ошибка при создании');
+                } else{
+                    toastSucces('Заявка создана');
+                    window.location.href = '/remont/client-request-edit/request_id/' + data.result['value'];
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

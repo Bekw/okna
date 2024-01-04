@@ -1,0 +1,61 @@
+<?
+$this->headTitle('Заявки');
+$this->placeholder('page-header')->set("Заявки");
+?>
+<div class="float-right mb-3">
+    <a href="/remont/create-request/" class="btn btn-xs btn-primary" >Добавить заявку</a>
+</div>
+<div class="clearfix"></div>
+<div class="hr hr-10 dotted hr-double"></div>
+<div class="bcard p-3" id="load">
+    <div id="tab">
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top" id="employee_table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Адрес</th>
+                    <th>Тип дома</th>
+                    <th>Площадь дома</th>
+                    <th>Площадь участка</th>
+                    <th>ФИО</th>
+                    <th>Телефон</th>
+                    <th>Email</th>
+                    <th>Дата создания</th>
+                </tr>
+                </thead>
+                <tbody>
+                <?
+                if(mycount($this->row) > 0){
+                    foreach ($this->row as $key => $value){?>
+                        <tr>
+                            <td class="text-right"><?=$value['client_request_id']?></td>
+                            <td class="text-left"><a href="/remont/client-request-edit/client_request_id/<?=$value['client_request_id']?>/"><?=$value['address']?></a></td>
+                            <td class="text-left"><?=$value['house_type_text']?></td>
+                            <td class="text-right"><?=$value['area_house']?> кв.м</td>
+                            <td class="text-right"><?=$value['area_field']?> соток</td>
+                            <td class="text-left"><?=$value['fio']?></td>
+                            <td class="text-left"><?=$value['client_phone']?></td>
+                            <td class="text-left"><?=$value['client_email']?></td>
+                            <td class="text-center"><?=$value['date_create']?></td>
+                        </tr>
+                        <?
+                    }
+                }
+                ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $("#employee_search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#employee_table tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>

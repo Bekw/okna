@@ -159,5 +159,87 @@ class DictController extends ParentController{
 
         $this->view->row = $ob->brand_tab__get($this->view->brand_id)['value'];
     }
+    public function briefTypeListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
 
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('brief-type-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->brief_type_upd($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('brief-type-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->brief_type_del($a['brief_type_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->brief_type_read()['value'];
+    }
+    public function briefTypeEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->brief_type_id = $this->_getParam('brief_type_id', 0);
+
+        $this->view->row = $ob->brief_type_get($this->view->brief_type_id)['value'];
+    }
+    function briefItemFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->brief_type_id = $brief_type_id = $this->_getParam("brief_type_id", 0);
+
+        $mode = $this->_getParam('mode', '');
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('brief-item-form', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->brief_item_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('brief-item-form', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->brief_item_del($a['brief_item_id']);
+            $this->view->result = $result;
+        }
+
+        $this->view->row = $ob->brief_item_read($brief_type_id)['value'];
+    }
+    function briefItemEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->brief_type_id = $this->_getParam("brief_type_id", 0);
+        $this->view->brief_item_id = $this->_getParam("brief_item_id", 0);
+        $this->view->row = $ob->brief_item_get($this->view->brief_item_id)['value'];
+    }
+    public function measureTypeListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('measure-type-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->measure_type_upd($params);
+            return;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('measure-type-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->measure_type_del($a['measure_type_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->measure_type_read()['value'];
+    }
+    public function measureTypeEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->measure_type_id = $this->_getParam('measure_type_id', 0);
+
+        $this->view->row = $ob->measure_type_get($this->view->measure_type_id)['value'];
+    }
 }
