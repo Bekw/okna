@@ -159,5 +159,108 @@ class RemontController extends ParentController{
 
         $this->view->row_type = $ob->payment_type_read()['value'];
     }
+    public function remontListAction(){
+        $ob = new Application_Model_DbTable_Remont();
+
+        $this->view->row = $ob->remont_read()['value'];
+    }
+    public function remontEditAction(){
+        $ob = new Application_Model_DbTable_Remont();
+        $remont_id = $this->_getParam('remont_id', 0);
+        $this->view->remont_id = $remont_id;
+
+        $mode = $this->_getParam('mode', '');
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_upd($params);
+            return;
+        }
+        if ($mode == 'upd-room'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_room_upd($params);
+            return;
+        }
+        if ($mode == 'upd-room-brief'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_room_brief_upd($params);
+            return;
+        }
+        if($mode == 'del-room'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->remont_room_del($a['remont_room_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-room-brief'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->remont_room_brief_del($a['remont_room_brief_id']);
+            $this->view->result = $result;
+        }
+
+        $this->view->row_measure = $ob->read_employee_fs('MEASURE')['value'];
+        $this->view->row_designer = $ob->read_employee_fs('DESIGNER')['value'];
+        $this->view->row_tech = $ob->read_employee_fs('TECH')['value'];
+        $this->view->row_contractor = $ob->read_contractor_fs()['value'];
+
+        $this->view->row = $ob->remont_get($remont_id)['value'];
+    }
+    public function remontRoomListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $remont_id = $this->_getParam('remont_id', 0);
+        $this->view->remont_id = $remont_id;
+
+        $this->view->row = $ob->remont_room_read($remont_id)['value'];
+    }
+    public function remontRoomEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $remont_room_id = $this->_getParam('remont_room_id', 0);
+        $remont_id = $this->_getParam('remont_id', 0);
+        $this->view->remont_id = $remont_id;
+        $this->view->remont_room_id = $remont_room_id;
+
+        $this->view->row_room = $ob->read_room_fs()['value'];
+        $this->view->row = $ob->remont_room_get($remont_room_id)['value'];
+    }
+    public function remontRoomBriefAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $remont_id = $this->_getParam('remont_id', 0);
+        $this->view->remont_id = $remont_id;
+
+        $this->view->row = $ob->remont_room_read($remont_id)['value'];
+    }
+    public function remontBriefTableAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_room_id = $remont_room_id = $this->_getParam('remont_room_id', 0);
+
+        $this->view->row = $ob->remont_room_brief_read($remont_room_id)['value'];
+    }
+
+    public function remontRoomBriefEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_room_brief_id = $remont_room_brief_id = $this->_getParam('remont_room_brief_id', 0);
+        $this->view->remont_room_id = $remont_room_id = $this->_getParam('remont_room_id', 0);
+
+        $this->view->row = $ob->remont_room_brief_get($remont_room_brief_id)['value'];
+        $this->view->row_brief = $ob->brief_read_fs()['value'];
+    }
+    public function briefItemFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->brief_type_id = $this->_getParam('brief_type_id', 0);
+        $this->view->brief_item_id = $this->_getParam('brief_item_id', 0);
+        $this->view->brief_value = $this->_getParam('brief_value', '');
+        $this->view->brief_type = $this->_getParam('brief_type', 0);
+
+        $this->view->row = $ob->brief_item_read_fs($this->view->brief_type_id)['value'];
+    }
 }
 

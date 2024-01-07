@@ -63,13 +63,8 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
                             <form id="form_request">
                                 <input type="hidden" name="client_request_id" value="<?=$this->client_request_id?>">
                                 <div class="form-group pull-left margin-right-10">
-                                    <label class="control-label no-padding-right" for="measure_date">Дата замера</label>
-                                    <input type="text" style="width: 166px; height: 34px" id="measure_date" name="measure_date" placeholder="Дата замера" class="form-control date-picker" value="<?=$this->row['measure_date']?>" autocomplete="off">
-                                </div>
-                                <div class="clearfix"></div>
-                                <div class="form-group pull-left margin-right-10">
                                     <label class="control-label no-padding-right">Цена работы</label>
-                                    <input type="text" name="total_price" placeholder="Цена работы" class="form-control" value="<?=$this->row['total_price']?>" autocomplete="off">
+                                    <input type="number" step="any" name="total_price" placeholder="Цена работы" class="form-control" value="<?=$this->row['total_price']?>" autocomplete="off">
                                 </div>
                                 <div class="clearfix"></div>
                                 <div class="form-group pull-left margin-right-10">

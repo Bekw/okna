@@ -33,10 +33,9 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
     }
     public function upd_client_request($a){
         $p['client_request_id'] = $a['client_request_id'];
-        $p['measure_date'] = zeroToNull($a['measure_date']);
         $p['mp_employee_id'] = zeroToNull($a['mp_employee_id']);
         $p['total_price'] = $a['total_price'];
-        $result = $this->execSP(__FUNCTION__, "public.upd_client_request(:client_request_id, :measure_date, :mp_employee_id, :total_price)", $p);
+        $result = $this->execSP(__FUNCTION__, "public.upd_client_request(:client_request_id, :mp_employee_id, :total_price)", $p);
         return $result;
     }
     public function upd_client_wish($a){
@@ -134,6 +133,90 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
     public function create_remont($client_request_id){
         $p['client_request_id'] = $client_request_id;
         $result = $this->execSP(__FUNCTION__, "public.create_remont(:client_request_id) res", $p, 'res');
+        return $result;
+    }
+    public function remont_read(){
+        $result = $this->readSP(__FUNCTION__, "public.remont_read('cur')");
+        return $result;
+    }
+    public function remont_get($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_get('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function remont_upd($a){
+        $p['remont_id'] = $a['remont_id'];
+        $p['measure_date'] = zeroToNull($a['measure_date']);
+        $p['remont_start_date'] = zeroToNull($a['remont_start_date']);
+        $p['measure_employee_id'] = zeroToNull($a['measure_employee_id']);
+        $p['designer_employee_id'] = zeroToNull($a['designer_employee_id']);
+        $p['tech_employee_id'] = zeroToNull($a['tech_employee_id']);
+        $p['contractor_id'] = zeroToNull($a['contractor_id']);
+        $result = $this->execSP(__FUNCTION__, "public.remont_upd(:remont_id, to_date(:measure_date, 'dd.mm.yyyy'), to_date(:remont_start_date, 'dd.mm.yyyy'), :measure_employee_id, :designer_employee_id, :tech_employee_id, :contractor_id)", $p);
+        return $result;
+    }
+    public function read_contractor_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.read_contractor_fs('cur')");
+        return $result;
+    }
+    public function remont_room_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_room_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function read_room_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.read_room_fs('cur')");
+        return $result;
+    }
+    public function remont_room_upd($a){
+        $p['remont_room_id'] = $a['remont_room_id'];
+        $p['remont_id'] = $a['remont_id'];
+        $p['room_id'] = $a['room_id'];
+        $p['remont_room_name'] = $a['remont_room_name'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_upd(:remont_room_id, :remont_id, :room_id, :remont_room_name)", $p);
+        return $result;
+    }
+    public function remont_room_del($remont_room_id){
+        $p['remont_room_id'] = $remont_room_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_del(:remont_room_id)", $p);
+        return $result;
+    }
+    public function remont_room_get($remont_room_id){
+        $p['remont_room_id'] = $remont_room_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_room_get('cur', :remont_room_id)", $p);
+        return $result;
+    }
+    public function remont_room_brief_read($remont_room_id){
+        $p['remont_room_id'] = $remont_room_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_room_brief_read('cur', :remont_room_id)", $p);
+        return $result;
+    }
+    public function remont_room_brief_get($remont_room_brief_id){
+        $p['remont_room_brief_id'] = $remont_room_brief_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_room_brief_get('cur', :remont_room_brief_id)", $p);
+        return $result;
+    }
+    public function remont_room_brief_del($remont_room_brief_id){
+        $p['remont_room_brief_id'] = $remont_room_brief_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_brief_del(:remont_room_brief_id)", $p);
+        return $result;
+    }
+    public function remont_room_brief_upd($a){
+        $p['remont_room_brief_id'] = $a['remont_room_brief_id'];
+        $p['remont_room_id'] = $a['remont_room_id'];
+        $p['brief_type_id'] = $a['brief_type_id'];
+        $p['brief_item_id'] = $a['brief_item_id'] ?? null;
+        $p['brief_value'] = $a['brief_value'] ?? null;
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_brief_upd(:remont_room_brief_id, :remont_room_id, :brief_item_id, :brief_value, :brief_type_id)", $p);
+        return $result;
+    }
+    public function brief_item_read_fs($brief_type_id){
+        $p['brief_type_id'] = $brief_type_id;
+        $result = $this->readSP(__FUNCTION__, "public.brief_item_read_fs('cur', :brief_type_id)", $p);
+        return $result;
+    }
+    public function brief_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.brief_read_fs('cur')");
         return $result;
     }
 }

@@ -1,0 +1,235 @@
+<?
+$this->headTitle('Ремонта №'.$this->remont_id);
+$this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
+?>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="alert bgc-blue-l1 text-dark-m2 border-0 text-110 mb-0 p-3">
+            <div style="float:left; margin-right: 40px;">
+                <p>ФИО: <?=$this->row['fio']?></p>
+                <p>Адрес: <?=$this->row['address']?></p>
+                <p>Телефон клиента: <?=$this->row['client_phone']?></p>
+            </div>
+            <div style="float:left; margin-right: 40px;">
+                <p>Тип дома: <?=$this->row['house_type_text']?></p>
+                <p>Площадь дома: <?=$this->row['area_house']?> кв.м</p>
+                <p>Площадь участка: <?=$this->row['area_field']?>ст.</p>
+            </div>
+            <div style="float:left; margin-right: 40px;">
+                <a class="btn btn-xs btn-primary" href="/remont/client-request-edit/client_request_id/<?=$this->row['client_request_id']?>">Заявка</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+        <div class="dcard">
+            <ul class="nav nav-tabs bgc-secondary-l3 border-y-1 brc-secondary-l3" role="tablist">
+                <li class="nav-item mr-2px">
+                    <a id="home1-tab-btn" class="d-style active btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Общее
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#stages" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Этапы
+                    </a>
+                </li>
+                <li class="nav-item mr-2px">
+                    <a id="profile1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#rooms" role="tab" aria-controls="profile1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Комнаты
+                    </a>
+                </li>
+                <li class="nav-item mr-2px">
+                    <a id="profile1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#birefs" role="tab" aria-controls="profile1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Бриф
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#measures" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Замеры
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#projects" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Проекты ремонта
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#smeta" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Смета
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content bgc-white p-35 border-0">
+                <div class="tab-pane fade show active text-95" id="home1" role="tabpanel" aria-labelledby="home1-tab-btn">
+                    <div class="col-lg-3 col-md-4 col-sm-5">
+                        <form id="form_remont">
+                            <input type="hidden" name="remont_id" value="<?=$this->remont_id?>">
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right" for="remont_start_date">Дата старта ремонта</label>
+                                <input type="text" style="width: 166px; height: 34px" id="remont_start_date" name="remont_start_date" placeholder="Дата старта ремонта" class="form-control date-picker" value="<?=$this->row['remont_start_date']?>" autocomplete="off">
+                            </div>
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right" for="measure_date">Дата замера</label>
+                                <input type="text" style="width: 166px; height: 34px" id="measure_date" name="measure_date" placeholder="Дата замера" class="form-control date-picker" value="<?=$this->row['measure_date']?>" autocomplete="off">
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right">Замерщик</label>
+                                <select class="form-control" id="platform" name="measure_employee_id">
+                                    <option value="0">Выберите замерщика</option>
+                                    <?foreach ($this->row_measure as $value){?>
+                                        <option value="<?=$value['employee_id']?>" <?if($value['employee_id'] == $this->row['measure_employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right">Дизайнер</label>
+                                <select class="form-control" id="platform" name="designer_employee_id">
+                                    <option value="0">Выберите дизайнера</option>
+                                    <?foreach ($this->row_designer as $value){?>
+                                        <option value="<?=$value['employee_id']?>" <?if($value['employee_id'] == $this->row['designer_employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right">Технолог</label>
+                                <select class="form-control" id="platform" name="tech_employee_id">
+                                    <option value="0">Выберите технолога</option>
+                                    <?foreach ($this->row_tech as $value){?>
+                                        <option value="<?=$value['employee_id']?>" <?if($value['employee_id'] == $this->row['tech_employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group pull-left margin-right-10">
+                                <label class="control-label no-padding-right">Подрядчик</label>
+                                <select class="form-control" id="platform" name="contractor_id">
+                                    <option value="0">Выберите подрядчика</option>
+                                    <?foreach ($this->row_contractor as $value){?>
+                                        <option value="<?=$value['contractor_id']?>" <?if($value['contractor_id'] == $this->row['contractor_id']){?>selected<?}?>><?=$value['contractor_name']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                            </div>
+                            <div class="clearfix"></div>
+                            <button class="btn btn-success btn-bold px-4" type="button" onclick="upd_remont()">
+                                <i class="fa fa-check mr-1"></i>
+                                Сохранить
+                            </button>
+                        </form>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="stages" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    stages
+                </div>
+
+                <div class="tab-pane fade text-95" id="rooms" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <a href="javascript:void(0)" onclick="showRoomForm(<?=$this->remont_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <div id="room_list">
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="birefs" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div id="room_brief_list">
+
+                    </div>
+                </div>
+                <div class="tab-pane fade text-95" id="measures" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    measures
+                </div>
+                
+                <div class="tab-pane fade text-95" id="projects" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    projects
+                </div>
+
+                <div class="tab-pane fade text-95" id="smeta" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    smeta
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+        $('#room_list').load('/remont/remont-room-list/remont_id/<?=$this->remont_id?>');
+        $('#room_brief_list').load('/remont/remont-room-brief/remont_id/<?=$this->remont_id?>');
+
+    });
+    function upd_remont(){
+        var fd = new FormData($("#form_remont")[0]);
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/upd/",
+            data: fd,
+            success: function(data){
+                if(data.result['status'] == false){
+                    alert(data.result['error']);
+                    toastError('Ошибка при редактировании');
+                } else{
+                    toastSucces('Ремонт отредактирован');
+                    window.location.reload();
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    function showRoomForm(remont_id, remont_room_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить комнату');
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-room-edit/",
+            data: {"remont_id" : remont_id,
+                   "remont_room_id" : remont_room_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+
+    function delRemontRoom(remont_room_id, ob){
+        if (!confirm("Вы действительно хотите удалить комнату ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/del-room/remont_room_id/" + remont_room_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Комната удалена');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+
+</script>

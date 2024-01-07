@@ -1,0 +1,83 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->remont_room_id?>" name="remont_room_id">
+        <input type="hidden" value="<?=$this->remont_room_brief_id?>" name="remont_room_brief_id">
+
+        <div class="form-group">
+            <label class="control-label " for="room_id">Тип </label>
+            <select class="form-control chosen-select" id="brief_type_id" name="brief_type_id">
+                <option value="0">Выберите тип</option>
+                <?foreach ($this->row_brief as $value){?>
+                    <option value="<?=$value['brief_type_id']?>" data-info="<?=$value['brief_type']?>" <?if($value['brief_type_id'] == $this->row['brief_type_id']){?>selected<?}?>><?=$value['brief_type_name']?></option>
+                    <?
+                }?>
+            </select>
+            <div class="clearfix"></div>
+        </div>
+        <input type="hidden" name="brief_item_id_hid" id="brief_item_id_hid" value="<?=$this->row['brief_item_id']?>">
+        <input type="hidden" name="brief_value_hid" id="brief_value_hid" value="<?=$this->row['brief_value']?>">
+        <span id="material_id_form"></span>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updRemontRoomBrief()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+
+        loadBriefTypeSelect(<?=$this->row['brief_type_id'] ?? 0?>, <?=$this->row['brief_type'] ?? 0?>);
+
+        $('#brief_type_id').on('change', function() {
+            brief_type_id = this.value;
+            brief_type = $(this).find("option:selected").data("info");
+            loadBriefTypeSelect(brief_type_id, brief_type);
+        });
+    });
+
+    function updRemontRoomBrief(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/remont/remont-edit/mode/upd-room-brief/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    loadTable(<?=$this->remont_room_id?>);
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    function loadBriefTypeSelect(brief_type_id, brief_type) {
+        main_loader_show();
+        brief_item_id = $('#brief_item_id_hid').val();
+        brief_value = $('#brief_value_hid').val();
+
+        $.ajax({
+            type: 'POST',
+            url: "/remont/brief-item-form/brief_type_id/"+ brief_type_id +"/brief_item_id/" + brief_item_id + "/brief_value/" + brief_value + "/brief_type/" + brief_type + "/",
+            success: function(data){
+                $('#material_id_form').html(data);
+                main_loader_hide();
+            }
+        });
+    }
+</script>

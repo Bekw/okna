@@ -1,0 +1,66 @@
+<div class="dcard">
+    <ul class="nav nav-tabs bgc-secondary-l3 border-y-1 brc-secondary-l3" role="tablist">
+        <?foreach ($this->row as $value){?>
+            <li class="nav-item mr-2px">
+                <a id="home1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" onclick="loadTable(<?=$value['remont_room_id']?>)" data-toggle="tab" href="#<?=$value['room_code']?>_<?=$value['remont_room_id']?>" role="tab" aria-controls="home1" aria-selected="true">
+                    <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                    <?=$value['remont_room_name']?>
+                </a>
+            </li>
+            <?
+        }?>
+    </ul>
+
+    <div class="tab-content bgc-white p-35 border-0">
+        <?foreach ($this->row as $value){?>
+            <div class="tab-pane fade show text-95" id="<?=$value['room_code']?>_<?=$value['remont_room_id']?>" role="tabpanel" aria-labelledby="home1-tab-btn">
+                <a href="javascript:void(0)" onclick="showBriefForm(<?=$value['remont_room_id']?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                <div class="clearfix"></div>
+                <hr>
+                <div id="room_<?=$value['remont_room_id']?>">
+
+                </div>
+            </div>
+            <?
+        }?>
+    </div>
+</div>
+<script>
+    function loadTable(remont_room_id) {
+        $('#room_'+remont_room_id).load('/remont/remont-brief-table/remont_room_id/'+remont_room_id);
+    }
+    function showBriefForm(remont_room_id, remont_room_brief_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить выбор клиента');
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-room-brief-edit/",
+            data: {"remont_room_id" : remont_room_id, "remont_room_brief_id" : remont_room_brief_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+    function delRemontRoomBrief(remont_room_brief_id, ob){
+        if (!confirm("Вы действительно хотите удалить выбор клиента?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/del-room-brief/remont_room_brief_id/" + remont_room_brief_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Выбор удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+</script>

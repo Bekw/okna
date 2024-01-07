@@ -1,0 +1,30 @@
+<div class="form-group">
+    <label class="control-label" for="material_id">Значение</label>
+    <?if($this->brief_type == 1){?>
+        <select class="chosen-select form-control" id="brief_item_id" name="brief_item_id" required>
+            <option value="0">Выберите вариант</option>
+            <?
+            if(mycount($this->row) > 0){
+                foreach ($this->row as $key => $value){?>
+                    <option value="<?=$value['brief_item_id']?>" <?if($this->brief_item_id == $value['brief_item_id']){?>selected<?}?>><?=$value['brief_item_name']?></option>
+                    <?
+                }
+            }?>
+        </select>
+        <?
+    }else{?>
+        <input type="text" value="<?=$this->brief_value?>" name="brief_value" class="form-control">
+        <?
+    }?>
+
+    <div class="clearfix"></div>
+</div>
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+
+    });
+</script>

@@ -1,0 +1,64 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->remont_id?>" name="remont_id">
+        <input type="hidden" value="<?=$this->remont_room_id?>" name="remont_room_id">
+
+        <div class="form-group">
+            <label class="control-label " for="remont_room_name">Наименование</label>
+            <input type="text" id="document_name" placeholder="Наименование" class="form-control" value="<?=$this->row['remont_room_name'] ?? null?>" name="remont_room_name">
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label " for="room_id">Тип комнаты</label>
+            <select class="form-control" id="platform" name="room_id">
+                <option value="0">Выберите тип</option>
+                <?foreach ($this->row_room as $value){?>
+                    <option value="<?=$value['room_id']?>" <?if($value['room_id'] == $this->row['room_id']){?>selected<?}?>><?=$value['room_name']?></option>
+                    <?
+                }?>
+            </select>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updRemontRoom()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function updRemontRoom(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/remont/remont-edit/mode/upd-room/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    $('#room_list').load('/remont/remont-room-list/remont_id/<?=$this->remont_id?>');
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>
