@@ -154,11 +154,18 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                     </div>
                 </div>
                 <div class="tab-pane fade text-95" id="measures" role="tabpanel" aria-labelledby="more1-tab-btn">
-                    measures
+                    <div id="room_measure_list">
+
+                    </div>
                 </div>
                 
                 <div class="tab-pane fade text-95" id="projects" role="tabpanel" aria-labelledby="more1-tab-btn">
-                    projects
+                    <a href="javascript:void(0)" onclick="showProjectForm(<?=$this->remont_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <div id="project_list">
+
+                    </div>
                 </div>
 
                 <div class="tab-pane fade text-95" id="smeta" role="tabpanel" aria-labelledby="more1-tab-btn">
@@ -172,6 +179,8 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
     $( document ).ready(function() {
         $('#room_list').load('/remont/remont-room-list/remont_id/<?=$this->remont_id?>');
         $('#room_brief_list').load('/remont/remont-room-brief/remont_id/<?=$this->remont_id?>');
+        $('#room_measure_list').load('/remont/remont-room-measure/remont_id/<?=$this->remont_id?>');
+        $('#project_list').load('/remont/remont-project-list/remont_id/<?=$this->remont_id?>');
 
     });
     function upd_remont(){
@@ -213,6 +222,24 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
         $("#modal-container").filter('.modal').modal();
     }
 
+    function showProjectForm(remont_id, remont_project_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить проект');
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-project-edit/",
+            data: {"remont_id" : remont_id,
+                   "remont_project_id" : remont_project_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+
     function delRemontRoom(remont_room_id, ob){
         if (!confirm("Вы действительно хотите удалить комнату ?")) {
             return false;
@@ -227,6 +254,43 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                 else{
                     toastSucces('Комната удалена');
                     $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+
+    function delRemontProject(remont_project, ob){
+        if (!confirm("Вы действительно хотите удалить проект ремонта?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/del-project/remont_project_id/" + remont_project_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Проект ремонта удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function acceptProject(remont_project_id, is_accepted){
+        if (!confirm("Вы действительно хотите утвердить проект ремонта?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/accept-project/remont_project_id/" + remont_project_id + "/is_accepted/" + is_accepted + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Проект ремонта утвержден');
+                    $('#project_list').load('/remont/remont-project-list/remont_id/<?=$this->remont_id?>');
                 }
             }
         });

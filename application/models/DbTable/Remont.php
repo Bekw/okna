@@ -219,4 +219,78 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "public.brief_read_fs('cur')");
         return $result;
     }
+    public function remont_room_measure_read($remont_room_id){
+        $p['remont_room_id'] = $remont_room_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_room_measure_read('cur', :remont_room_id)", $p);
+        return $result;
+    }
+    public function remont_room_measure_del($remont_room_measure_id){
+        $p['remont_room_measure_id'] = $remont_room_measure_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_measure_del(:remont_room_measure_id)", $p);
+        return $result;
+    }
+    public function remont_room_measure_upd($a){
+        $p['remont_room_measure_id'] = $a['remont_room_measure_id'];
+        $p['remont_room_id'] = $a['remont_room_id'];
+        $p['measure_type_id'] = $a['measure_type_id'];
+        $p['measure_value'] = $a['measure_value'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_room_measure_upd(:remont_room_measure_id, :remont_room_id, :measure_type_id, :measure_value)", $p);
+        return $result;
+    }
+    public function measure_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.measure_read_fs('cur')");
+        return $result;
+    }
+    public function remont_room_measure_get($remont_room_measure_id){
+        $p['remont_room_measure_id'] = $remont_room_measure_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_room_measure_get('cur', :remont_room_measure_id)", $p);
+        return $result;
+    }
+    public function remont_project_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_project_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function remont_project_get($remont_project_id){
+        $p['remont_project_id'] = $remont_project_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_project_get('cur', :remont_project_id)", $p);
+        return $result;
+    }
+    public function remont_project_del($remont_project_id){
+        $p['remont_project_id'] = $remont_project_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_project_del(:remont_project_id)", $p);
+        return $result;
+    }
+    public function remont_project_upd($a){
+        $p['remont_project_id'] = $a['remont_project_id'];
+        $p['remont_id'] = $a['remont_id'];
+        $p['remont_project_filename'] = $a['remont_project_filename'];
+        $p['is_final'] = 0; #$a['is_final'];
+        if($a['is_final'] == 'on'){
+            $p['is_final'] = 1;
+        }
+        $p['remont_project_url'] = '';
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/project_remont/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/project_remont/".uniqid('project_',true)."." . $ext;
+            $p['remont_project_url'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "public.remont_project_upd(:remont_project_id, :remont_id, :remont_project_url, :remont_project_filename, :is_final)", $p);
+        return $result;
+    }
+    public function remont_project_accept($remont_project_id, $is_accepted){
+        $p['remont_project_id'] = $remont_project_id;
+        $p['is_accepted'] = $is_accepted;
+        $result = $this->execSP(__FUNCTION__, "public.remont_project_accept(:remont_project_id, :is_accepted)", $p);
+        return $result;
+    }
 }

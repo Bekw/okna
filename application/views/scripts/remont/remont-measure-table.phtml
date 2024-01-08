@@ -2,7 +2,7 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Выбор клиента</th>
+        <th>Замер</th>
         <th>Значение</th>
         <th>Работник</th>
         <th>Дата создания</th>
@@ -14,18 +14,18 @@
     if(mycount($this->row) > 0){
         foreach ($this->row as $key => $value){?>
             <tr>
-                <td class="text-right"><?=$value['remont_room_brief_id']?></td>
-                <td class="text-left"><?=$value['brief_type_name']?></td>
-                <td class="text-left"><?=$value['choise']?></td>
+                <td class="text-right"><?=$value['remont_room_measure_id']?></td>
+                <td class="text-left"><?=$value['measure_type_name']?></td>
+                <td class="text-left"><?=$value['measure_value']?> <?=$value['unit_type_name']?></td>
                 <td class="text-left"><?=$value['fio']?></td>
                 <td class="text-center"><?=$value['date_create']?></td>
                 <td class="text-center">
                     <div class="action-buttons">
-                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delRemontRoomBrief(<?=$value['remont_room_brief_id']?>, this)">
+                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delRemontRoomMeasure(<?=$value['remont_room_measure_id']?>, this)">
                             <i class="fa fa-trash" aria-hidden="true">
                             </i>  Удалить
                         </a>
-                        <a class="btn btn-xs btn-primary" href="javascript:void(0);" onclick="showBriefForm(<?=$this->remont_room_id?>, <?=$value['remont_room_brief_id']?>)">
+                        <a class="btn btn-xs btn-primary" href="javascript:void(0);" onclick="showMeasureForm(<?=$this->remont_room_id?>, <?=$value['remont_room_measure_id']?>)">
                             <i class="fa fa-edit" aria-hidden="true">
                             </i>  Изменить
                         </a>
