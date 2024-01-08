@@ -1,0 +1,66 @@
+<style>
+    .modal-body .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->material_type_id?>" name="material_type_id">
+        <input type="hidden" value="<?=$this->material_id?>" name="material_id">
+        <div class="form-group">
+            <label class="control-label " for="material_name">Название</label>
+            <input type="text" id="material_name" placeholder="Название" class="form-control" value="<?=$this->row['material_name']?>" name="material_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="material_code">Код</label>
+            <input type="text" id="material_code" placeholder="Код" class="form-control" value="<?=$this->row['material_code']?>" name="material_code">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="discount_percent">Фото</label>
+            <div class="form-control no-padding">
+                <input type="file" name="upload" id="upload" >
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="itemEdit()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function itemEdit(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/material-form/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    showItemTable($('#material_type_id').val());
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

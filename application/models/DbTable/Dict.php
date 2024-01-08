@@ -30,7 +30,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
             if (!file_exists($dir)) {
                 mkdir($dir, 0777, true);
             }
-            $filename = "/documents/".date('Y.m.d')."/category_group_photo/".uniqid('category_group_photo',true)."." . $ext;
+            $filename = "/documents/category_group_photo/".uniqid('category_group_photo',true)."." . $ext;
             $p['category_group_img'] = $filename;
             $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
 
@@ -199,6 +199,87 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $p['area_field'] = $a['area_field'];
         $p['house_type'] = $a['house_type'];
         $result = $this->execSP(__FUNCTION__, "public.create_client_request(:first_name, :second_name, :last_name, :client_phone, :client_email, :address, :area_house, :area_field, :house_type)", $p);
+        return $result;
+    }
+    public function material_type_read(){
+        $result = $this->readSP(__FUNCTION__, "public.material_type_read('cur')");
+        return $result;
+    }
+    public function material_type_get($material_type_id){
+        $p['material_type_id'] = $material_type_id;
+        $result = $this->getSP(__FUNCTION__, "public.material_type_get('cur', :material_type_id)", $p);
+        return $result;
+    }
+    public function material_type_del($material_type_id){
+        $p['material_type_id'] = $material_type_id;
+        $result = $this->execSP(__FUNCTION__, "public.material_type_del(:material_type_id)", $p);
+        return $result;
+    }
+    public function material_type_upd($a){
+        $p['material_type_id'] = $a['material_type_id'];
+        $p['material_type_name'] = $a['material_type_name'];
+        $p['material_type_code'] = $a['material_type_code'];
+
+        $result = $this->execSP(__FUNCTION__, "public.material_type_upd(:material_type_id, :material_type_name, :material_type_code)", $p);
+        return $result;
+    }
+    public function material_read($material_type_id){
+        $p['material_type_id'] = $material_type_id;
+        $result = $this->readSP(__FUNCTION__, "public.material_read('cur', :material_type_id)", $p);
+        return $result;
+    }
+    public function material_get($material_id){
+        $p['material_id'] = $material_id;
+        $result = $this->getSP(__FUNCTION__, "public.material_get('cur', :material_id)", $p);
+        return $result;
+    }
+    public function material_del($material_id){
+        $p['material_id'] = $material_id;
+        $result = $this->execSP(__FUNCTION__, "public.material_del(:material_id)", $p);
+        return $result;
+    }
+    public function material_upd($a){
+        $p['material_id'] = $a['material_id'];
+        $p['material_type_id'] = $a['material_type_id'];
+        $p['material_name'] = $a['material_name'];
+        $p['material_code'] = $a['material_code'];
+        $p['photo_name'] = '';
+        $p['photo_url'] = '';
+
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/material_img/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/material_img/".uniqid('material_img',true)."." . $ext;
+            $p['photo_name'] = $filename;
+            $p['photo_url'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "public.material_upd(:material_id, :material_type_id, :material_name, :material_code, :photo_name, :photo_url)", $p);
+        return $result;
+    }
+    public function material_price_read($material_id){
+        $p['material_id'] = $material_id;
+        $result = $this->readSP(__FUNCTION__, "public.material_price_read('cur', :material_id)", $p);
+        return $result;
+    }
+    public function material_price_del($material_price_id){
+        $p['material_price_id'] = $material_price_id;
+        $result = $this->execSP(__FUNCTION__, "public.material_price_del(:material_price_id)", $p);
+        return $result;
+    }
+    public function material_price_upd($a){
+        $p['material_id'] = $a['material_id'];
+        $p['price'] = $a['price'];
+        $p['date_start'] = $a['date_start'];
+        $p['date_end'] = $a['date_end'];
+        $result = $this->execSP(__FUNCTION__, "public.material_price_upd(:material_id, :price, to_date(:date_start, 'dd.mm.yyyy'), to_date(:date_end, 'dd.mm.yyyy'))", $p);
         return $result;
     }
 }
