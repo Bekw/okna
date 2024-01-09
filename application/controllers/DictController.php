@@ -292,12 +292,16 @@ class DictController extends ParentController{
         $this->view->row = $ob->material_read($material_type_id)['value'];
     }
     function materialEditAction(){
-        $this->_helper->layout->disableLayout();
         $ob = new Application_Model_DbTable_Dict();
 
-        $this->view->material_type_id = $this->_getParam("material_type_id", 0);
         $this->view->material_id = $this->_getParam("material_id", 0);
+
+        $this->view->row_type = $ob->material_type_read_fs()['value'];
+        $this->view->row_unit_type = $ob->unit_type_read_fs()['value'];
         $this->view->row = $ob->material_get($this->view->material_id)['value'];
+        if($this->view->material_id <> 0){
+            $this->view->row_price = $ob->material_price_read($this->view->material_id)['value'];
+        }
     }
     function materialPriceFormAction(){
         $this->_helper->layout->disableLayout();
@@ -305,5 +309,42 @@ class DictController extends ParentController{
 
         $this->view->material_id = $this->_getParam("material_id", 0);
         $this->view->row = $ob->material_price_read($this->view->material_id)['value'];
+    }
+    public function materialListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('material-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-price'){
+            $this->_helper->AjaxContext()->addActionContext('material-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_price_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('material-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_del($a['material_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-price'){
+            $this->_helper->AjaxContext()->addActionContext('material-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_price_del($a['material_price_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->material_read()['value'];
+    }
+    function materialPriceEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->material_id = $this->_getParam("material_id", 0);
     }
 }

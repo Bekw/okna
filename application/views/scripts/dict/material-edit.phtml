@@ -1,35 +1,117 @@
+<?
+$this->headTitle('Редактирование материала');
+$this->placeholder('page-header')->set("Редактирование материала");
+?>
 <style>
     .modal-body .chosen-container {
         width: 100% !important;
     }
 </style>
-<div class="modal-body" id="modal_body">
-    <form id="form_id">
-        <input type="hidden" value="<?=$this->material_type_id?>" name="material_type_id">
-        <input type="hidden" value="<?=$this->material_id?>" name="material_id">
-        <div class="form-group">
-            <label class="control-label " for="material_name">Название</label>
-            <input type="text" id="material_name" placeholder="Название" class="form-control" value="<?=$this->row['material_name']?>" name="material_name">
-            <div class="clearfix"></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label " for="material_code">Код</label>
-            <input type="text" id="material_code" placeholder="Код" class="form-control" value="<?=$this->row['material_code']?>" name="material_code">
-            <div class="clearfix"></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label " for="discount_percent">Фото</label>
-            <div class="form-control no-padding">
-                <input type="file" name="upload" id="upload" >
+<div class="row">
+    <div class="col-lg-5" style="border-right: 1px solid #00a3d1">
+        <form id="form_id">
+            <input type="hidden" value="<?=$this->material_type_id?>" name="material_type_id">
+            <input type="hidden" value="<?=$this->material_id?>" name="material_id">
+            <div class="form-group">
+                <label class="control-label " for="material_name">Название</label>
+                <input type="text" id="material_name" placeholder="Название" class="form-control" value="<?=$this->row['material_name']?>" name="material_name">
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label " for="material_type_id">Тип</label>
+                <div>
+                    <select class="form-control" id="material_type_id" name="material_type_id" required>
+                        <option value="0">Выберите тип</option>
+                        <?foreach ($this->row_type as $value){?>
+                            <option value="<?=$value['material_type_id']?>" <?=is_selected_html($value['material_type_id'], $this->row['material_type_id'] ?? null)?>><?=$value['material_type_name']?></option>
+                            <?
+                        }?>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label " for="unit_type_id">Ед.измерения</label>
+                <div>
+                    <select class="form-control" id="unit_type_id" name="unit_type_id" required>
+                        <option value="0">Выберите тип</option>
+                        <?foreach ($this->row_unit_type as $value){?>
+                            <option value="<?=$value['unit_type_id']?>" <?=is_selected_html($value['unit_type_id'], $this->row['unit_type_id'] ?? null)?>><?=$value['unit_type_name']?></option>
+                            <?
+                        }?>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label " for="material_code">Код</label>
+                <input type="text" id="material_code" placeholder="Код" class="form-control" value="<?=$this->row['material_code']?>" name="material_code">
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label " for="discount_percent">Фото</label>
+                <div class="form-control no-padding">
+                    <input type="file" name="upload" id="upload" >
+                </div>
+                <div class="clearfix"></div>
             </div>
             <div class="clearfix"></div>
-        </div>
-        <div class="clearfix"></div>
-    </form>
-</div>
-<div class="modal-footer">
-    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="itemEdit()">Сохранить</button>
-    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+            <hr>
+            <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="itemEdit()">Сохранить</button>
+            <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+        </form>
+    </div>
+    <div class="col-lg-5">
+        <?if($this->material_id <> 0){?>
+            <h3>Цена материала</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Цена</th>
+                        <th>Дата начала</th>
+                        <th>Дата оканчания</th>
+                        <th>Дата создания</th>
+                        <th>
+                            <a href="javascript:void(0)" class="card-toolbar-btn btn btn-xs radius-1 btn-outline-success mx-1px" draggable="false" onclick="showModalPrice(<?=$this->material_id?>)">
+                                <i class="fas fa-plus w-2 mx-1px"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?
+                    if(mycount($this->row_price) > 0){
+                        $i = 1;
+                        foreach ($this->row_price as $key => $value){
+                            ?>
+                            <tr>
+                                <td class="text-right"><?=$i?></td>
+                                <td class="text-left"><?=tenge_text($value['price'])?></td>
+                                <td class="text-center"><?=$value['date_start']?></td>
+                                <td class="text-center"><?=$value['date_end']?></td>
+                                <td class="text-center"><?=$value['date_create']?></td>
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delPrice(<?=$value['material_price_id']?>, this)">
+                                            <i class="fa fa-trash" aria-hidden="true">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?
+                            $i = $i + 1;
+                        }
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <?
+        }?>
+    </div>
 </div>
 <script>
     $(document).ready(function() {
@@ -54,13 +136,50 @@
                 else{
                     $('.modal').modal('hide');
                     toastSucces('Успех');
-                    showItemTable($('#material_type_id').val());
+                    window.location.href = '/dict/material-edit/material_id/' + data.result['value'];
                 }
                 main_loader_hide();
             },
             cache: false,
             contentType: false,
             processData: false
+        });
+    }
+
+    function showModalPrice(material_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование');
+        $.ajax({
+            type: 'POST',
+            url: "/dict/material-price-edit/",
+            data: {material_id : material_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function delPrice(material_price_id, ob){
+        if (!confirm('Вы действительно хотите удалить?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/material-list/mode/del-price/",
+            data:{"material_price_id" : material_price_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Материал удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
         });
     }
 </script>

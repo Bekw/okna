@@ -223,9 +223,8 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "public.material_type_upd(:material_type_id, :material_type_name, :material_type_code)", $p);
         return $result;
     }
-    public function material_read($material_type_id){
-        $p['material_type_id'] = $material_type_id;
-        $result = $this->readSP(__FUNCTION__, "public.material_read('cur', :material_type_id)", $p);
+    public function material_read(){
+        $result = $this->readSP(__FUNCTION__, "public.material_read('cur')");
         return $result;
     }
     public function material_get($material_id){
@@ -243,8 +242,9 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $p['material_type_id'] = $a['material_type_id'];
         $p['material_name'] = $a['material_name'];
         $p['material_code'] = $a['material_code'];
-        $p['photo_name'] = '';
-        $p['photo_url'] = '';
+        $p['unit_type_id'] = $a['unit_type_id'];
+        $p['photo_name'] = null;
+        $p['photo_url'] = null;
 
         $tmpFilePath = $_FILES['upload']['tmp_name'];
         if ($tmpFilePath != ""){
@@ -261,7 +261,7 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
             if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
             }
         }
-        $result = $this->execSP(__FUNCTION__, "public.material_upd(:material_id, :material_type_id, :material_name, :material_code, :photo_name, :photo_url)", $p);
+        $result = $this->execSP(__FUNCTION__, "public.material_upd(:material_id, :material_type_id, :material_name, :material_code, :photo_name, :photo_url, :unit_type_id) res", $p, 'res');
         return $result;
     }
     public function material_price_read($material_id){
@@ -277,9 +277,17 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
     public function material_price_upd($a){
         $p['material_id'] = $a['material_id'];
         $p['price'] = $a['price'];
-        $p['date_start'] = $a['date_start'];
-        $p['date_end'] = $a['date_end'];
+        $p['date_start'] = zeroToNull($a['date_start']);
+        $p['date_end'] = zeroToNull($a['date_end']);
         $result = $this->execSP(__FUNCTION__, "public.material_price_upd(:material_id, :price, to_date(:date_start, 'dd.mm.yyyy'), to_date(:date_end, 'dd.mm.yyyy'))", $p);
+        return $result;
+    }
+    public function material_type_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.material_type_read_fs('cur')");
+        return $result;
+    }
+    public function unit_type_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.unit_type_read_fs('cur')");
         return $result;
     }
 }

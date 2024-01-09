@@ -1,0 +1,134 @@
+<?
+$this->headTitle('Материалы');
+$this->placeholder('page-header')->set("Материалы");
+?>
+
+<style>
+    .product-img{
+        object-fit: contain;
+        border: 1px solid #f2f2f2;
+        width: 100px;
+        height: 100px;
+        padding: 3px;
+    }
+</style>
+<div class="hr hr-10 dotted hr-double"></div>
+<div class="row">
+    <div class="col-lg-8 p-0" id="load">
+        <div class="pos-rel ml-sm-auto order-last order-sm-0 float-left" style="margin-bottom: 5px;">
+            <i class="fa fa-search position-lc ml-25 text-primary-m1"></i>
+            <input type="text" class="form-control w-100 pl-45 radius-1 brc-primary-m4" id="sp_search" placeholder="Быстрый поиск ...">
+        </div>
+        <a href="/dict/material-edit/material_id/0/" class="btn btn-success float-left" style="margin-left: 5px;">
+            <i class="ace-icon fa fa-plus bigger-125"></i>
+            Добавить
+        </a>
+        <div class="clearfix"></div>
+
+        <div class="card dcard mb-3" id="sp_table" draggable="false" style="">
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="card-body p-0 table-responsive">
+                        <table class="table mb-1">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Наименование</th>
+                                <th>Код</th>
+                                <th>Ед.измерения</th>
+                                <th>Текущая цена</th>
+                                <th>Фото</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            foreach ($this->row as $key => $value){?>
+                                <tr>
+                                    <td class="text-right"><?=$value['material_id']?></td>
+                                    <td class="text-left"><?=$value['material_name']?></td>
+                                    <td class="text-left"><?=$value['material_code']?></td>
+                                    <td class="text-left"><?=$value['unit_type_name']?></td>
+                                    <td class="text-left"><?=$value['cur_price']?></td>
+                                    <td class="text-left">
+                                        <img src="<?=$value['photo_url']?>" onerror="imgErrorHref(this);" alt="картинка" class="radius-1 mb-1 mb-sm-0 mr-3 d-none d-sm-block product-img"/>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="/dict/material-edit/material_id/<?=$value['material_id']?>/" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-success">
+                                            <i class="fa fa-pencil-alt"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger" onclick="delMaterial(<?=$value['material_id']?>, this)">
+                                            <i class="fa fa-trash-alt"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <?
+                            }
+                            ?>
+                            </tbody>
+                        </table>
+                    </div><!-- /.card-body -->
+                </div>
+            </div><!-- /.card-body -->
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#modal').on('shown.bs.modal', function (e) {
+            $(document).keypress(function(e) {
+                var keycode = (e.keyCode ? e.keyCode : e.which);
+                if (keycode == '13') {
+                    updShop();
+                }
+            });
+        });
+
+        $("#sp_search").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#sp_table tbody tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+    function showModal(measure_type_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование');
+        $.ajax({
+            type: 'POST',
+            url: "/dict/measure-type-edit/",
+            data: {measure_type_id : measure_type_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function delMaterial(material_id, ob){
+        if (!confirm('Вы действительно хотите удалить?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/material-list/mode/del/",
+            data:{"material_id" : material_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Материал удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+</script>

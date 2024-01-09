@@ -64,7 +64,7 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $p['document_name'] = $a['document_name'];
         $p['document_type_id'] = $a['document_type_id'];
         $p['client_request_id'] = $a['client_request_id'];
-        $p['document_url'] = '';
+        $p['document_url'] = null;
 
         $tmpFilePath = $_FILES['upload']['tmp_name'];
         if ($tmpFilePath != ""){
@@ -112,7 +112,7 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $p['payment_sum'] = $a['payment_sum'];
         $p['payment_comment'] = $a['payment_comment'];
         $p['client_request_id'] = $a['client_request_id'];
-        $p['payment_url'] = '';
+        $p['payment_url'] = null;
         $tmpFilePath = $_FILES['upload']['tmp_name'];
         if ($tmpFilePath != ""){
             $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
@@ -269,7 +269,7 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         if($a['is_final'] == 'on'){
             $p['is_final'] = 1;
         }
-        $p['remont_project_url'] = '';
+        $p['remont_project_url'] = null;
         $tmpFilePath = $_FILES['upload']['tmp_name'];
         if ($tmpFilePath != ""){
             $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
@@ -291,6 +291,38 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $p['remont_project_id'] = $remont_project_id;
         $p['is_accepted'] = $is_accepted;
         $result = $this->execSP(__FUNCTION__, "public.remont_project_accept(:remont_project_id, :is_accepted)", $p);
+        return $result;
+    }
+    public function material_smeta_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.material_smeta_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function material_smeta_del($material_smeta_id){
+        $p['material_smeta_id'] = $material_smeta_id;
+        $result = $this->execSP(__FUNCTION__, "public.material_smeta_del(:material_smeta_id)", $p);
+        return $result;
+    }
+    public function material_smeta_upd($a){
+        $p['material_id'] = $a['material_id'];
+        $p['material_cnt'] = $a['material_cnt'];
+        $p['material_price'] = $a['material_price'];
+        $p['remont_id'] = $a['remont_id'];
+        $result = $this->execSP(__FUNCTION__, "public.material_smeta_upd(:material_id, :material_cnt, :material_price, :remont_id)", $p);
+        return $result;
+    }
+    public function material_read_fs($material_type_id){
+        $p['material_type_id'] = $material_type_id;
+        $result = $this->readSP(__FUNCTION__, "public.material_read_fs('cur', :material_type_id)", $p);
+        return $result;
+    }
+    public function material_type_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.material_type_read_fs('cur')");
+        return $result;
+    }
+    public function material_cur_price_get($material_id){
+        $p['material_id'] = $material_id;
+        $result = $this->scalarSP(__FUNCTION__, "public.material_cur_price_get(:material_id) res", $p, 'res');
         return $result;
     }
 }

@@ -5,7 +5,7 @@
         </h5>
         <div class="card-toolbar">
             <div class="card-toolbar no-border">
-                <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="materialItemEdit(0)">
+                <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="showModal(<?=$this->material_id?>)">
                     <i class="fas fa-plus w-2 mx-1px"></i>
                 </a>
             </div>
@@ -59,7 +59,7 @@
         }
         $.ajax({
             type: 'POST',
-            url: "/dict/material-form/mode/del/",
+            url: "/dict/material-list/mode/del/",
             data:{"material_id" : material_id},
             success: function(data){
                 if(data.result['status'] == false){

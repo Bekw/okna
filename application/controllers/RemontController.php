@@ -200,6 +200,12 @@ class RemontController extends ParentController{
             $this->view->result = $ob->remont_project_upd($params);
             return;
         }
+        if ($mode == 'upd-smeta'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_smeta_upd($params);
+            return;
+        }
         if ($mode == 'accept-project'){
             $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
@@ -229,6 +235,18 @@ class RemontController extends ParentController{
             $a = $this->_getAllParams();
             $result = $ob->remont_project_del($a['remont_project_id']);
             $this->view->result = $result;
+        }
+        if($mode == 'del-smeta'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_smeta_del($a['material_smeta_id']);
+            $this->view->result = $result;
+        }
+        if ($mode == 'get-price'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_cur_price_get($params['material_id']);
+            return;
         }
 
         $this->view->row_measure = $ob->read_employee_fs('MEASURE')['value'];
@@ -330,6 +348,21 @@ class RemontController extends ParentController{
         $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
 
         $this->view->row = $ob->remont_project_get($remont_project_id)['value'];
+    }
+    public function remontSmetaListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row = $ob->material_smeta_read($remont_id)['value'];
+        $this->view->row_type = $ob->material_type_read_fs()['value'];
+    }
+    public function materialSelectFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->material_type_id = $material_type_id = $this->_getParam('material_type_id', 0);
+
+        $this->view->row = $ob->material_read_fs($material_type_id)['value'];
     }
 }
 

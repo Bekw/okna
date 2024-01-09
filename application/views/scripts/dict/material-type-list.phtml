@@ -1,6 +1,6 @@
 <?
-$this->headTitle('Материалы');
-$this->placeholder('page-header')->set("Материалы");
+$this->headTitle('Тип материала');
+$this->placeholder('page-header')->set("Тип материала");
 ?>
 
 <style>
@@ -50,8 +50,8 @@ $this->placeholder('page-header')->set("Материалы");
                                 foreach ($this->row as $key => $value){?>
                                     <tr class="bgc-h-orange-l4 text-600">
                                         <td class="text-center"><?=$value['material_type_id']?></td>
-                                        <td onclick="showItem(<?=$value['material_type_id']?>, this)" class="text-center"><?=$value['material_type_name']?></td>
-                                        <td onclick="showItem(<?=$value['material_type_id']?>, this)" class="text-center"><?=$value['material_type_code']?></td>
+                                        <td class="text-center"><?=$value['material_type_name']?></td>
+                                        <td class="text-center"><?=$value['material_type_code']?></td>
                                         <td class="pr-35 text-center" style="white-space: nowrap">
                                             <a href="javascript:void(0);" onclick="showModal(<?=$value['material_type_id']?>)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-warning">
                                                 <i class="fa fa-pencil-alt"></i>
