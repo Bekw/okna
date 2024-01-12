@@ -253,6 +253,7 @@ class RemontController extends ParentController{
         $this->view->row_designer = $ob->read_employee_fs('DESIGNER')['value'];
         $this->view->row_tech = $ob->read_employee_fs('TECH')['value'];
         $this->view->row_contractor = $ob->read_contractor_fs()['value'];
+        $this->view->row_type = $ob->material_type_read_fs()['value'];
 
         $this->view->row = $ob->remont_get($remont_id)['value'];
     }
@@ -355,7 +356,6 @@ class RemontController extends ParentController{
         $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
 
         $this->view->row = $ob->material_smeta_read($remont_id)['value'];
-        $this->view->row_type = $ob->material_type_read_fs()['value'];
     }
     public function materialSelectFormAction(){
         $this->_helper->layout->disableLayout();

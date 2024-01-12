@@ -182,6 +182,40 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                 </div>
 
                 <div class="tab-pane fade text-95" id="smeta" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <form id="form_id_smeta">
+                        <input type="hidden" value="<?=$this->remont_id?>" name="remont_id">
+                        <div class="row">
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="room_id">Тип материала</label>
+                                <select class="form-control" id="material_type_id" name="material_type_id" required>
+                                    <option value="0">Выберите тип</option>
+                                    <?foreach ($this->row_type as $value1){?>
+                                        <option value="<?=$value1['material_type_id']?>"><?=$value1['material_type_name']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3" id="material">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="material_price">Цена</label>
+                                <input type="number" step="any" id="material_price" name="material_price" placeholder="Цена" class="form-control" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="material_cnt">Кол-во</label>
+                                <input type="number" step="any" id="material_cnt" name="material_cnt" placeholder="Кол-во" class="form-control" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3">
+                                <button type="button" class="btn btn-sm px-4 btn-success mb-1" style="margin-top: 25px;" onclick="updSmetaMaterial()">Сохранить</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
                     <div id="smeta_list">
 
                     </div>
@@ -198,8 +232,37 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
         $('#room_measure_list').load('/remont/remont-room-measure/remont_id/<?=$this->remont_id?>');
         $('#project_list').load('/remont/remont-project-list/remont_id/<?=$this->remont_id?>');
         $('#smeta_list').load('/remont/remont-smeta-list/remont_id/<?=$this->remont_id?>');
-
+        $('#material_type_id').on('change', function() {
+            material_type_id = this.value;
+            loadMaterialSelect(material_type_id);
+        });
+        $('#material_id').on('change', function() {
+            material_id = this.value;
+            loadMaterialPrice(material_id);
+        });
     });
+    function loadMaterialSelect(material_type_id) {
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            url: "/remont/material-select-form/material_type_id/"+ material_type_id +"/",
+            success: function(data){
+                $('#material').html(data);
+                main_loader_hide();
+            }
+        });
+    }
+    function loadMaterialPrice(material_id) {
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/get-price/material_id/"+ material_id +"/",
+            success: function(data){
+                $("#material_price").val(data.result['value']);
+                main_loader_hide();
+            }
+        });
+    }
     function upd_remont(){
         var fd = new FormData($("#form_remont")[0]);
         $.ajax({
