@@ -52,7 +52,9 @@
         <?
         if(mycount($this->row) > 0){
             $i = 1;
+            $sum = 0;
             foreach ($this->row as $key => $value){
+                $sum = $sum + $value['material_sum'];
                 ?>
                 <tr>
                     <td class="text-right"><?=$i?></td>
@@ -73,7 +75,13 @@
                 </tr>
                 <?
                 $i = $i + 1;
-            }
+            }?>
+                <tr>
+                    <td class="text-right font-bold" colspan="5">Общая сумма</td>
+                    <td class="text-right font-bold"><?=tenge_text($sum)?> тг</td>
+                    <td class="text-right" colspan="2"></td>
+                </tr>
+            <?
         }
         ?>
         </tbody>

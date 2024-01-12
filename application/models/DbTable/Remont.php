@@ -325,4 +325,26 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $result = $this->scalarSP(__FUNCTION__, "public.material_cur_price_get(:material_id) res", $p, 'res');
         return $result;
     }
+    public function remont_material_read($remont_room_id){
+        $p['remont_room_id'] = $remont_room_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_material_read('cur', :remont_room_id)", $p);
+        return $result;
+    }
+    public function remont_material_get($remont_material_id){
+        $p['remont_material_id'] = $remont_material_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_material_get('cur', :remont_material_id)", $p);
+        return $result;
+    }
+    public function remont_material_del($remont_material_id){
+        $p['remont_material_id'] = $remont_material_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_material_del(:remont_material_id)", $p);
+        return $result;
+    }
+    public function remont_material_upd($a){
+        $p['remont_material_id'] = $a['remont_material_id'];
+        $p['material_id'] = $a['material_id'];
+        $p['material_cnt'] = $a['material_cnt'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_material_upd(:remont_material_id, :material_id, :material_cnt)", $p);
+        return $result;
+    }
 }

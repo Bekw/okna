@@ -1,5 +1,5 @@
 <?
-$this->headTitle('Ремонта №'.$this->remont_id);
+$this->headTitle('Ремонт №'.$this->remont_id);
 $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
 ?>
 <div class="row">
@@ -42,16 +42,22 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                         Комнаты
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#measures" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Замеры
+                    </a>
+                </li>
                 <li class="nav-item mr-2px">
                     <a id="profile1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#birefs" role="tab" aria-controls="profile1" aria-selected="false">
                         <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
                         Бриф
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#measures" role="tab" aria-controls="more1" aria-selected="false">
+                <li class="nav-item mr-2px">
+                    <a id="profile1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#materials" role="tab" aria-controls="profile1" aria-selected="false">
                         <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
-                        Замеры
+                        Материалы
                     </a>
                 </li>
                 <li class="nav-item">
@@ -148,17 +154,24 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                     </div>
                 </div>
 
-                <div class="tab-pane fade text-95" id="birefs" role="tabpanel" aria-labelledby="profile1-tab-btn">
-                    <div id="room_brief_list">
-
-                    </div>
-                </div>
                 <div class="tab-pane fade text-95" id="measures" role="tabpanel" aria-labelledby="more1-tab-btn">
                     <div id="room_measure_list">
 
                     </div>
                 </div>
-                
+
+                <div class="tab-pane fade text-95" id="birefs" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div id="room_brief_list">
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="materials" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div id="room_material_list">
+
+                    </div>
+                </div>
+
                 <div class="tab-pane fade text-95" id="projects" role="tabpanel" aria-labelledby="more1-tab-btn">
                     <a href="javascript:void(0)" onclick="showProjectForm(<?=$this->remont_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
                     <div class="clearfix"></div>
@@ -181,6 +194,7 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
     $( document ).ready(function() {
         $('#room_list').load('/remont/remont-room-list/remont_id/<?=$this->remont_id?>');
         $('#room_brief_list').load('/remont/remont-room-brief/remont_id/<?=$this->remont_id?>');
+        $('#room_material_list').load('/remont/remont-room-material/remont_id/<?=$this->remont_id?>');
         $('#room_measure_list').load('/remont/remont-room-measure/remont_id/<?=$this->remont_id?>');
         $('#project_list').load('/remont/remont-project-list/remont_id/<?=$this->remont_id?>');
         $('#smeta_list').load('/remont/remont-smeta-list/remont_id/<?=$this->remont_id?>');

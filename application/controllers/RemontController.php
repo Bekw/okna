@@ -364,5 +364,22 @@ class RemontController extends ParentController{
 
         $this->view->row = $ob->material_read_fs($material_type_id)['value'];
     }
+
+    public function remontRoomMaterialAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $remont_id = $this->_getParam('remont_id', 0);
+        $this->view->remont_id = $remont_id;
+
+        $this->view->row_material_type = $ob->material_type_read_fs()['value'];
+        $this->view->row = $ob->remont_room_read($remont_id)['value'];
+    }
+    public function remontMaterialTableAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_room_id = $remont_room_id = $this->_getParam('remont_room_id', 0);
+
+        $this->view->row = $ob->remont_material_read($remont_room_id)['value'];
+    }
 }
 
