@@ -155,6 +155,12 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                 </div>
 
                 <div class="tab-pane fade text-95" id="measures" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <h5>Замеры(Документы)  <a href="javascript:void(0)" onclick="showMeasureDocForm(<?=$this->remont_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    </h5>
+                    <div id="measure_doc">
+
+                    </div>
+                    <hr>
                     <div id="room_measure_list">
 
                     </div>
@@ -216,6 +222,9 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                         </div>
                         <div class="clearfix"></div>
                     </form>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <button class="btn btn-xs btn-primary" onclick="autoLoadSmeta(<?=$this->remont_id?>)">Обновить смету</button>
                     <div id="smeta_list">
 
                     </div>
@@ -232,6 +241,7 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
         $('#room_measure_list').load('/remont/remont-room-measure/remont_id/<?=$this->remont_id?>');
         $('#project_list').load('/remont/remont-project-list/remont_id/<?=$this->remont_id?>');
         $('#smeta_list').load('/remont/remont-smeta-list/remont_id/<?=$this->remont_id?>');
+        $('#measure_doc').load('/remont/remont-measure-doc/remont_id/<?=$this->remont_id?>');
         $('#material_type_id').on('change', function() {
             material_type_id = this.value;
             loadMaterialSelect(material_type_id);
@@ -241,6 +251,24 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
             loadMaterialPrice(material_id);
         });
     });
+    function autoLoadSmeta(remont_id){
+        if (!confirm("Вы действительно хотите обновить смету? Все старые записи удалятся!")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/auto-smeta-load/remont_id/" + remont_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Смета обновлена');
+                    $('#smeta_list').load('/remont/remont-smeta-list/remont_id/<?=$this->remont_id?>');
+                }
+            }
+        });
+    }
     function loadMaterialSelect(material_type_id) {
         main_loader_show();
         $.ajax({
@@ -319,6 +347,23 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
         });
         $("#modal-container").filter('.modal').modal();
     }
+    function showMeasureDocForm(remont_id, remont_measure_doc_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить вложение');
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-measure-doc-edit/",
+            data: {"remont_id" : remont_id,
+                   "remont_measure_doc_id" : remont_measure_doc_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
 
     function delRemontRoom(remont_room_id, ob){
         if (!confirm("Вы действительно хотите удалить комнату ?")) {
@@ -352,6 +397,24 @@ $this->placeholder('page-header')->set('Ремонт №'.$this->remont_id);
                 }
                 else{
                     toastSucces('Проект ремонта удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function delMeasureDoc(remont_measure_doc_id, ob){
+        if (!confirm("Вы действительно хотите удалить вложение?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/del-measure-doc/remont_measure_doc_id/" + remont_measure_doc_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Вложение удалено');
                     $(ob).closest("tr").remove();
                 }
             }

@@ -19,8 +19,8 @@
                     <input type="hidden" value="0" name="remont_material_id">
                     <div class="row">
                         <div class="box1 col-md-3">
-                            <label class="control-label " for="room_id">Тип замера</label>
-                            <select class="form-control" id="material_type_id" name="material_type_id" required>
+                            <label class="control-label " for="room_id">Тип материала</label>
+                            <select class="form-control" onchange="loadMaterial(this, <?=$value['remont_room_id']?>)" id="material_type_id" name="material_type_id" required>
                                 <option value="0">Выберите тип</option>
                                 <?foreach ($this->row_material_type as $value1){?>
                                     <option value="<?=$value1['material_type_id']?>"><?=$value1 ['material_type_name']?></option>
@@ -28,6 +28,8 @@
                                 }?>
                             </select>
                             <div class="clearfix"></div>
+                        </div>
+                        <div class="box1 col-md-3" style="display:none;" id="material_select_<?=$value['remont_room_id']?>">
                         </div>
                         <div class="box1 col-md-3">
                             <label class="control-label " for="material_cnt">Кол-во</label>
@@ -51,6 +53,21 @@
     </div>
 </div>
 <script>
+    function loadMaterial(ob, remont_room_id) {
+        main_loader_show();
+
+        material_type_id = ob.value;
+
+        $.ajax({
+            type: 'POST',
+            url: "/remont/material-select-form/material_type_id/"+ material_type_id +"/",
+            success: function(data){
+                $('#material_select_'+remont_room_id).html(data);
+                $('#material_select_'+remont_room_id).show();
+                main_loader_hide();
+            }
+        });
+    }
     function loadTableMaterial(remont_room_id) {
         $('#room_material_'+remont_room_id).load('/remont/remont-material-table/remont_room_id/'+remont_room_id);
     }

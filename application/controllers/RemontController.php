@@ -206,6 +206,24 @@ class RemontController extends ParentController{
             $this->view->result = $ob->material_smeta_upd($params);
             return;
         }
+        if ($mode == 'upd-room-material'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_material_upd($params);
+            return;
+        }
+        if ($mode == 'upd-smeta-price'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_smeta_upd_price($params);
+            return;
+        }
+        if ($mode == 'upd-measure-doc'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_measure_doc_upd($params);
+            return;
+        }
         if ($mode == 'accept-project'){
             $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
@@ -242,10 +260,28 @@ class RemontController extends ParentController{
             $result = $ob->material_smeta_del($a['material_smeta_id']);
             $this->view->result = $result;
         }
+        if($mode == 'del-room-material'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->remont_material_del($a['remont_material_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-measure-doc'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->remont_measure_doc_del($a['remont_measure_doc_id']);
+            $this->view->result = $result;
+        }
         if ($mode == 'get-price'){
             $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
             $this->view->result = $ob->material_cur_price_get($params['material_id']);
+            return;
+        }
+        if ($mode == 'auto-smeta-load'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->smeta_auto_insert($params['remont_id']);
             return;
         }
 
@@ -380,6 +416,29 @@ class RemontController extends ParentController{
         $this->view->remont_room_id = $remont_room_id = $this->_getParam('remont_room_id', 0);
 
         $this->view->row = $ob->remont_material_read($remont_room_id)['value'];
+    }
+    public function remontSmetaEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->material_smeta_id = $material_smeta_id = $this->_getParam('material_smeta_id', 0);
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row = $ob->material_smeta_get($material_smeta_id)['value'];
+    }
+    public function remontMeasureDocAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row = $ob->remont_measure_doc_read($remont_id)['value'];
+    }
+    public function remontMeasureDocEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_measure_doc_id = $remont_measure_doc_id = $this->_getParam('remont_measure_doc_id', 0);
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row = $ob->remont_measure_doc_get($remont_measure_doc_id)['value'];
     }
 }
 

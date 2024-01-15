@@ -16,6 +16,7 @@
             <tr>
                 <td class="text-right"><?=$value['remont_material_id']?></td>
                 <td class="text-left"><?=$value['material_name']?></td>
+                <td class="text-left"><?=$value['material_type_name']?></td>
                 <td class="text-left"><?=$value['material_cnt']?> <?=$value['unit_type_name']?></td>
                 <td class="text-center"><?=$value['date_create']?></td>
                 <td class="text-center">
@@ -23,10 +24,6 @@
                         <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delRemontRoomMaterial(<?=$value['remont_material_id']?>, this)">
                             <i class="fa fa-trash" aria-hidden="true">
                             </i>  Удалить
-                        </a>
-                        <a class="btn btn-xs btn-primary" href="javascript:void(0);" onclick="showMaterialForm(<?=$this->remont_room_id?>, <?=$value['remont_material_id']?>)">
-                            <i class="fa fa-edit" aria-hidden="true">
-                            </i>  Изменить
                         </a>
                     </div>
                 </td>

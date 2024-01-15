@@ -33,6 +33,10 @@
                     <td class="text-center"><?=$value['date_create']?></td>
                     <td class="text-center">
                         <div class="action-buttons">
+                            <a class="btn btn-xs btn-primary" href="javascript:void(0);" onclick="showSmetaForm(<?=$this->remont_id?>, <?=$value['material_smeta_id']?>)">
+                                <i class="fa fa-edit" aria-hidden="true">
+                                </i>  Изменить
+                            </a>
                             <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delSmetaMaterial(<?=$value['material_smeta_id']?>, this)">
                                 <i class="fa fa-trash" aria-hidden="true">
                                 </i>  Удалить
@@ -64,6 +68,22 @@
 
     });
 
+    function showSmetaForm(remont_id, material_smeta_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование цены');
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-smeta-edit/",
+            data: {"remont_id" : remont_id, "material_smeta_id" : material_smeta_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
 
     function updSmetaMaterial(){
         main_loader_show();

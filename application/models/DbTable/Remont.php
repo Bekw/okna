@@ -344,7 +344,61 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $p['remont_material_id'] = $a['remont_material_id'];
         $p['material_id'] = $a['material_id'];
         $p['material_cnt'] = $a['material_cnt'];
-        $result = $this->execSP(__FUNCTION__, "public.remont_material_upd(:remont_material_id, :material_id, :material_cnt)", $p);
+        $p['remont_room_id'] = $a['remont_room_id'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_material_upd(:remont_material_id, :material_id, :material_cnt, :remont_room_id)", $p);
+        return $result;
+    }
+    public function material_smeta_get($material_smeta_id){
+        $p['material_smeta_id'] = $material_smeta_id;
+        $result = $this->getSP(__FUNCTION__, "public.material_smeta_get('cur', :material_smeta_id)", $p);
+        return $result;
+    }
+    public function material_smeta_upd_price($a){
+        $p['material_price'] = $a['material_price'];
+        $p['material_smeta_id'] = $a['material_smeta_id'];
+        $result = $this->execSP(__FUNCTION__, "public.material_smeta_upd_price(:material_smeta_id, :material_price)", $p);
+        return $result;
+    }
+    public function smeta_auto_insert($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->execSP(__FUNCTION__, "public.smeta_auto_insert(:remont_id)", $p);
+        return $result;
+    }
+    public function remont_measure_doc_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_measure_doc_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function remont_measure_doc_get($remont_measure_doc_id){
+        $p['remont_measure_doc_id'] = $remont_measure_doc_id;
+        $result = $this->getSP(__FUNCTION__, "public.remont_measure_doc_get('cur', :remont_measure_doc_id)", $p);
+        return $result;
+    }
+    public function remont_measure_doc_del($remont_measure_doc_id){
+        $p['remont_measure_doc_id'] = $remont_measure_doc_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_measure_doc_del(:remont_measure_doc_id)", $p);
+        return $result;
+    }
+    public function remont_measure_doc_upd($a){
+        $p['remont_measure_doc_id'] = $a['remont_measure_doc_id'];
+        $p['remont_id'] = $a['remont_id'];
+        $p['doc_name'] = $a['doc_name'];
+        $p['doc_url'] = null;
+        $tmpFilePath = $_FILES['upload']['tmp_name'];
+        if ($tmpFilePath != ""){
+            $ext = pathinfo($_FILES['upload']['name'], PATHINFO_EXTENSION);
+            $dir = $_SERVER['DOCUMENT_ROOT']."/documents/".date('Y.m.d')."/measure_doc/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $filename = "/documents/".date('Y.m.d')."/measure_doc/".uniqid('measure_',true)."." . $ext;
+            $p['doc_url'] = $filename;
+            $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
+
+            if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
+            }
+        }
+        $result = $this->execSP(__FUNCTION__, "public.remont_measure_doc_upd(:remont_measure_doc_id, :remont_id, :doc_name, :doc_url)", $p);
         return $result;
     }
 }
