@@ -401,4 +401,41 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "public.remont_measure_doc_upd(:remont_measure_doc_id, :remont_id, :doc_name, :doc_url)", $p);
         return $result;
     }
+    public function remont_stage_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_stage_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function remont_stage_upd($a){
+        $p['remont_id'] = $a['remont_id'];
+        $p['stage_id'] = $a['stage_id'];
+        $p['stage_status_id'] = $a['stage_status_id'];
+        $p['stage_comment'] = $a['stage_comment'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_stage_upd(:remont_id, :stage_id, :stage_status_id, :stage_comment)", $p);
+        return $result;
+    }
+    public function remont_stage_del($remont_stage_id){
+        $p['remont_stage_id'] = $remont_stage_id;
+        $result = $this->execSP(__FUNCTION__, "public.remont_stage_del(:remont_stage_id)", $p);
+        return $result;
+    }
+    public function stage_status_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.stage_status_read_fs('cur')");
+        return $result;
+    }
+    public function stage_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.stage_read_fs('cur')");
+        return $result;
+    }
+    public function remont_mark_read($remont_id){
+        $p['remont_id'] = $remont_id;
+        $result = $this->readSP(__FUNCTION__, "public.remont_mark_read('cur', :remont_id)", $p);
+        return $result;
+    }
+    public function remont_mark_upd($a){
+        $p['remont_id'] = $a['remont_id'];
+        $p['mark_type_id'] = $a['mark_type_id'];
+        $result = $this->execSP(__FUNCTION__, "public.remont_mark_upd(:remont_id, :mark_type_id)", $p);
+        return $result;
+    }
 }

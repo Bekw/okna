@@ -347,4 +347,25 @@ class DictController extends ParentController{
 
         $this->view->material_id = $this->_getParam("material_id", 0);
     }
+    function stageMarkListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('stage-mark-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->upd_stage_mark($a);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->stage_read()['value'];
+    }
+    function markTypeFormAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->stage_id = $this->_getParam("stage_id", 0);
+
+        $this->view->row = $ob->stage_mark_read($this->view->stage_id)['value'];
+    }
 }

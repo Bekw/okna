@@ -16,8 +16,14 @@
         if(mycount($this->row) > 0){
             $i = 1;
             foreach ($this->row as $key => $value){
+                $background = '';
+                if($value['is_accepted'] == 2){
+                    $background = '#fcb3b3';
+                }elseif ($value['is_accepted'] == 1){
+                    $background = '#befcb3';
+                }
                 ?>
-                <tr>
+                <tr style="background-color: <?=$background?>">
                     <td class="text-right"><?=$i?></td>
                     <td class="text-left"><?=$value['remont_project_filename']?></td>
                     <td class="text-center">
@@ -30,10 +36,21 @@
                             <i class="fa fa-check text-green-m2" style="font-size: 20px;"></i>
                             <br>
                             <?=$value['accept_fio']?> <?=$value['is_accepted_date']?>
+                            <?if(getCurPositionCode() == 'ADMIN'){?>
+                                <br>
+                                <button class="btn btn-danger btn-xs" onclick="acceptProject(<?=$value['remont_project_id']?>, 0)">Убрать</button>
+                            <?}?>
+                        <?}else if($value['is_accepted'] == 2){?>
+                            <i class="fa fa-ban text-danger-m2" style="font-size: 20px;"></i>
                             <br>
-                            <button class="btn btn-danger btn-xs" onclick="acceptProject(<?=$value['remont_project_id']?>, 0)">Убрать</button>
+                            <?=$value['accept_fio']?> <?=$value['is_accepted_date']?>
+                            <?if(getCurPositionCode() == 'ADMIN'){?>
+                                <br>
+                                <button class="btn btn-danger btn-xs" onclick="acceptProject(<?=$value['remont_project_id']?>, 0)">Убрать</button>
+                            <?}?>
                         <?}else{?>
                             <button class="btn btn-primary btn-xs" onclick="acceptProject(<?=$value['remont_project_id']?>, 1)">Утвердить</button>
+                            <button class="btn btn-danger btn-xs" onclick="acceptProject(<?=$value['remont_project_id']?>, 2)">Отклонить</button>
                             <?
                         }?>
                     </td>

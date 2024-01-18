@@ -290,4 +290,20 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "public.unit_type_read_fs('cur')");
         return $result;
     }
+    public function stage_read(){
+        $result = $this->readSP(__FUNCTION__, "public.stage_read('cur')");
+        return $result;
+    }
+    public function stage_mark_read($stage_id){
+        $p['stage_id'] = $stage_id;
+        $result = $this->readSP(__FUNCTION__, "public.stage_mark_read('cur', :stage_id)", $p);
+        return $result;
+    }
+    public function upd_stage_mark($a){
+        $p['stage_id'] = $a['stage_id'];
+        $p['mark_type_id'] = $a['mark_type_id'];
+        $p['type'] = $a['type'];
+        $result = $this->execSP(__FUNCTION__, "public.upd_stage_mark(:stage_id, :mark_type_id, :type)", $p);
+        return $result;
+    }
 }

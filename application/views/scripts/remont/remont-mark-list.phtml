@@ -1,0 +1,69 @@
+<div class="card dcard mb-3 loading-widget" id="card-5" draggable="false" style="">
+    <div class="card-header">
+        <h5 class="card-title text-120 text-primary-d2">
+            Статусы этапа
+        </h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="p-3">
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered hover-table" id="brief_item_table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>Статус</th>
+                        <th>Время</th>
+                        <th>Работник</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?
+                    foreach ($this->row as $key => $value){?>
+                        <tr>
+                            <td class="text-right">
+                                <input type="checkbox" name="is_read" onclick="updMarkRemont(<?=$this->remont_id?>, <?=$value['mark_type_id']?>, this)" class="input-lg bgc-blue" <?if($value['is_checked'] == 1){?>checked=""<?}?> <?if($value['is_upd'] == 0){?>disabled<?}?>>
+                            </td>
+                            <td class="text-left"><?=$value['mark_type_name']?></td>
+                            <td class="text-center"><?=$value['date_checked']?></td>
+                            <td class="text-left"><?=$value['fio']?></td>
+                        </tr>
+                        <?
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div><!-- /.card-body -->
+</div>
+<script>
+    function updMarkRemont(remont_id, mark_type_id, ob){
+        if (!confirm('Вы действительно хотите изменить статус этапа?')) {
+            $(ob).prop('checked', false);
+            return false;
+        }
+        main_loader_show();
+
+        $.ajax({
+            type: 'POST',
+            url: "/remont/remont-edit/mode/upd-mark/",
+            data:{"mark_type_id" : mark_type_id, "remont_id" : remont_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    if ($(ob).is(':checked')) {
+                        $(ob).prop('checked', false);
+                    } else {
+                        $(ob).prop('checked', true);
+                    }
+                    bootboxAlert(data.result['error']);
+                    main_loader_hide();
+                }
+                else{
+                    toastSucces('Успех');
+                    location.reload();
+                    main_loader_hide();
+                }
+            }
+        });
+    }
+</script>

@@ -224,6 +224,18 @@ class RemontController extends ParentController{
             $this->view->result = $ob->remont_measure_doc_upd($params);
             return;
         }
+        if ($mode == 'upd-stage'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_stage_upd($params);
+            return;
+        }
+        if ($mode == 'upd-mark'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->remont_mark_upd($params);
+            return;
+        }
         if ($mode == 'accept-project'){
             $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
@@ -272,6 +284,12 @@ class RemontController extends ParentController{
             $result = $ob->remont_measure_doc_del($a['remont_measure_doc_id']);
             $this->view->result = $result;
         }
+        if($mode == 'del-stage'){
+            $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->remont_stage_del($a['remont_stage_id']);
+            $this->view->result = $result;
+        }
         if ($mode == 'get-price'){
             $this->_helper->AjaxContext()->addActionContext('remont-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
@@ -291,6 +309,7 @@ class RemontController extends ParentController{
         $this->view->row_contractor = $ob->read_contractor_fs()['value'];
         $this->view->row_type = $ob->material_type_read_fs()['value'];
 
+        $this->view->row_stage = $ob->remont_stage_read($remont_id)['value'];
         $this->view->row = $ob->remont_get($remont_id)['value'];
     }
     public function remontRoomListAction(){
@@ -439,6 +458,21 @@ class RemontController extends ParentController{
         $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
 
         $this->view->row = $ob->remont_measure_doc_get($remont_measure_doc_id)['value'];
+    }
+    public function remontStageFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row_stage = $ob->stage_read_fs()['value'];
+        $this->view->row_stage_status = $ob->stage_status_read_fs()['value'];
+    }
+    public function remontMarkListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Remont();
+        $this->view->remont_id = $remont_id = $this->_getParam('remont_id', 0);
+
+        $this->view->row = $ob->remont_mark_read($this->view->remont_id)['value'];
     }
 }
 
