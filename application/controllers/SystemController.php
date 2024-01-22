@@ -354,7 +354,9 @@ class SystemController extends ParentController{
             $validate = $this->login($this->view->login, $password);
             if ($validate == 'valid'){
                 $ob->employee_set_last_login();
-                $this->_redirect('/system/blank/');
+                $row = $ob->get_first_menu_action();
+                $row = $row['value'];
+                $this->_redirect($row['menu_action'].'menu_global_id/'.$row['menu_id']);
             } else if($validate == 'blocked'){
                 $this->view->error = "Пользователь заблокирован";
             } else{
@@ -372,6 +374,9 @@ class SystemController extends ParentController{
             $validate = $this->login($row['email'], $row['password'], true);
             if ($validate == 'valid'){
                 $ob->employee_set_last_login();
+                $row = $ob->get_first_menu_action();
+                $row = $row['value'];
+                $this->_redirect($row['menu_action'].'menu_global_id/'.$row['menu_id']);
                 $this->_redirect('/system/blank/');
             }else{
                 Zend_Auth::getInstance()->clearIdentity();
