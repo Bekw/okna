@@ -368,4 +368,64 @@ class DictController extends ParentController{
 
         $this->view->row = $ob->stage_mark_read($this->view->stage_id)['value'];
     }
+    function contractorListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('contractor-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->contractor_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('contractor-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->contractor_del($a['contractor_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'set-active'){
+            $this->_helper->AjaxContext()->addActionContext('contractor-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->contractor_is_active($a['contractor_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->contractor_read()['value'];
+    }
+    function contractorEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->contractor_id = $this->_getParam("contractor_id", 0);
+
+        $this->view->row = $ob->contractor_get($this->view->contractor_id)['value'];
+    }
+    function roomListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('room-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->room_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('room-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->room_del($a['room_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->room_read()['value'];
+    }
+    function roomEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->room_id = $this->_getParam("room_id", 0);
+
+        $this->view->row = $ob->room_get($this->view->room_id)['value'];
+    }
 }

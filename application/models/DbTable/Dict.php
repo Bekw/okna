@@ -306,4 +306,55 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "public.upd_stage_mark(:stage_id, :mark_type_id, :type)", $p);
         return $result;
     }
+    public function contractor_read(){
+        $result = $this->readSP(__FUNCTION__, "public.contractor_read('cur')");
+        return $result;
+    }
+    public function contractor_get($contractor_id){
+        $p['contractor_id'] = $contractor_id;
+        $result = $this->getSP(__FUNCTION__, "public.contractor_get('cur', :contractor_id)", $p);
+        return $result;
+    }
+    public function contractor_del($contractor_id){
+        $p['contractor_id'] = $contractor_id;
+        $result = $this->execSP(__FUNCTION__, "public.contractor_del(:contractor_id)", $p);
+        return $result;
+    }
+    public function contractor_upd($a){
+        $p['contractor_id'] = $a['contractor_id'];
+        $p['contractor_name'] = $a['contractor_name'];
+        $p['contractor_bin'] = $a['contractor_bin'];
+        $p['contractor_address'] = $a['contractor_address'];
+        $p['contractor_cheif_fio'] = $a['contractor_cheif_fio'];
+        $p['add_date'] = $a['add_date'];
+        $p['is_active'] = $a['is_active'] ?? false;
+        $result = $this->execSP(__FUNCTION__, "public.contractor_upd(:contractor_id, :contractor_name, :contractor_bin, :contractor_address, :contractor_cheif_fio, to_date(:add_date, 'dd.mm.yyyy'), :is_active)", $p);
+        return $result;
+    }
+    public function contractor_is_active($contractor_id){
+        $p['contractor_id'] = $contractor_id;
+        $result = $this->execSP(__FUNCTION__, "public.contractor_is_active(:contractor_id)", $p);
+        return $result;
+    }
+    public function room_read(){
+        $result = $this->readSP(__FUNCTION__, "public.room_read('cur')");
+        return $result;
+    }
+    public function room_get($room_id){
+        $p['room_id'] = $room_id;
+        $result = $this->getSP(__FUNCTION__, "public.room_get('cur', :room_id)", $p);
+        return $result;
+    }
+    public function room_del($room_id){
+        $p['room_id'] = $room_id;
+        $result = $this->execSP(__FUNCTION__, "public.room_del(:room_id)", $p);
+        return $result;
+    }
+    public function room_upd($a){
+        $p['room_id'] = $a['room_id'];
+        $p['room_name'] = $a['room_name'];
+        $p['room_code'] = $a['room_code'];
+        $result = $this->execSP(__FUNCTION__, "public.room_upd(:room_id, :room_name, :room_code)", $p);
+        return $result;
+    }
 }

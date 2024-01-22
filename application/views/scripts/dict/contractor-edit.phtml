@@ -1,0 +1,86 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->contractor_id?>" name="contractor_id">
+
+        <div class="form-group">
+            <label class="control-label " for="contractor_name">Название</label>
+            <input type="text" id="contractor_name" placeholder="Название" class="form-control" value="<?=$this->row['contractor_name'] ?? null?>" name="contractor_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="contractor_bin">БИН</label>
+            <input type="text" id="contractor_bin" placeholder="БИН" class="form-control" value="<?=$this->row['contractor_bin'] ?? null?>" name="contractor_bin">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="contractor_address">Адрес</label>
+            <input type="text" id="contractor_address" placeholder="Адрес" class="form-control" value="<?=$this->row['contractor_address'] ?? null?>" name="contractor_address">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="contractor_cheif_fio">ФИО начальника</label>
+            <input type="text" id="contractor_cheif_fio" placeholder="ФИО начальника" class="form-control" value="<?=$this->row['contractor_cheif_fio'] ?? null?>" name="contractor_cheif_fio">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="add_date">Дата присоединения</label>
+            <input type="text" style="width: 166px; height: 34px" id="add_date" placeholder="Дата присоединения" class="form-control date-picker" value="<?=$this->row['add_date'] ?? null?>" name="add_date">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="is_active">Активный</label>
+            <div>
+                <select class="form-control" id="is_active" name="is_active" required>
+                    <option value="0" <?=is_selected_html(0, $this->row['is_active'] ?? null)?>>Нет</option>
+                    <option value="1" <?=is_selected_html(1, $this->row['is_active'] ?? null)?>>Да</option>
+                </select>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updContractor()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+5"
+        });
+    });
+
+    function updContractor(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/contractor-list/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>
