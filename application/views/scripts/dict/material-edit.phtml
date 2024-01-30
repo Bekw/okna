@@ -109,6 +109,17 @@ $this->placeholder('page-header')->set("Редактирование матер�
                     </tbody>
                 </table>
             </div>
+            <h3>Пакеты ремонта
+                <a href="javascript:void(0)" class="card-toolbar-btn btn btn-xs radius-1 btn-outline-success mx-1px" draggable="false" onclick="showModalPackage(<?=$this->material_id?>)">
+                    <i class="fas fa-plus w-2 mx-1px"></i>
+                </a>
+            </h3>
+            <?foreach ($this->package_row as $value2){?>
+                <span class="m-1 badge bgc-white border-1 brc-primary-m2 btn-text-primary px-25" style="font-size: 14px;">
+                    <?=$value2['package_name']?>
+                </span>
+                <?
+            }?>
             <?
         }?>
     </div>
@@ -150,10 +161,26 @@ $this->placeholder('page-header')->set("Редактирование матер�
         $('#modal-container').find('.modal-dialog').addClass('modal-md');
         $("#modal-header-container").empty();
         $("#modal-body-container").empty();
-        $('#modal-header-container').append('Редактирование');
+        $('#modal-header-container').append('Цена');
         $.ajax({
             type: 'POST',
             url: "/dict/material-price-edit/",
+            data: {material_id : material_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+    function showModalPackage(material_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Пакеты');
+        $.ajax({
+            type: 'POST',
+            url: "/dict/material-package-edit/",
             data: {material_id : material_id},
             async: true,
             success: function(data){

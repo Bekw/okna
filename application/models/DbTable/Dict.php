@@ -269,6 +269,11 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "public.material_price_read('cur', :material_id)", $p);
         return $result;
     }
+    public function material_package_read($material_id){
+        $p['material_id'] = $material_id;
+        $result = $this->readSP(__FUNCTION__, "public.material_package_read('cur', :material_id)", $p);
+        return $result;
+    }
     public function material_price_del($material_price_id){
         $p['material_price_id'] = $material_price_id;
         $result = $this->execSP(__FUNCTION__, "public.material_price_del(:material_price_id)", $p);
@@ -355,6 +360,37 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $p['room_name'] = $a['room_name'];
         $p['room_code'] = $a['room_code'];
         $result = $this->execSP(__FUNCTION__, "public.room_upd(:room_id, :room_name, :room_code)", $p);
+        return $result;
+    }
+    public function package_read(){
+        $result = $this->readSP(__FUNCTION__, "public.package_read('cur')");
+        return $result;
+    }
+    public function package_get($package_id){
+        $p['package_id'] = $package_id;
+        $result = $this->getSP(__FUNCTION__, "public.package_get('cur', :package_id)", $p);
+        return $result;
+    }
+    public function package_del($package_id){
+        $p['package_id'] = $package_id;
+        $result = $this->execSP(__FUNCTION__, "public.package_del(:package_id)", $p);
+        return $result;
+    }
+    public function package_upd($a){
+        $p['package_id'] = $a['package_id'];
+        $p['package_name'] = $a['package_name'];
+        $p['package_code'] = $a['package_code'];
+        $result = $this->execSP(__FUNCTION__, "public.package_upd(:package_id, :package_name, :package_code)", $p);
+        return $result;
+    }
+    public function material_package_upd($a){
+        $p['material_id'] = $a['material_id'];
+        if (isset($a['package_id_arr'])){
+            $p['package_id_arr'] = '{'.implode(",", zeroToNull($a['package_id_arr'])).'}';
+        }else{
+            $p['package_id_arr'] = '{}';
+        }
+        $result = $this->execSP(__FUNCTION__, "public.material_package_upd(:material_id, :package_id_arr)", $p);
         return $result;
     }
 }

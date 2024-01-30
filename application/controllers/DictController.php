@@ -301,6 +301,7 @@ class DictController extends ParentController{
         $this->view->row = $ob->material_get($this->view->material_id)['value'];
         if($this->view->material_id <> 0){
             $this->view->row_price = $ob->material_price_read($this->view->material_id)['value'];
+            $this->view->package_row = $ob->material_package_read($this->view->material_id)['value'];
         }
     }
     function materialPriceFormAction(){
@@ -326,6 +327,12 @@ class DictController extends ParentController{
             $result = $ob->material_price_upd($a);
             $this->view->result = $result;
         }
+        if($mode == 'upd-package'){
+            $this->_helper->AjaxContext()->addActionContext('material-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_package_upd($a);
+            $this->view->result = $result;
+        }
         if($mode == 'del'){
             $this->_helper->AjaxContext()->addActionContext('material-edit', 'json')->initContext('json');
             $a = $this->_getAllParams();
@@ -346,6 +353,15 @@ class DictController extends ParentController{
         $ob = new Application_Model_DbTable_Dict();
 
         $this->view->material_id = $this->_getParam("material_id", 0);
+    }
+    function materialPackageEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->material_id = $this->_getParam("material_id", 0);
+        $this->view->row = $ob->material_get($this->view->material_id)['value'];
+        $this->view->row_package = $ob->package_read()['value'];
     }
     function stageMarkListAction(){
         $ob = new Application_Model_DbTable_Dict();
@@ -427,5 +443,32 @@ class DictController extends ParentController{
         $this->view->room_id = $this->_getParam("room_id", 0);
 
         $this->view->row = $ob->room_get($this->view->room_id)['value'];
+    }
+    function packageListAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('package-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->package_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('package-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->package_del($a['package_id']);
+            $this->view->result = $result;
+        }
+        $this->view->row = $ob->package_read()['value'];
+    }
+    function packageEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->package_id = $this->_getParam("package_id", 0);
+
+        $this->view->row = $ob->package_get($this->view->package_id)['value'];
     }
 }

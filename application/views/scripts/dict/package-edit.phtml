@@ -1,0 +1,61 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->package_id?>" name="package_id">
+
+        <div class="form-group">
+            <label class="control-label " for="package_name">Название</label>
+            <input type="text" id="package_name" placeholder="Название" class="form-control" value="<?=$this->row['package_name'] ?? null?>" name="package_name">
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="package_code">Код</label>
+            <input type="text" id="package_code" placeholder="Код" class="form-control" value="<?=$this->row['package_code'] ?? null?>" name="package_code">
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updPackage()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+5"
+        });
+    });
+
+    function updPackage(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/package-list/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>
