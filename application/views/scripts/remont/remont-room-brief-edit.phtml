@@ -5,7 +5,8 @@
 
         <div class="form-group">
             <label class="control-label " for="room_id">Тип </label>
-            <select class="form-control chosen-select" id="brief_type_id" name="brief_type_id">
+            <br>
+            <select class="form-control chosen-select" id="brief_type_id" name="brief_type_id" style="width: 250px;">
                 <option value="0">Выберите тип</option>
                 <?foreach ($this->row_brief as $value){?>
                     <option value="<?=$value['brief_type_id']?>" data-info="<?=$value['brief_type']?>" <?if($value['brief_type_id'] == $this->row['brief_type_id']){?>selected<?}?>><?=$value['brief_type_name']?></option>
