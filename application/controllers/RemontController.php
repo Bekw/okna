@@ -42,7 +42,7 @@ class RemontController extends ParentController{
         $this->_helper->layout->setLayout('layout-system');
         parent::init();
         $action_name =  (Zend_Controller_Front::getInstance()->getRequest()->getActionName());
-        $actions_except = array('send-email', 'send-tg');
+        $actions_except = array('send-email', 'send-tg', 'create-request-landing');
         if (!in_array($action_name, $actions_except)){
             if (!Zend_Auth::getInstance()->hasIdentity()){
                 $this->_redirect('/system/login');

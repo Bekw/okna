@@ -438,4 +438,15 @@ class Application_Model_DbTable_Remont extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "public.remont_mark_upd(:remont_id, :mark_type_id)", $p);
         return $result;
     }
+    public function create_landing_request($a){
+        $p['client_fio'] = $a['client_fio'];
+        $p['phone_num'] = $a['phone_num'];
+        $p['package_id'] = zeroToNull($a['package_id']);
+        $result = $this->execSP(__FUNCTION__, "public.create_landing_request(:client_fio, :phone_num, :package_id)", $p);
+        return $result;
+    }
+    public function package_read_fs(){
+        $result = $this->readSP(__FUNCTION__, "public.package_read_fs('cur')");
+        return $result;
+    }
 }

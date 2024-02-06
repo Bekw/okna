@@ -30,7 +30,8 @@
     $(document).ready(function() {
         $(".chosen-select").chosen({
             allow_single_deselect: true,
-            no_results_text: "Ничего не найдено..."
+            no_results_text: "Ничего не найдено...",
+            width: '100%'
         });
 
         loadBriefTypeSelect(<?=$this->row['brief_type_id'] ?? 0?>, <?=$this->row['brief_type'] ?? 0?>);

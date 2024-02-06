@@ -1,1 +1,1284 @@
-version 2.0
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1">
+    <base href="../" />
+
+    <title>EmenTau</title>
+
+    <!-- include common vendor stylesheets & fontawesome -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css">
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/regular.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/brands.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.3/css/solid.min.css">
+    <!-- include fonts -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600&display=swap">
+    <!-- ace.css -->
+    <link rel="stylesheet" type="text/css" href="./dist/css/ace.min.css">
+    <!-- favicon -->
+    <link rel="icon" type="image/png" href="./assets/image/landing/logo.png" />
+    <style>
+        html {
+            --navbar-height: 5rem;
+            --navbar-sm-height: 3.5rem;
+        }
+        #scroll-down {
+            top: 25vh;
+        }
+        .navbar-fixed {
+            position: relative;
+        }
+
+        .navbar-compact {
+            height: 5rem;
+        }
+
+        .navbar-inner {
+            transition: height 250ms;
+        }
+
+        .navbar-compact .navbar-inner {
+            height: 3.5rem;
+        }
+
+        .navbar-fixed .navbar-inner {
+            position: fixed;
+            top: 0;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .navbar-inner {
+                transition: none;
+            }
+        }
+        .page-intro {
+            background-repeat: no-repeat;
+            background-position: center 1.5rem;
+            background-size: 100% auto;
+            background-attachment: fixed;
+        }
+        @media (max-width: 1800px) {
+            .page-intro {
+                background-size: auto 480px;
+            }
+        }
+
+        @media (max-width: 1199.98px) {
+            .page-intro {
+                background-size: auto 420px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .page-intro {
+                background-position: -50vw 1rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .page-intro {
+                background-position: -100vw 1rem;
+            }
+        }
+        .footer {
+            background: url('assets/image/landing/travel-footer.jpg') no-repeat center;
+            background-size: auto;
+            background-attachment: fixed;
+            background-position: bottom;
+        }
+        @media (max-width: 1000px) {
+            .footer {
+                background-size: auto 80%;
+            }
+        }
+        @media (max-width: 450px) {
+            .footer {
+                background-position: 60% 60%;
+                background-size: auto 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="./dist/css/ace-themes.min.css">
+</head>
+<body>
+<div class="body-container">
+    <div class="pos-abs" id="scroll-down"></div>
+    <nav class="navbar navbar-fixed navbar-expand-lg navbar-white">
+        <div class="navbar-inner shadow-sm border-b-1 brc-grey-l2">
+            <div class="container">
+                <button type="button" class="navbar-toggler btn btn-burger burger-times static collapsed d-flex d-lg-none ml-2" data-toggle="collapse" data-target="#navbarMenu" aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navbar menu">
+                    <span class="bars text-dark-tp3"></span>
+                </button>
+
+                <div class="navbar-intro justify-content-xl-between w-auto border-0">
+                    <a class="navbar-brand text-dark-tp3 text-180" href="#">
+<!--                        <img alt="Travel image" src="assets/image/landing/logo-removebg-preview.png" width="70" height="70" class="dh-zoom-2" />-->
+<!--                        <i class="fa fa-tree rotate-n45 text-105 text-green-m1 mr-1"></i>-->
+                        <span>EmenTau</span>
+                    </a><!-- /.navbar-brand -->
+                </div><!-- /.navbar-intro -->
+
+
+                <div class="navbar-menu collapse navbar-collapse navbar-backdrop ml-auto mr-lg-4" id="navbarMenu">
+
+<!--                    <div class="navbar-nav">-->
+<!--                        <ul class="nav nav-compact-3">-->
+<!--                            <li class="nav-item dropdown mx-1px">-->
+<!--                                <a class="btn btn-white btn-h-default btn-a-default" href="#">-->
+<!--                                    <i class="fa fa-phone fa-flip-horizontal mr-1 text-blue bgc-white-tp1 radius-1 p-1"></i>-->
+<!--                                    Контакты-->
+<!--                                </a>-->
+<!--                            </li>-->
+<!--                        </ul><!-- /.navbar-nav menu -->
+<!--                    </div><!-- /.navbar-nav -->
+                </div><!-- /.navbar-menu.navbar-collapse -->
+
+
+
+                <button type="button" class="d-style mr-2 px-4 navbar-toggler btn btn-burger static collapsed d-flex d-lg-none" data-toggle="collapse" data-target="#navbarMenu2" aria-controls="navbarMenu2" aria-expanded="false" aria-label="Toggle navbar menu">
+                    <i class="fa fa-caret-down d-collapsed text-grey-m1 text-80"></i>
+                    <i class="fa fa-caret-up d-n-collapsed text-grey-m1 text-80"></i>
+
+                    <i class="fa fa-user text-orange-d1 ml-2"></i>
+                </button><!-- mobile navbar toggler button -->
+
+                <div class="navbar-menu collapse navbar-collapse navbar-backdrop " id="navbarMenu2">
+                    <div class="navbar-nav">
+                        <ul class="nav">
+                            <li class="nav-item dropdown px-lg-2 d-lg-flex flex-column justify-content-center">
+                                <a class="d-none d-lg-block h-auto btn btn-outline-blue btn-bold radius-round border-2 dropdown-toggle px-2 px-xl-4" href="/system/login" aria-haspopup="true" aria-expanded="false">
+                                    Войти
+                                </a>
+                                <a class="d-lg-none nav-link dropdown-toggle" href="/system/login" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-caret-right bgc-blue radius-round text-white py-2 px-4 mr-2"></i>
+                                    Войти
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div><!-- /.navbar-inner -->
+    </nav>
+    <div class="main-container bgc-white">
+
+        <div role="main" class="main-content">
+            <div class="page-content p-0">
+
+                <div role="main" class="main-content">
+                    <div class="page-content p-0">
+                        <!-- the page intro for dark theme -->
+                        <div id="page-intro-dark" class="page-intro pos-rel navbar-darkblue py-2 pt-xl-4 py-xl-5 text-white">
+
+                            <!-- some random circles -->
+                            <div class="d-none d-lg-block">
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.16;width:4px; height:4px; top:30%; left:85%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.2;width:6px; height:6px; top:91%; left:15%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.3;width:8px; height:8px; top:1%; left:87%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.24;width:6px; height:6px; top:0%; left:70%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.17;width:16px; height:16px; top:79%; left:20%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.35;width:6px; height:6px; top:10%; left:0%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.17;width:14px; height:14px; top:16%; left:87%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.15;width:17px; height:17px; top:82%; left:71%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.2;width:12px; height:12px; top:17%; left:92%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.19;width:12px; height:12px; top:44%; left:64%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.27;width:11px; height:11px; top:43%; left:89%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.18;width:9px; height:9px; top:55%; left:25%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.38;width:10px; height:10px; top:5%; left:71%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.11;width:9px; height:9px; top:62%; left:22%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.39;width:18px; height:18px; top:47%; left:3%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.18;width:6px; height:6px; top:12%; left:20%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.34;width:10px; height:10px; top:97%; left:95%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.33;width:7px; height:7px; top:74%; left:87%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.17;width:7px; height:7px; top:84%; left:72%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.14;width:9px; height:9px; top:7%; left:23%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.39;width:15px; height:15px; top:94%; left:91%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.28;width:14px; height:14px; top:60%; left:83%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.3;width:15px; height:15px; top:65%; left:66%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.1;width:7px; height:7px; top:3%; left:95%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.39;width:10px; height:10px; top:20%; left:53%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.14;width:13px; height:13px; top:13%; left:77%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.38;width:13px; height:13px; top:76%; left:13%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.19;width:16px; height:16px; top:9%; left:42%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.21;width:16px; height:16px; top:37%; left:69%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.11;width:4px; height:4px; top:21%; left:95%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.16;width:10px; height:10px; top:76%; left:74%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.16;width:17px; height:17px; top:9%; left:88%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.21;width:15px; height:15px; top:79%; left:131%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.37;width:14px; height:14px; top:94%; left:8%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.2;width:9px; height:9px; top:65%; left:87%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.1;width:16px; height:16px; top:4%; left:93%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.32;width:18px; height:18px; top:36%; left:81%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.35;width:7px; height:7px; top:0%; left:21%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.22;width:11px; height:11px; top:69%; left:82%;"></div>
+                                <div class="pos-abs bgc-white radius-round" style="opacity: 0.32;width:6px; height:6px; top:68%; left:79%;"></div>
+                            </div>
+
+
+                            <div class="row container container-plus mx-auto mt-3 mb-5">
+                                <div class="col-12 col-md-12 d-flex flex-column justify-content-center text-center" data-aos="fade-right" data-aos-delay="100">
+                                    <h1 class="align-self-center">
+                                        <span class="text-110 text-yellow-l3">
+                                            Планируете ремонт?
+                                        </span>
+                                    </h1>
+
+                                    <h4 class="my-3 text-white text-120">
+                                        Компания <span class="text-110 text-yellow-l3">EmenTau</span> - 10 лет на рынке. Все виды услуг начиная от дизайна до монтажа мебели на заказ.
+                                    </h4>
+
+                                </div><!-- /.col -->
+
+
+<!--                                <div class="col-12 col-md-5 order-first order-md-last mb-4 mb-md-0" data-aos="fade-left">-->
+<!--                                    <img alt="Product Image" src="assets/image/landing/preview.png" class="w-90 1mx-auto" />-->
+<!--                                </div>-->
+                            </div><!-- /.row -->
+
+                        </div>
+
+<!--                <div>-->
+<!--                    <video src="assets/video/video1.mp4" autoplay  class="d-block w-100"  width="400" height="300"></video>-->
+<!--                </div>-->
+
+                <div class="py-3 mt-3 bgc-white">
+                    <div class="container container-plus py-2 py-lg-4 text-center">
+
+                        <h2 class="text-primary mb-2 text-190">
+                            Вы купили новую квартиру или решили затеять ремонт в старой, но не знаете, с чего начать?!
+                        </h2>
+
+                        <div class="text-dark-l1 text-110">
+                            Не беда, ведь вам поможет компания "EMEN TAU"! Мы занимаемся профессиональным дизайном интерьера и ремонтом под ключ жилых и коммерческих помещений в Алматы и области!
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12 col-lg-11 col-xl-9 mx-auto">
+
+                                <div class="row my-4">
+                                    <div class="col-12 col-md-4 mb-4 mb-md-0 pb-2 pb-md-0">
+                                        <div class="d-inline-block text-center bgc-green-l4 p-4 radius-round text-120 border-2 brc-green-m4 d-style">
+                                            <i class="fa fa-pen-nib fa-2x w-5 h-5 text-green-d1 d-zoom-2"></i>
+                                        </div>
+
+                                        <h3 class="text-grey-d3 text-140 my-2 my-md-3">
+                                            Проект/дизайн ремонта
+                                        </h3>
+
+                                        <p class="text-dark-m3">
+                                            Мы поможем вам правильно спланировать ваше пространство, учитывая все ваши вкусы и привычки!
+                                        </p>
+                                    </div>
+
+
+                                    <div class="col-12 col-md-4 mb-4 mb-md-0 pb-2 pb-md-0">
+                                        <div class="d-inline-block text-center bgc-blue-l4 p-4 radius-round text-120 border-2 brc-blue-l1 d-style">
+                                            <i class="fa fa-hammer text-180 w-5 h-5 text-blue-d1 d-zoom-2"></i>
+                                        </div>
+
+                                        <h3 class="text-grey-d3 text-140 my-2 my-md-3">
+                                            Контроль качества
+                                        </h3>
+
+                                        <p class="text-dark-m3">
+                                            Приступим к ремонту, контролируя каждый этап работы!
+                                        </p>
+                                    </div>
+
+
+                                    <div class="col-12 col-md-4">
+                                        <div class="d-inline-block text-center bgc-orange-l4 p-4 radius-round text-120 border-2 brc-warning-m4 d-style">
+                                            <i class="fa fa-laptop text-180 w-5 h-5 text-orange-d2 d-zoom-2"></i>
+                                        </div>
+
+                                        <h3 class="text-grey-d3 text-140 my-2 my-md-3">
+                                            Прозрачность
+                                        </h3>
+
+                                        <p class="text-dark-m3">
+                                            Весь процесс работы у вас в руках. СРМ для сотрудников и личный кабинет каждому клиенту
+                                        </p>
+                                    </div>
+                                </div><!-- /.row -->
+
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+
+                    </div><!-- /.container -->
+                </div>
+
+
+
+
+                <div class="bgc-blue-l4">
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+                                    <div class="radius-2 mt-1 mr-md-4 shadow-sm border-1 p-2px brc-brown-l1 bgc-white">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/measure.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 1
+                                        </h3>
+                                        <p>
+                                            Встреча на объекте, замеры, брифинг
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+
+                <div>
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 2
+                                        </h3>
+
+                                        <p>
+                                            Разработка технического дизайн проекта, рабочего проекта и 3д визуализации. Составление сметы
+                                        </p>
+                                    </div>
+
+                                    <div class="radius-2 mt-1 ml-md-4 shadow-sm border-1 p-2px brc-default-l1 bgc-white order-first order-md-last">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/plan.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+                <div class="bgc-blue-l4">
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+                                    <div class="radius-2 mt-1 mr-md-4 shadow-sm border-1 p-2px brc-brown-l1 bgc-white">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/remon1.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 3
+                                        </h3>
+
+                                        <p>
+                                            Черновая отделка объекта: перепланировка, черновая электрика, сантехника
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+                <div>
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 4
+                                        </h3>
+
+                                        <p>
+                                            Чистовая отделка объекта: покарска стен, обои, кафель, потолок, двери
+                                        </p>
+                                    </div>
+
+                                    <div class="radius-2 mt-1 ml-md-4 shadow-sm border-1 p-2px brc-default-l1 bgc-white order-first order-md-last">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/remon2.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+                <div class="bgc-blue-l4">
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+                                    <div class="radius-2 mt-1 mr-md-4 shadow-sm border-1 p-2px brc-brown-l1 bgc-white">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/cleaning.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 5
+                                        </h3>
+
+                                        <p>
+                                            Клининг объекта
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+                <div>
+                    <div class="container container-plus py-45">
+                        <div class="row">
+                            <div class="col-12 col-lg-8 mx-auto">
+                                <div class="d-flex flex-column align-items-center flex-md-row align-items-md-center">
+
+                                    <div class="flex-grow-1 text-dark-m3 mt-4 mt-md-0">
+                                        <h3 class="text-dark-m3 text-center text-md-left mb-4">
+                                            Шаг 6
+                                        </h3>
+
+                                        <p>
+                                            Изготовление и монтаж мебели
+                                        </p>
+                                    </div>
+
+                                    <div class="radius-2 mt-1 ml-md-4 shadow-sm border-1 p-2px brc-default-l1 bgc-white order-first order-md-last">
+                                        <div class="overflow-hidden radius-1">
+                                            <img alt="Travel image" src="assets/image/landing/mebel.jpeg" width="320" height="230" class="dh-zoom-2" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.col -->
+                        </div><!-- /.row -->
+                    </div><!-- /.container -->
+                </div>
+
+                <div class="py-3 mt-3 bgc-white">
+                    <div class="container container-plus py-2 py-lg-4 text-center">
+                        <h2 class="text-primary mb-2 text-190">
+                            Вам останется лишь завести свои личные вещи и наслаждаться жизнью в новой квартире!
+                        </h2>
+                    </div>
+                </div>
+
+                <div class="bgc-blue-l4 pb-3">
+                    <div class="container container-plus py-5">
+                        <h3 class="text-center text-dark-tp3 text-160 mb-5">Наши пакеты</h3>
+                        <div>
+                            <div class="row justify-content-center mx-1 mx-lg-0 mt-3">
+
+                                <!-- Basic -->
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+
+                                        <div class="d-flex flex-column align-items-center">
+
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                STANDART
+                                            </h4>
+
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">42 500</span> тг
+                                            </div>
+
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола, теплый пол, укладка ламината, линолеума
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, Левкас Q2, покраска, поклейка обоев
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков и накладных светильников
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                KOMFORT
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">50 000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола,  теплый пол,  укладка ламината, линолеума, кварцвинила + ёлочка
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, левкас Q2, покраска, поклейка обоев
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков и накладных светильников
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Поклейка декоративных элементов из гипса
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                PREMIUM
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">60000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола,  теплый пол,  укладка любого типа напольного покрытия
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, левкас Q2, нанесение любого чистового материала на выбор
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков, монтаж ГКЛ потолков любой сложности, установка светильных приборов
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж декор элементов любой сложности
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект, дизайн проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                BASIC
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">92 500</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола, теплый пол,  укладка ламината, линолеума
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, Левкас Q2, покраска, поклейка обоев
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков,  накладных светильников
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект, дизайн проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                NOMINAL
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">100 000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола, теплый пол,  укладка ламината, линолеума, кварцвинила + ёлочка
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, Левкас Q2, покраска, поклейка обоев
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков,  накладных светильников
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Поклейка декоративных элементов из гипса
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект, дизайн проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                INCLUSIVE NOMINAL
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">170 000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола,  теплый пол, любое напольное покрытие
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, левкас Q2/3 нанесение любого чистового материала на выбор заказчика
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков, монтаж ГКЛ потолков любой сложности, установка  светильных приборов
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж декор элементов любой сложности
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех.надзор, сопровождение по подбору материала
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Рабочий проект, дизайн проект
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                ALL INCLUSIVE
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">227 000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола,  теплый пол, любое напольное покрытие
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, левкас Q2/3 нанесение любого чистового материала на выбор заказчика
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы, умный дом
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков, монтаж ГКЛ потолков любой сложности, установка  светильных приборов
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж декор элементов любой сложности
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех. надзор, сопровождение по подбору материала, польный клининг после ремонта
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Полный дизайн проект с 3D визуализация
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-lg-3 px-2 dh-zoom-1 mb-4">
+                                    <div class="d-style btn btn-outline-default btn-h-outline-blue btn-a-outline-blue bgc-white w-100 border-t-3 pb-3">
+                                        <div class="d-flex flex-column align-items-center">
+                                            <h4 class="w-75 pt-15 pb-2 text-140 bgc-blue text-white mt-n35 mb-3 radius-1">
+                                                TAU
+                                            </h4>
+                                            <div class="text-secondary text-120">
+                                                от <span class="text-200">398 000</span> тг
+                                            </div>
+                                            <hr class="w-90 my-4 brc-secondary-l3" />
+                                            <div class="text-grey-d1 text-90 w-90">
+                                                <ul class="list-unstyled text-left mx-auto mb-1">
+                                                    <li>
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Выравнивание пола,  теплый пол, любое напольное покрытие
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж стен, левкас Q2/3 нанесение любого чистового материала на выбор заказчика
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Все электромонтажные работы, умный дом, умный замок
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Черновая и чистовая сантехника
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Побелка потолков, монтаж ГКЛ потолков любой сложности, установка  светильных приборов
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Монтаж декор элементов любой сложности
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Вывоз мусора, тех. надзор, сопровождение по подбору материала, польный клининг после ремонта
+                                                        </span>
+                                                    </li>
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Полный дизайн проект с 3D визуализация, VR очки виртуальной реальности
+                                                        </span>
+                                                    </li>
+
+                                                    <li class="mt-25">
+                                                        <i class="fa fa-check text-success-m2 text-110 mr-1 mt-1"></i>
+                                                        <span class="text-110">
+                                                            Мебель и бытовая техника на заказ
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="navbar-blue pos-rel">
+                    <div class="container container-plus py-5 px-lg-5 ">
+                        <div class="row">
+                            <div class="col-lg-12 col-xl-12 mx-auto justify-content-center" data-aos="fade-up">
+                                <h3 class="text-white text-center text-180 mb-3">
+                                    Оставить заявку
+                                </h3>
+                                <form id="form_id">
+                                    <div class="row">
+                                        <div class="box1 col-md-3">
+                                            <label class="control-label " style="color: white;" for="client_fio">ФИО</label>
+                                            <input type="text" id="client_fio" placeholder="ФИО" class="form-control" name="client_fio" required>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="box1 col-md-3">
+                                            <label class="control-label " style="color: white;" for="phone_num">Телефон</label>
+                                            <input type="text" id="phone" placeholder="Телефон" class="form-control" name="phone_num" required>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                        <div class="box1 col-md-3">
+                                            <label class="control-label " style="color: white;" for="package_id">Пакет ремонта</label>
+                                            <select class="form-control" id="platform" name="package_id">
+                                                <option value="0">Выберите тип</option>
+                                                <?foreach ($this->row as $value){?>
+                                                    <option value="<?=$value['package_id']?>" <?if($this->package_id == $value['package_id']){?>selected<?}?>><?=$value['package_name']?></option>
+                                                    <?
+                                                }?>
+                                            </select>
+                                        </div>
+                                        <div class="box1 col-md-3" style="margin-top: 35px;">
+                                            <button type="button" class="btn btn-sm px-4 btn-success mb-1" onclick="updRequest()">Сохранить</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container container-plus py-3 my-45 px-lg-5">
+                    <div class="row">
+                        <div class="col-lg-9 mx-auto">
+                            <h4 class="text-dark-tp3 text-center text-160 mb-2">
+                                Наши контакты
+                            </h4>
+                            <hr class="brc-secondary-l3" />
+
+                            <div class="row text-130 mt-4 justify-content-center">
+
+                                <div class="col-4 col-sm-3 col-md-2 text-center my-2">
+                                    <a href="tel:+77075928272" target="_blank">
+                                        <i class="d-block fa fa-address-book text-primary fa-2x"></i>
+                                        <span class="text-90 text-muted">Телефон</span><br>
+                                        <span class="text-90 text-muted">8 707 592 82 72</span>
+                                    </a>
+                                </div>
+
+                                <div class="col-4 col-sm-3 col-md-2 text-center my-2">
+                                    <a href="https://wa.me/+77075928272" target="_blank">
+                                        <i class="d-block fab fa-whatsapp text-success fa-2x"></i>
+                                        <span class="text-90 text-muted">WhatsApp</span><br>
+                                        <span class="text-90 text-muted">8 707 592 82 72</span>
+                                    </a>
+                                </div>
+
+                                <div class="col-4 col-sm-3 col-md-2 text-center my-2">
+                                    <a href="https://go.2gis.com/badhe" target="_blank">
+                                        <i class="d-block fa fa-map text-success fa-2x"></i>
+                                        <span class="text-90 text-muted">Адрес</span><br>
+                                        <span class="text-90 text-muted">Саламат-3</span>
+                                    </a>
+                                </div>
+
+                                <div class="col-4 col-sm-3 col-md-2 text-center my-2">
+                                    <a href="https://www.instagram.com/emen.group?utm_source=qr&igsh=MXZqbnh2am4yZGJ6bA==" target="_blank">
+                                        <i class="d-block fab fa-instagram text-danger-m1 fa-2x"></i>
+                                        <span class="text-90 text-muted">Instagram</span>
+                                    </a>
+                                </div>
+<!---->
+<!--                                <div class="col-4 col-sm-3 col-md-2 text-center my-2">-->
+<!--                                    <a href="https://www.instagram.com/emen.group?utm_source=qr&igsh=MXZqbnh2am4yZGJ6bA==" target="_blank">-->
+<!--                                        <i class="d-block fab fa-tiktok text-default fa-2x"></i>-->
+<!--                                        <span class="text-90 text-muted">TikTok</span>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+
+                            </div><!-- /.row -->
+                        </div><!-- /.col -->
+                    </div><!-- /.row -->
+                </div>
+
+
+
+
+
+
+                        <div class="text-center py-4 bgc-primary-l4 border-t-1 brc-primary-l3">
+                            <span class="text-dark-m3 text-105">
+                                Все права защищены &copy; 2024 EmenTau
+                            </span>
+                        </div>
+
+
+
+                <div class="footer-tools">
+                    <a href="#" class="btn-scroll-up btn btn-blue px-25 py-2 text-95 border-2 radius-round mb-2 mr-2">
+                        <i class="fa fa-arrow-up w-2 h-2"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+        <?=$this->partial('dict/modal-container.phtml');?>
+
+<!-- include common vendor scripts used in demo pages -->
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"></script>
+
+
+<!-- include vendor scripts used in "Landing Page 2" page. see "/views//pages/partials/landing-page-2/@vendor-scripts.hbs" -->
+<script src="https://cdn.jsdelivr.net/npm/holderjs@2.9.9/holder.min.js"></script>
+
+
+<!-- include ace.js -->
+<script src="./dist/js/ace.min.js"></script>
+
+
+
+<!-- demo.js is only for Ace's demo and you shouldn't use it -->
+<script src="./app/browser/demo.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootbox@5.5.2/bootbox.all.min.js"></script>
+
+
+<!-- "Landing Page 2" page script to enable its demo functionality -->
+<script>
+    function main_loader_show(){
+        $('.request-loader-smr').css('top', '45px');
+    }
+
+    function main_loader_hide(){
+        $('.request-loader-smr').css('top', '-45px');
+    }
+
+    function toastSucces(text){
+        $.aceToaster.add({
+            placement: 'tr',
+            body: `
+                   <p class='p-3 mb-0 text-center text-white'>
+                        <span class='d-inline-block mb-3'>
+                            <i class='fa fa-check fa-2x'></i>
+                        </span><br />
+                        <span class='text-125'>${text}</span>
+                   </p>`,
+
+            width: 360,
+            delay: 4000,
+            close: true,
+            className: 'bgc-green-d2 shadow ',
+            bodyClass: 'border-0 p-0',
+            headerClass: 'd-none',
+            progress: 'position-bl bgc-black-tp6 py-2px m-1px'
+        });
+    }
+    function toastError(text){
+        $.aceToaster.add({
+            placement: 'br',
+            body: `<div class='p-3 m-2 d-flex'>
+                     <span class='align-self-center text-center mr-3 py-2 px-1 border-1 bgc-danger radius-round'>
+                        <i class='fa fa-times text-180 w-4 text-white mx-2px'></i>
+                     </span>
+                     <div>
+                        <h4 class='text-dark-tp3'>Ошибка</h4>
+                        <span class='text-dark-tp3 text-110'>${text}</span>
+                     </div>
+                    </div>
+                    <button data-dismiss='toast' class='btn text-grey btn-h-light-danger position-tr mr-1 mt-1'><i class='fa fa-times'></i></button>`,
+
+            width: 480,
+            delay: 50000,
+            close: false,
+            className: 'shadow border-none radius-0 border-l-4 brc-danger',
+            bodyClass: 'border-0 p-0',
+            headerClass: 'd-none',
+            progress: 'position-bl bgc-black-tp6 py-2px m-1px'
+        });
+    }
+
+    function bootboxAlert(text, callback) {
+        bootbox.alert({
+            title: 'Внимание!',
+            message: `<pre class="prettyprint linenums p-3 pb-0 mb-0 ace-scrollbar ace-scroll-grey text-wrap">${text}</pre>`,
+            onEscape: true,
+            backdrop: true,
+            scrollable: true,
+            size: 'md',
+            callback: function() {
+                if (typeof callback === 'function') {
+                    callback();
+                }
+            }
+        })
+    }
+    function updRequest(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/index/index/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('#client_fio').val('');
+                    $('#phone').val('');
+                    toastSucces('Заявка создана. Скоро с Вами свяжется наш менеджер.');
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+    jQuery(function($) {
+
+        // instead of listening to window `scroll` event, we use `IntersectionObserver`
+        // to observe an element and determine when it becomes visible/invisible during scrolling
+
+        // when we scroll down, navbar becomes fixed
+        // we use a hidden element (#scroll-down) to determine when to do the above
+
+        if (window.IntersectionObserver) {
+            var observer = new window.IntersectionObserver(function(entries) {
+                var entry = entries[0];
+                var isOut = entry.intersectionRatio < 1 && entry.boundingClientRect.y < 0
+                if (isOut) {
+                    $('.navbar').addClass('navbar-compact')
+                } else {
+                    $('.navbar').removeClass('navbar-compact')
+                }
+            }, {
+                threshold: [1.0],
+                delay: 100
+            })
+
+            observer.observe(document.getElementById('scroll-down'))
+        }
+    })
+</script>
+</body>
+
+</html>
