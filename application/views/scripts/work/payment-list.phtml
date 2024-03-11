@@ -10,6 +10,7 @@
             <th>Работник</th>
             <th>Дата создания</th>
             <th>Вложения</th>
+            <th>Действия</th>
             <th>Удалить</th>
         </tr>
         </thead>
@@ -21,6 +22,9 @@
                 $status_color = '#e19e2e69';
                 if($value['status_text'] == 'Оплачен'){
                     $status_color = '#36ad8282';
+                }
+                if($value['status_text'] == 'Отклонен'){
+                    $status_color = '#e12e2e69';
                 }
                 ?>
                 <tr>
@@ -37,6 +41,30 @@
                                 <a href="<?=$value['payment_url']?>" title="Скачать" class="btn btn-xs btn-secondary" target="_blank" download="download">
                                     <i class="fa fa-download" aria-hidden="true">
                                     </i> Скачать
+                                </a>
+                            </div>
+                            <?
+                        }?>
+                    </td>
+                    <td class="text-center">
+                        <?if($value['payment_status'] == 1){?>
+                            <div class="action-buttons">
+                                <a class="btn btn-xs btn-warning" href="javascript:void(0);" onclick="statusPayment(<?=$value['payment_id']?>, 2, this)">
+                                    <i class="fa fa-ban" aria-hidden="true">
+                                    </i>  Отклонить
+                                </a>
+                                <a class="btn btn-xs btn-success" href="javascript:void(0);" onclick="statusPayment(<?=$value['payment_id']?>, 3, this)">
+                                    <i class="fa fa-check" aria-hidden="true">
+                                    </i>  Оплачен
+                                </a>
+                            </div>
+                            <?
+                        }?>
+                        <?if($value['payment_status'] != 1 && getCurPositionCode() == 'ADMIN'){?>
+                            <div class="action-buttons">
+                                <a class="btn btn-xs btn-grey" href="javascript:void(0);" onclick="statusPayment(<?=$value['payment_id']?>, 1, this)">
+                                    <i class="fa fa-ban" aria-hidden="true">
+                                    </i>  Сбросить
                                 </a>
                             </div>
                             <?

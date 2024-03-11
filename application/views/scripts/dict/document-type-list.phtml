@@ -1,6 +1,6 @@
 <?
-$this->headTitle('Пакеты');
-$this->placeholder('page-header')->set("Пакеты");
+$this->headTitle('Тип документа');
+$this->placeholder('page-header')->set("Тип документа");
 ?>
 
 <style>
@@ -33,7 +33,7 @@ $this->placeholder('page-header')->set("Пакеты");
                             <thead>
                             <tr class="text-primary-d3 text-95 text-center">
                                 <th class="py-3 pl-35">ID</th>
-                                <th class="text-center">Название</th>
+                                <th class="text-center">Наименование</th>
                                 <th class="text-center">Код</th>
                                 <th class="text-center"></th>
                             </tr>
@@ -44,14 +44,14 @@ $this->placeholder('page-header')->set("Пакеты");
                             if(mycount($this->row) > 0){
                                 foreach ($this->row as $key => $value){?>
                                     <tr class="bgc-h-orange-l4 text-600">
-                                        <td class="text-right'"><?=$value['package_id']?></td>
-                                        <td class="text-left"><?=$value['package_name']?></td>
-                                        <td class="text-left"><?=$value['package_code']?></td>
+                                        <td class="text-center"><?=$value['document_type_id']?></td>
+                                        <td class="text-center"><?=$value['document_type_name']?></td>
+                                        <td class="text-center"><?=$value['document_type_code']?></td>
                                         <td class="pr-35 text-center" style="white-space: nowrap">
-                                            <a href="javascript:void(0);" onclick="showModal(<?=$value['package_id']?>)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-warning">
+                                            <a href="javascript:void(0);" onclick="showModal(<?=$value['document_type_id']?>)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-warning">
                                                 <i class="fa fa-pencil-alt"></i>
                                             </a>
-                                            <a href="javascript:void(0);" onclick="delPackage(<?=$value['package_id']?>,'<?=$value['package_name']?>', this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger">
+                                            <a href="javascript:void(0);" onclick="delType(<?=$value['document_type_id']?>,'<?=$value['document_type_name']?>', this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger">
                                                 <i class="fa fa-trash-alt"></i>
                                             </a>
                                         </td>
@@ -86,15 +86,15 @@ $this->placeholder('page-header')->set("Пакеты");
         });
     });
 
-    function showModal(package_id){
+    function showModal(document_type_id){
         $('#modal-container').find('.modal-dialog').addClass('modal-md');
         $("#modal-header-container").empty();
         $("#modal-body-container").empty();
         $('#modal-header-container').append('Редактирование');
         $.ajax({
             type: 'POST',
-            url: "/dict/package-edit/",
-            data: {package_id : package_id},
+            url: "/dict/document-type-edit/",
+            data: {document_type_id : document_type_id},
             async: true,
             success: function(data){
                 $("#modal-body-container").html(data);
@@ -103,19 +103,19 @@ $this->placeholder('page-header')->set("Пакеты");
         $(".modal").modal('show');
     }
 
-    function delPackage(package_id, package_name, ob){
-        if (!confirm("Вы действительно хотите удалить комнату " + package_name + " ?")) {
+    function delType(document_type_id, document_type_name, ob){
+        if (!confirm("Вы действительно хотите удалить " + document_type_name + " ?")) {
             return false;
         }
         $.ajax({
             type: 'POST',
-            url: "/dict/package-list/mode/del/package_id/" + package_id + "/",
+            url: "/dict/document-type-list/mode/del/document_type_id/" + document_type_id + "/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
                 }
                 else{
-                    toastSucces('Комната ' + package_name + ' удалена');
+                    toastSucces('Тип ' + document_type_name + ' удален');
                     $(ob).closest("tr").remove();
                 }
             }

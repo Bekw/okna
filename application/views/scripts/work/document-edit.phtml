@@ -1,29 +1,28 @@
 <div class="modal-body" id="modal_body">
     <form id="form_id">
-        <input type="hidden" value="<?=$this->brand_id?>" name="brand_id">
+        <input type="hidden" value="<?=$this->client_request_id?>" name="client_request_id">
+        <input type="hidden" value="0" name="document_id">
 
         <div class="form-group">
-            <label class="control-label " for="brand_name">Наименование</label>
-            <input type="text" id="brand_name" placeholder="Наименование" class="form-control" value="<?=$this->row['brand_name'] ?? null?>" name="brand_name">
+            <label class="control-label " for="document_name">Наименование</label>
+            <input type="text" id="document_name" placeholder="Наименование" class="form-control" value="<?=$this->row['document_name'] ?? null?>" name="document_name">
             <div class="clearfix"></div>
         </div>
+
         <div class="form-group">
-            <label class="control-label " for="brand_code">Код</label>
-            <input type="text" id="brand_code" placeholder="Код" class="form-control" value="<?=$this->row['brand_code'] ?? null?>" name="brand_code">
+            <label class="control-label " for="document_type_id">Тип документа</label>
+            <select class="form-control" id="platform" name="document_type_id">
+                <option value="0">Выберите тип</option>
+                <?foreach ($this->row_type as $value){?>
+                    <option value="<?=$value['document_type_id']?>"><?=$value['document_type_name']?></option>
+                    <?
+                }?>
+            </select>
             <div class="clearfix"></div>
         </div>
+
         <div class="form-group">
-            <label class="control-label " for="is_active">Активный</label>
-            <div>
-                <select class="form-control" id="is_active" name="is_active" required>
-                    <option value="0" <?=is_selected_html(0, $this->row['is_active'] ?? null)?>>Нет</option>
-                    <option value="1" <?=is_selected_html(1, $this->row['is_active'] ?? null)?>>Да</option>
-                </select>
-            </div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="form-group">
-            <label class="control-label " for="discount_percent">Фото</label>
+            <label class="control-label " for="discount_percent">Файл</label>
             <div class="form-control no-padding">
                 <input type="file" name="upload" id="upload" >
             </div>
@@ -34,7 +33,7 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updBrand()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updDocument()">Сохранить</button>
     <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
 </div>
 
@@ -46,14 +45,14 @@
         });
     });
 
-    function updBrand(){
+    function updDocument(){
         main_loader_show();
         var send_data = new FormData($("#form_id")[0]);
 
         $.ajax({
             type: 'POST',
             data: send_data,
-            url: "/dict/brand-list/mode/upd/",
+            url: "/work/client-request-edit/mode/upd-doc/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
@@ -61,7 +60,7 @@
                 else{
                     $('.modal').modal('hide');
                     toastSucces('Успех');
-                    location.reload();
+                    $('#documents').load('/work/document-list/client_request_id/<?=$this->client_request_id?>');
                 }
                 main_loader_hide();
             },

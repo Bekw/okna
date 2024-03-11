@@ -6,23 +6,12 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
     <div class="col-12 col-md-12">
         <div class="alert bgc-blue-l1 text-dark-m2 border-0 text-110 mb-0 p-3">
             <div style="float:left; margin-right: 40px;">
-                <p>ФИО: <?=$this->row['fio']?></p>
+                <p>ФИО: <?=$this->row['client_fio']?></p>
                 <p>Адрес: <?=$this->row['address']?></p>
                 <p>Телефон клиента: <?=$this->row['client_phone']?></p>
             </div>
             <div style="float:left; margin-right: 40px;">
-                <p>Тип дома: <?=$this->row['house_type_text']?></p>
-                <p>Площадь дома: <?=$this->row['area_house']?> кв.м</p>
-                <p>Площадь участка: <?=$this->row['area_field']?>ст.</p>
-            </div>
-            <div style="float:left; margin-right: 40px;">
-                <?if(is_null($this->row['remont_id'])){?>
-                    <button class="btn btn-xs btn-success" onclick="create_remont(<?=$this->client_request_id?>)">Создать ремонт</button>
-                    <?
-                }else{?>
-                    <a class="btn btn-xs btn-primary" href="/remont/remont-edit/remont_id/<?=$this->row['remont_id']?>">Ремонт</a>
-                    <?
-                }?>
+                <p>Тип клиента: <?=$this->row['client_type']?></p>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -94,7 +83,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
                             <input type="hidden" name="client_request_id" value="<?=$this->client_request_id?>">
                             <div class="form-group pull-left margin-right-10">
                                 <label class="control-label no-padding-right" for="measure_date">Предпочтения клиента</label>
-                                <textarea id="client_comment" name="client_wants" style="height: 200px;" class="autosize-transition form-control"><?=$this->row['client_wish']?></textarea>
+                                <textarea id="client_comment" name="client_wants" style="height: 200px;" class="autosize-transition form-control"><?=$this->row['client_wants']?></textarea>
                             </div>
                             <button class="btn btn-success btn-bold px-4" type="button" onclick="upd_request_wish()">
                                 <i class="fa fa-check mr-1"></i>
@@ -127,14 +116,14 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
 </div>
 <script>
     $( document ).ready(function() {
-        $('#documents').load('/remont/document-list/client_request_id/<?=$this->client_request_id?>');
-        $('#payment').load('/remont/payment-list/client_request_id/<?=$this->client_request_id?>');
+        $('#documents').load('/work/document-list/client_request_id/<?=$this->client_request_id?>');
+        $('#payment').load('/work/payment-list/client_request_id/<?=$this->client_request_id?>');
     });
     function upd_request(){
         var fd = new FormData($("#form_request")[0]);
         $.ajax({
             type: 'POST',
-            url: "/remont/client-request-edit/mode/upd/",
+            url: "/work/client-request-edit/mode/upd/",
             data: fd,
             success: function(data){
                 if(data.result['status'] == false){
@@ -154,7 +143,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         var fd = new FormData($("#form_wish")[0]);
         $.ajax({
             type: 'POST',
-            url: "/remont/client-request-edit/mode/upd-wish/",
+            url: "/work/client-request-edit/mode/upd-wish/",
             data: fd,
             success: function(data){
                 if(data.result['status'] == false){
@@ -177,7 +166,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         $('#modal-header-container').append('Добавить документ');
         $.ajax({
             type: 'POST',
-            url: "/remont/document-edit/",
+            url: "/work/document-edit/",
             data: {"client_request_id" : client_request_id,},
             async: true,
             success: function(data){
@@ -193,7 +182,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         $('#modal-header-container').append('Добавить платеж');
         $.ajax({
             type: 'POST',
-            url: "/remont/payment-edit/",
+            url: "/work/payment-edit/",
             data: {"client_request_id" : client_request_id,},
             async: true,
             success: function(data){
@@ -208,7 +197,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         }
         $.ajax({
             type: 'POST',
-            url: "/remont/client-request-edit/mode/del-doc/document_id/" + document_id + "/",
+            url: "/work/client-request-edit/mode/del-doc/document_id/" + document_id + "/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
@@ -226,7 +215,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         }
         $.ajax({
             type: 'POST',
-            url: "/remont/client-request-edit/mode/del-payment/payment_id/" + payment_id + "/",
+            url: "/work/client-request-edit/mode/del-payment/payment_id/" + payment_id + "/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
@@ -238,20 +227,38 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
             }
         });
     }
-    function create_remont(client_request_id){
+    function statusPayment(payment_id, payment_status, ob){
+        if (!confirm("Вы действительно хотите изменить статус?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/client-request-edit/mode/upd-payment-status/payment_id/" + payment_id + "/payment_status/" + payment_status + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Статус изменен');
+                    $('#payments').load('/work/payment-list/client_request_id/<?=$this->client_request_id?>');
+                }
+            }
+        });
+    }
+    function create_work(client_request_id){
         if (!confirm("Вы действительно хотите создать ремонт?")) {
             return false;
         }
         $.ajax({
             type: 'POST',
-            url: "/remont/client-request-edit/mode/create-remont/client_request_id/" + client_request_id + "/",
+            url: "/work/client-request-edit/mode/create-work/client_request_id/" + client_request_id + "/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
                 }
                 else{
                     toastSucces('Ремонт создан');
-                    window.location.href = '/remont/remont-edit/remont_id/' + data.result['value'];
+                    window.location.href = '/work/work-edit/work_id/' + data.result['value'];
                 }
             }
         });

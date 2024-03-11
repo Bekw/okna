@@ -1,15 +1,15 @@
 <div class="modal-body" id="modal_body">
     <form id="form_id">
-        <input type="hidden" value="<?=$this->package_id?>" name="package_id">
+        <input type="hidden" value="<?=$this->employee_request_type_id?>" name="employee_request_type_id">
 
         <div class="form-group">
-            <label class="control-label " for="package_name">Название</label>
-            <input type="text" id="package_name" placeholder="Название" class="form-control" value="<?=$this->row['package_name'] ?? null?>" name="package_name">
+            <label class="control-label " for="employee_request_type_name">Наименование</label>
+            <input type="text" id="employee_request_type_name" placeholder="Наименование" class="form-control" value="<?=$this->row['employee_request_type_name'] ?? null?>" name="employee_request_type_name">
             <div class="clearfix"></div>
         </div>
         <div class="form-group">
-            <label class="control-label " for="package_code">Код</label>
-            <input type="text" id="package_code" placeholder="Код" class="form-control" value="<?=$this->row['package_code'] ?? null?>" name="package_code">
+            <label class="control-label " for="employee_request_type_code">Код</label>
+            <input type="text" id="employee_request_type_code" placeholder="Код" class="form-control" value="<?=$this->row['employee_request_type_code'] ?? null?>" name="employee_request_type_code">
             <div class="clearfix"></div>
         </div>
 
@@ -17,7 +17,7 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updPackage()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updType()">Сохранить</button>
     <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
 </div>
 
@@ -27,21 +27,16 @@
             allow_single_deselect: true,
             no_results_text: "Ничего не найдено..."
         });
-        $(".date-picker").datepicker({
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-80:+5"
-        });
     });
 
-    function updPackage(){
+    function updType(){
         main_loader_show();
         var send_data = new FormData($("#form_id")[0]);
 
         $.ajax({
             type: 'POST',
             data: send_data,
-            url: "/dict/package-list/mode/upd/",
+            url: "/dict/employee-request-type-list/mode/upd/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);

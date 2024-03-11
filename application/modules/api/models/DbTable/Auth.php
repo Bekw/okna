@@ -17,8 +17,8 @@ class Api_Model_DbTable_Auth extends Application_Model_DbTable_Parent {
             $jwsBuilder = new JWSBuilder($algorithmManager);
 
             $payload = json_encode([
-                'iss' => 'https://ementau.kz',  // Issuer
-                'aud' => 'EmenTau_Users',  // Audience
+                'iss' => 'https://bestokna.kz',  // Issuer
+                'aud' => 'BestOkna_Users',  // Audience
                 'exp' => time() + $this->access_exp,
                 'iat' => time(),
                 'nbf' => time(),  // Not Before

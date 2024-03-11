@@ -1,6 +1,7 @@
 <div class="modal-body" id="modal_body">
     <form id="form_id">
         <input type="hidden" value="<?=$this->client_request_id?>" name="client_request_id">
+        <input type="hidden" value="0" name="payment_id">
 
         <div class="form-group">
             <label class="control-label " for="payment_type_id">Тип документа</label>
@@ -57,7 +58,7 @@
         $.ajax({
             type: 'POST',
             data: send_data,
-            url: "/remont/client-request-edit/mode/upd-payment/",
+            url: "/work/client-request-edit/mode/upd-payment/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
@@ -65,7 +66,7 @@
                 else{
                     $('.modal').modal('hide');
                     toastSucces('Успех');
-                    $('#payments').load('/remont/payment-list/client_request_id/<?=$this->client_request_id?>');
+                    $('#payments').load('/work/payment-list/client_request_id/<?=$this->client_request_id?>');
                 }
                 main_loader_hide();
             },

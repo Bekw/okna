@@ -1,6 +1,6 @@
 <?
-$this->headTitle('Подрядчики');
-$this->placeholder('page-header')->set("Подрядчики");
+$this->headTitle('Тип запроса');
+$this->placeholder('page-header')->set("Тип запроса");
 ?>
 
 <style>
@@ -33,12 +33,8 @@ $this->placeholder('page-header')->set("Подрядчики");
                             <thead>
                             <tr class="text-primary-d3 text-95 text-center">
                                 <th class="py-3 pl-35">ID</th>
-                                <th class="text-center">Название</th>
-                                <th class="text-center">Бин</th>
-                                <th class="text-center">Адрес</th>
-                                <th class="text-center">ФИО начальника</th>
-                                <th class="text-center">Дата присоединения</th>
-                                <th class="text-center">Активный</th>
+                                <th class="text-center">Наименование</th>
+                                <th class="text-center">Код</th>
                                 <th class="text-center"></th>
                             </tr>
                             </thead>
@@ -48,20 +44,14 @@ $this->placeholder('page-header')->set("Подрядчики");
                             if(mycount($this->row) > 0){
                                 foreach ($this->row as $key => $value){?>
                                     <tr class="bgc-h-orange-l4 text-600">
-                                        <td class="text-right'"><?=$value['contractor_id']?></td>
-                                        <td class="text-left"><?=$value['contractor_name']?></td>
-                                        <td class="text-left"><?=$value['contractor_bin']?></td>
-                                        <td class="text-left"><?=$value['contractor_address']?></td>
-                                        <td class="text-left"><?=$value['contractor_cheif_fio']?></td>
-                                        <td class="text-center"><?=$value['add_date']?></td>
-                                        <td class="text-center">
-                                            <input type="checkbox" id="is_active" class="ace-switch ace-switch-bars bgc-success-d2 ml-2" <?if($value['is_active'] == 1){?>checked<?}?> onchange="set_is_active(<?=$value['contractor_id']?>, this)">
-                                        </td>
+                                        <td class="text-center"><?=$value['employee_request_type_id']?></td>
+                                        <td class="text-center"><?=$value['employee_request_type_name']?></td>
+                                        <td class="text-center"><?=$value['employee_request_type_code']?></td>
                                         <td class="pr-35 text-center" style="white-space: nowrap">
-                                            <a href="javascript:void(0);" onclick="showModal(<?=$value['contractor_id']?>)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-warning">
+                                            <a href="javascript:void(0);" onclick="showModal(<?=$value['employee_request_type_id']?>)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-success btn-a-lighter-warning">
                                                 <i class="fa fa-pencil-alt"></i>
                                             </a>
-                                            <a href="javascript:void(0);" onclick="delContractor(<?=$value['contractor_id']?>,'<?=$value['contractor_name']?>', this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger">
+                                            <a href="javascript:void(0);" onclick="delType(<?=$value['employee_request_type_id']?>,'<?=$value['employee_request_type_name']?>', this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger">
                                                 <i class="fa fa-trash-alt"></i>
                                             </a>
                                         </td>
@@ -96,37 +86,15 @@ $this->placeholder('page-header')->set("Подрядчики");
         });
     });
 
-    function set_is_active(contractor_id, ob) {
-        var isChecked = $(ob).is(':checked');
-
-        $.ajax({
-            type: 'POST',
-            url: "/dict/contractor-list/mode/set-active/",
-            data:{contractor_id: contractor_id},
-            success: function(data){
-                if(data.result['status'] == false){
-                    bootboxAlert(data.result['error']);
-                    $(ob).prop('checked', false);
-                }else{
-                    if(isChecked != false){
-                        toastSucces('Подрядчик активный');
-                    }else{
-                        toastSucces('Подрядчик неактивный');
-                    }
-                }
-            }
-        });
-    }
-
-    function showModal(contractor_id){
+    function showModal(employee_request_type_id){
         $('#modal-container').find('.modal-dialog').addClass('modal-md');
         $("#modal-header-container").empty();
         $("#modal-body-container").empty();
         $('#modal-header-container').append('Редактирование');
         $.ajax({
             type: 'POST',
-            url: "/dict/contractor-edit/",
-            data: {contractor_id : contractor_id},
+            url: "/dict/employee-request-type-edit/",
+            data: {employee_request_type_id : employee_request_type_id},
             async: true,
             success: function(data){
                 $("#modal-body-container").html(data);
@@ -135,19 +103,19 @@ $this->placeholder('page-header')->set("Подрядчики");
         $(".modal").modal('show');
     }
 
-    function delContractor(contractor_id, contractor_name, ob){
-        if (!confirm("Вы действительно хотите удалить подрядчика " + contractor_name + " ?")) {
+    function delType(employee_request_type_id, employee_request_type_name, ob){
+        if (!confirm("Вы действительно хотите удалить " + employee_request_type_name + " ?")) {
             return false;
         }
         $.ajax({
             type: 'POST',
-            url: "/dict/contractor-list/mode/del/contractor_id/" + contractor_id + "/",
+            url: "/dict/employee-request-type-list/mode/del/employee_request_type_id/" + employee_request_type_id + "/",
             success: function(data){
                 if(data.result['status'] == false){
                     bootboxAlert(data.result['error']);
                 }
                 else{
-                    toastSucces('Подрядчик ' + contractor_name + ' удален');
+                    toastSucces('Тип ' + employee_request_type_name + ' удален');
                     $(ob).closest("tr").remove();
                 }
             }
