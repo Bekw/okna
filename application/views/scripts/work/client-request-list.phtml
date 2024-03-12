@@ -1,6 +1,14 @@
 <?
-$this->headTitle('Заявки');
-$this->placeholder('page-header')->set("Заявки");
+$status_name = 'Создан';
+if($this->client_client_request_status_id == 2){
+    $status_name = 'В работе';
+}elseif ($this->client_client_request_status_id == 3){
+    $status_name = 'Закончен';
+}elseif ($this->client_client_request_status_id == 4){
+    $status_name = 'Отменен';
+}
+$this->headTitle('Заявки - '.$status_name.'('.mycount($this->row).')');
+$this->placeholder('page-header')->set("Заявки - ".$status_name.'('.mycount($this->row).')');
 ?>
 <div class="float-right mb-3">
     <a href="/remont/create-request/" class="btn btn-xs btn-primary" >Добавить заявку</a>
@@ -19,6 +27,7 @@ $this->placeholder('page-header')->set("Заявки");
                     <th>ФИО</th>
                     <th>Телефон</th>
                     <th>Дата создания</th>
+                    <th></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -32,6 +41,25 @@ $this->placeholder('page-header')->set("Заявки");
                             <td class="text-left"><?=$value['client_fio']?></td>
                             <td class="text-left"><?=$value['client_phone']?></td>
                             <td class="text-center"><?=$value['date_create']?></td>
+                            <td class="text-center">
+                                <?if(in_array(getCurPositionCode(), array('ADMIN'))){?>
+                                    <a class="btn btn-sm btn-grey" style="width: 90px;" href="javascript:void(0);" <?if($value['client_request_status_id'] == 1){?>disabled="true" <?}?> onclick="upd_status(<?=$value['client_request_id']?>, 1, this)">
+                                        Создан
+                                    </a>
+                                    <br>
+                                    <a class="btn btn-sm btn-primary" style="width: 90px; margin-top: 5px;" href="javascript:void(0);" <?if($value['client_request_status_id'] == 2){?>disabled="true" <?}?> onclick="upd_status(<?=$value['client_request_id']?>, 2, this)">
+                                        В работе
+                                    </a>
+                                    <br>
+                                    <a class="btn btn-sm btn-success" style="width: 90px; margin-top: 5px;" href="javascript:void(0);" <?if($value['client_request_status_id'] == 3){?>disabled="true" <?}?> onclick="upd_status(<?=$value['client_request_id']?>, 3, this)">
+                                        Завершен
+                                    </a>
+                                    <br>
+                                    <a class="btn btn-sm btn-danger" style="width: 90px; margin-top: 5px;" href="javascript:void(0);" <?if($value['client_request_status_id'] == 4){?>disabled="true" <?}?> onclick="upd_status(<?=$value['client_request_id']?>, 4, this)">
+                                        Отменен
+                                    </a>
+                                <?}?>
+                            </td>
                         </tr>
                         <?
                     }
@@ -52,4 +80,23 @@ $this->placeholder('page-header')->set("Заявки");
             });
         });
     });
+
+    function upd_status(client_request_id, client_request_status_id, ob){
+        if (!confirm('Вы действительно хотите поменять статус?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/client-request-list/mode/upd-status/client_request_id/" + client_request_id + "/client_request_status_id/" + client_request_status_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    toastError(data.result['error']);
+                }
+                else{
+                    toastSucces('Статус изменен');
+                    location.reload();
+                }
+            }
+        });
+    }
 </script>

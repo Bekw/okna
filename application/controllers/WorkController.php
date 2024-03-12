@@ -72,6 +72,13 @@ class WorkController extends ParentController{
     public function clientRequestListAction(){
         $ob = new Application_Model_DbTable_Work();
         $client_request_status_id = $this->_getParam('client_request_status_id', 0);
+        $mode = $this->_getParam('mode', '');
+        if($mode == 'upd-status'){
+            $this->_helper->AjaxContext()->addActionContext('client-request-list', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->client_request_set_status($a);
+            $this->view->result = $result;
+        }
 
         $this->view->row = $ob->client_request_read($client_request_status_id)['value'];
     }
@@ -251,13 +258,13 @@ class WorkController extends ParentController{
             return;
         }
         if ($mode == 'upd-stage'){
-            $this->_helper->AjaxContext()->addActionContext('stage-edit', 'json')->initContext('json');
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
             $params = $this->getAllParams();
-            $this->view->result = $ob->work_stage_upd($params);
+            $this->view->result = $ob->work_stage_upd_form($params);
             return;
         }
         if($mode == 'del-stage'){
-            $this->_helper->AjaxContext()->addActionContext('stage-edit', 'json')->initContext('json');
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
             $a = $this->_getAllParams();
             $result = $ob->work_stage_del($a['work_stage_id']);
             $this->view->result = $result;

@@ -1,6 +1,17 @@
 <?
-$this->headTitle('Работы');
-$this->placeholder('page-header')->set("Работы");
+$stage_name = 'Замер/Проектирование';
+if($this->stage_id == 2){
+    $stage_name = 'Смета/Закуп';
+}elseif ($this->stage_id == 3){
+    $stage_name = 'Цех';
+}elseif ($this->stage_id == 4){
+    $stage_name = 'Доставка/Монтаж';
+}elseif ($this->stage_id == 5){
+    $stage_name = 'Сдача клиенту';
+}
+
+$this->headTitle('Заказы - '.$stage_name.'('.mycount($this->row).')');
+$this->placeholder('page-header')->set('Заказы - '.$stage_name.'('.mycount($this->row).')');
 ?>
 <div class="hr hr-10 dotted hr-double"></div>
 <div class="bcard p-3" id="load">

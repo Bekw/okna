@@ -19,7 +19,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
             </div>
             <div style="float:left; margin-right: 40px;">
                 <?if(is_null($this->row['work_id'])){?>
-                    <button class="btn btn-xs btn-success" onclick="create_work(<?=$this->client_request_id?>)">Создать работу</button>
+                    <button class="btn btn-xs btn-success" onclick="create_work(<?=$this->client_request_id?>)">Создать заказ</button>
                     <?
                 }else{?>
                     <a class="btn btn-xs btn-primary" href="/work/work-edit/work_id/<?=$this->row['work_id']?>">Работа</a>

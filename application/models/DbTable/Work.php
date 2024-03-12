@@ -281,12 +281,12 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "public.work_stage_read('cur', :work_id)", $p);
         return $result;
     }
-    public function work_stage_upd($a){
+    public function work_stage_upd_form($a){
         $p['work_id'] = $a['work_id'];
         $p['stage_id'] = $a['stage_id'];
         $p['stage_status_id'] = $a['stage_status_id'];
         $p['stage_comment'] = $a['stage_comment'];
-        $result = $this->execSP(__FUNCTION__, "public.work_stage_upd(:work_id, :stage_id, :stage_status_id, :stage_comment)", $p);
+        $result = $this->execSP(__FUNCTION__, "public.work_stage_upd_form(:work_id, :stage_id, :stage_status_id, :stage_comment)", $p);
         return $result;
     }
     public function work_stage_del($work_stage_id){
@@ -319,7 +319,8 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $p['date_start'] = zeroToNull($a['date_start']);
         $p['measure_employee_id'] = zeroToNull($a['measure_employee_id']);
         $p['designer_employee_id'] = zeroToNull($a['designer_employee_id']);
-        $result = $this->execSP(__FUNCTION__, "public.work_upd(:work_id, to_date(:measure_date, 'dd.mm.yyyy'), to_date(:date_start, 'dd.mm.yyyy'), :measure_employee_id, :designer_employee_id)", $p);
+        $p['total_area'] = zeroToNull($a['total_area']);
+        $result = $this->execSP(__FUNCTION__, "public.work_upd(:work_id, to_date(:measure_date, 'dd.mm.yyyy'), to_date(:date_start, 'dd.mm.yyyy'), :measure_employee_id, :designer_employee_id, :total_area)", $p);
         return $result;
     }
     public function client_data_upd($a){
@@ -331,6 +332,12 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $p['client_doc_num'] = $a['client_doc_num'];
         $p['client_doc_source'] = $a['client_doc_source'];
         $result = $this->execSP(__FUNCTION__, "public.client_data_upd(:client_request_id, :client_fio, :client_iin, :client_phone, :address, :client_doc_num, :client_doc_source)", $p);
+        return $result;
+    }
+    public function client_request_set_status($a){
+        $p['client_request_id'] = $a['client_request_id'];
+        $p['client_request_status_id'] = $a['client_request_status_id'];
+        $result = $this->execSP(__FUNCTION__, "public.client_request_set_status(:client_request_id, :client_request_status_id)", $p);
         return $result;
     }
 }
