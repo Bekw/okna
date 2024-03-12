@@ -9,9 +9,22 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
                 <p>ФИО: <?=$this->row['client_fio']?></p>
                 <p>Адрес: <?=$this->row['address']?></p>
                 <p>Телефон клиента: <?=$this->row['client_phone']?></p>
+                <p>Тип клиента: <?=$this->row['client_type']?></p>
             </div>
             <div style="float:left; margin-right: 40px;">
-                <p>Тип клиента: <?=$this->row['client_type']?></p>
+                <p>ИИН: <?=$this->row['client_iin']?></p>
+                <p>№ УДВ: <?=$this->row['client_doc_num']?></p>
+                <p>Орган выдачи УДВ: <?=$this->row['client_doc_source']?></p>
+                <button class="btn btn-xs btn-grey" onclick="editClient(<?=$this->client_request_id?>)">Редактировать</button>
+            </div>
+            <div style="float:left; margin-right: 40px;">
+                <?if(is_null($this->row['work_id'])){?>
+                    <button class="btn btn-xs btn-success" onclick="create_work(<?=$this->client_request_id?>)">Создать работу</button>
+                    <?
+                }else{?>
+                    <a class="btn btn-xs btn-primary" href="/work/work-edit/work_id/<?=$this->row['work_id']?>">Работа</a>
+                    <?
+                }?>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -191,6 +204,22 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         });
         $("#modal-container").filter('.modal').modal();
     }
+    function editClient(client_request_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Данные клиента');
+        $.ajax({
+            type: 'POST',
+            url: "/work/client-edit/",
+            data: {"client_request_id" : client_request_id,},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
     function delDocument(document_id, ob){
         if (!confirm("Вы действительно хотите удалить документ ?")) {
             return false;
@@ -246,7 +275,7 @@ $this->placeholder('page-header')->set('Заявка №'.$this->client_request_
         });
     }
     function create_work(client_request_id){
-        if (!confirm("Вы действительно хотите создать ремонт?")) {
+        if (!confirm("Вы действительно хотите создать работу?")) {
             return false;
         }
         $.ajax({

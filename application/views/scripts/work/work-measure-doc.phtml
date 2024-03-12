@@ -1,0 +1,42 @@
+<table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Документ</th>
+        <th>Работник</th>
+        <th>Дата создания</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?
+    if(mycount($this->row) > 0){
+        foreach ($this->row as $key => $value){?>
+            <tr>
+                <td class="text-right"><?=$value['work_measure_doc_id']?></td>
+                <td class="text-left"><?=$value['doc_name']?></td>
+                <td class="text-left"><?=$value['fio']?></td>
+                <td class="text-center"><?=$value['date_create']?></td>
+                <td class="text-center">
+                    <div class="action-buttons">
+                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delMeasureDoc(<?=$value['work_measure_doc_id']?>, this)">
+                            <i class="fa fa-trash" aria-hidden="true">
+                            </i>  Удалить
+                        </a>
+                        <a class="btn btn-xs btn-primary" href="javascript:void(0);" onclick="showMeasureDocForm(<?=$this->work_id?>, <?=$value['work_measure_doc_id']?>)">
+                            <i class="fa fa-edit" aria-hidden="true">
+                            </i>  Изменить
+                        </a>
+                        <a class="btn btn-xs btn-success" href="<?=$value['doc_url']?>" target="_blank" download="download">
+                            <i class="fa fa-download" aria-hidden="true">
+                            </i>  Скачать
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <?
+        }
+    }
+    ?>
+    </tbody>
+</table>

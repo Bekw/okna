@@ -1,0 +1,441 @@
+<?
+$this->headTitle('Заказ №'.$this->work_id);
+$this->placeholder('page-header')->set('Заказ №'.$this->work_id);
+?>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="alert bgc-blue-l1 text-dark-m2 border-0 text-110 mb-0 p-3">
+            <div style="float:left; margin-right: 40px;">
+                <p>ФИО: <?=$this->row['client_fio']?></p>
+                <p>Адрес: <?=$this->row['address']?></p>
+                <p>Телефон клиента: <?=$this->row['client_phone']?></p>
+            </div>
+            <div style="float:left; margin-right: 40px;">
+                <p>Тип клиента: <?=$this->row['client_type']?></p>
+            </div>
+            <div style="float:left; margin-right: 40px;">
+                <a class="btn btn-xs btn-primary" href="/work/client-request-edit/client_request_id/<?=$this->row['client_request_id']?>">Заявка</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <br>
+        <div class="dcard">
+            <ul class="nav nav-tabs bgc-secondary-l3 border-y-1 brc-secondary-l3" role="tablist">
+                <li class="nav-item mr-2px">
+                    <a id="home1-tab-btn" class="d-style active btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#home1" role="tab" aria-controls="home1" aria-selected="true">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Общее
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#stages" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Этапы
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#measures" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Замеры
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#projects" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Проектировка
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#smeta" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Смета
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content bgc-white p-35 border-0">
+                <div class="tab-pane fade show active text-95" id="home1" role="tabpanel" aria-labelledby="home1-tab-btn">
+                    <div class="row">
+                        <div class="col-lg-5 col-md-5 col-sm-5">
+                            <div class="col-lg-6 col-md-6 col-sm-6">
+                                <form id="form_work">
+                                    <input type="hidden" name="work_id" value="<?=$this->work_id?>">
+                                    <div class="form-group pull-left margin-right-10">
+                                        <label class="control-label no-padding-right" for="date_start">Дата старта</label>
+                                        <input type="text" style="width: 166px; height: 34px" id="date_start" name="date_start" placeholder="Дата старта" class="form-control date-picker" value="<?=$this->row['date_start']?>" autocomplete="off">
+                                    </div>
+                                    <div class="form-group pull-left margin-right-10">
+                                        <label class="control-label no-padding-right" for="measure_date">Дата замера</label>
+                                        <input type="text" style="width: 166px; height: 34px" id="measure_date" name="measure_date" placeholder="Дата замера" class="form-control date-picker" value="<?=$this->row['measure_date']?>" autocomplete="off">
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group pull-left margin-right-10">
+                                        <label class="control-label no-padding-right">Замерщик</label>
+                                        <select class="form-control" id="platform" name="measure_employee_id">
+                                            <option value="0">Выберите замерщика</option>
+                                            <?foreach ($this->row_measure as $value){?>
+                                                <option value="<?=$value['employee_id']?>" <?if($value['employee_id'] == $this->row['measure_employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                                                <?
+                                            }?>
+                                        </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group pull-left margin-right-10">
+                                        <label class="control-label no-padding-right">Дизайнер</label>
+                                        <select class="form-control" id="platform" name="designer_employee_id">
+                                            <option value="0">Выберите дизайнера</option>
+                                            <?foreach ($this->row_designer as $value){?>
+                                                <option value="<?=$value['employee_id']?>" <?if($value['employee_id'] == $this->row['designer_employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                                                <?
+                                            }?>
+                                        </select>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <button class="btn btn-success btn-bold px-4" type="button" onclick="upd_work()">
+                                        <i class="fa fa-check mr-1"></i>
+                                        Сохранить
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="mark_list">
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="stages" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <a href="javascript:void(0)" onclick="showStageForm(<?=$this->work_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Этап</th>
+                            <th>Статус</th>
+                            <th>Комментарий</th>
+                            <th>Работник</th>
+                            <th>Дата создания</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?
+                        if(mycount($this->row_stage) > 0){
+                            $i = 0;
+                            $background = '';
+                            foreach ($this->row_stage as $key => $value){
+                                $i++;
+                                $background = '';
+                                if($value['stage_status_code'] == 'stage_check'){
+                                    $background = '#b3e0fc';
+                                }elseif ($value['stage_status_code'] == 'stage_check_fail'){
+                                    $background = '#fcb3b3';
+                                }elseif ($value['stage_status_code'] == 'fail_check'){
+                                    $background = '#f7fcb3';
+                                }elseif ($value['stage_status_code'] == 'done'){
+                                    $background = '#befcb3';
+                                }
+                                ?>
+                                <tr style="background-color: <?=$background?>">
+                                    <td class="text-right"><?=$i?></td>
+                                    <td class="text-left"><?=$value['stage_name']?></td>
+                                    <td class="text-left"><?=$value['stage_status_name']?></td>
+                                    <td class="text-left"><?=$value['stage_comment']?></td>
+                                    <td class="text-left"><?=$value['fio']?></td>
+                                    <td class="text-center"><?=$value['date_create']?></td>
+                                    <td class="text-center">
+                                        <div class="action-buttons">
+                                            <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delworkStage(<?=$value['work_stage_id']?>, this)">
+                                                <i class="fa fa-trash" aria-hidden="true">
+                                                </i>  Удалить
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?
+                            }
+                        }
+                        ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane fade text-95" id="measures" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <h5>Замеры(Документы)  <a href="javascript:void(0)" onclick="showMeasureDocForm(<?=$this->work_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    </h5>
+                    <div id="measure_doc">
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="projects" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <a href="javascript:void(0)" onclick="showProjectForm(<?=$this->work_id?>, 0)" class="btn btn-info btn-xs pull-right">Добавить</a>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <div id="project_list">
+
+                    </div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="smeta" role="tabpanel" aria-labelledby="more1-tab-btn">
+                    <form id="form_id_smeta">
+                        <input type="hidden" value="<?=$this->work_id?>" name="work_id">
+                        <div class="row">
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="room_id">Тип материала</label>
+                                <select class="form-control" id="material_type_id" name="material_type_id" required>
+                                    <option value="0">Выберите тип</option>
+                                    <?foreach ($this->row_type as $value1){?>
+                                        <option value="<?=$value1['material_type_id']?>"><?=$value1['material_type_name']?></option>
+                                        <?
+                                    }?>
+                                </select>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3" id="material">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="material_price">Цена</label>
+                                <input type="number" step="any" id="material_price" name="material_price" placeholder="Цена" class="form-control" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3">
+                                <label class="control-label " for="material_cnt">Кол-во</label>
+                                <input type="number" step="any" id="material_cnt" name="material_cnt" placeholder="Кол-во" class="form-control" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="box1 col-md-3">
+                                <button type="button" class="btn btn-sm px-4 btn-success mb-1" style="margin-top: 25px;" onclick="updSmetaMaterial()">Сохранить</button>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                    <div class="clearfix"></div>
+                    <hr>
+                    <button class="btn btn-xs btn-primary" onclick="autoLoadSmeta(<?=$this->work_id?>)">Обновить смету</button>
+                    <div id="smeta_list">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $( document ).ready(function() {
+        $('#project_list').load('/work/work-project-list/work_id/<?=$this->work_id?>');
+        $('#smeta_list').load('/work/work-smeta-list/work_id/<?=$this->work_id?>');
+        $('#measure_doc').load('/work/work-measure-doc/work_id/<?=$this->work_id?>');
+        $('#material_type_id').on('change', function() {
+            material_type_id = this.value;
+            loadMaterialSelect(material_type_id);
+        });
+        $('#material_id').on('change', function() {
+            material_id = this.value;
+            loadMaterialPrice(material_id);
+        });
+        loadMarkList();
+    });
+    function autoLoadSmeta(work_id){
+        if (!confirm("Вы действительно хотите обновить смету? Все старые записи удалятся!")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/auto-smeta-load/work_id/" + work_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Смета обновлена');
+                    $('#smeta_list').load('/work/work-smeta-list/work_id/<?=$this->work_id?>');
+                }
+            }
+        });
+    }
+    function loadMaterialSelect(material_type_id) {
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            url: "/work/material-select-form/material_type_id/"+ material_type_id +"/",
+            success: function(data){
+                $('#material').html(data);
+                main_loader_hide();
+            }
+        });
+    }
+    function loadMarkList() {
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-mark-list/work_id/"+ <?=$this->work_id?> +"/",
+            success: function(data){
+                $('#mark_list').html(data);
+                main_loader_hide();
+            }
+        });
+    }
+    function loadMaterialPrice(material_id) {
+        main_loader_show();
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/get-price/material_id/"+ material_id +"/",
+            success: function(data){
+                $("#material_price").val(data.result['value']);
+                main_loader_hide();
+            }
+        });
+    }
+    function upd_work(){
+        var fd = new FormData($("#form_work")[0]);
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/upd/",
+            data: fd,
+            success: function(data){
+                if(data.result['status'] == false){
+                    alert(data.result['error']);
+                    toastError('Ошибка при редактировании');
+                } else{
+                    toastSucces('Заказ отредактирован');
+                    window.location.reload();
+                }
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+    function showStageForm(work_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить этап');
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-stage-form/",
+            data: {"work_id" : work_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+
+    function showProjectForm(work_id, work_project_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить проект');
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-project-edit/",
+            data: {"work_id" : work_id,
+                   "work_project_id" : work_project_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+    function showMeasureDocForm(work_id, work_measure_doc_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Добавить вложение');
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-measure-doc-edit/",
+            data: {"work_id" : work_id,
+                   "work_measure_doc_id" : work_measure_doc_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $("#modal-container").filter('.modal').modal();
+    }
+
+    function delworkStage(work_stage_id, ob){
+        if (!confirm("Вы действительно хотите удалить этап?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/del-stage/work_stage_id/" + work_stage_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Этап удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+
+    function delworkProject(work_project_id, ob){
+        if (!confirm("Вы действительно хотите удалить проект?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/del-project/work_project_id/" + work_project_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Проект удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function delMeasureDoc(work_measure_doc_id, ob){
+        if (!confirm("Вы действительно хотите удалить вложение?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/del-measure-doc/work_measure_doc_id/" + work_measure_doc_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Вложение удалено');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function acceptProject(work_project_id, is_accepted){
+        if (!confirm("Вы действительно хотите утвердить проект")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/work-edit/mode/accept-project/work_project_id/" + work_project_id + "/is_accepted/" + is_accepted + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Проект утвержден');
+                    $('#project_list').load('/work/work-project-list/work_id/<?=$this->work_id?>');
+                }
+            }
+        });
+    }
+
+</script>

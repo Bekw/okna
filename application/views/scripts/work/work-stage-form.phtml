@@ -1,0 +1,70 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <input type="hidden" value="<?=$this->work_id?>" name="work_id">
+
+        <div class="form-group">
+            <label class="control-label " for="room_id">Этап</label>
+            <select class="form-control chosen-select" id="stage_id" name="stage_id">
+                <option value="0">Выберите этап</option>
+                <?foreach ($this->row_stage as $value){?>
+                    <option value="<?=$value['stage_id']?>"><?=$value['stage_name']?></option>
+                    <?
+                }?>
+            </select>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+            <label class="control-label " for="room_id">Статус этапа</label>
+            <select class="form-control chosen-select" id="stage_status_id" name="stage_status_id">
+                <option value="0">Выберите статус этапа</option>
+                <?foreach ($this->row_stage_status as $value){?>
+                    <option value="<?=$value['stage_status_id']?>"><?=$value['stage_status_name']?></option>
+                    <?
+                }?>
+            </select>
+            <div class="clearfix"></div>
+        </div>
+        <div class="form-group">
+            <label class="control-label " for="stage_comment">Комментарий</label>
+            <textarea class="form-control" name="stage_comment" style="height: 100px; overflow: hidden; overflow-wrap: break-word; resize: horizontal;" id="stage_comment" placeholder="Комментарии"></textarea>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updworkStage()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+    });
+
+    function updworkStage(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/work/work-edit/mode/upd-stage/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+</script>

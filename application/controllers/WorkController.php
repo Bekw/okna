@@ -123,6 +123,26 @@ class WorkController extends ParentController{
             $result = $ob->payment_del($a['payment_id']);
             $this->view->result = $result;
         }
+        if($mode == 'create-work'){
+            $this->_helper->AjaxContext()->addActionContext('client-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->create_work_from_request($a['client_request_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-client'){
+            $this->_helper->AjaxContext()->addActionContext('client-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->client_data_upd($a);
+            $this->view->result = $result;
+        }
+
+        $this->view->row = $ob->client_request_get($client_request_id)['value'];
+    }
+    public function clientEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $client_request_id = $this->_getParam('client_request_id', 0);
+        $this->view->client_request_id = $client_request_id;
 
         $this->view->row = $ob->client_request_get($client_request_id)['value'];
     }
@@ -157,6 +177,170 @@ class WorkController extends ParentController{
         $this->view->client_request_id = $client_request_id;
 
         $this->view->row_type = $ob->payment_type_read()['value'];
+    }
+    public function workListAction(){
+        $ob = new Application_Model_DbTable_Work();
+        $stage_id = $this->_getParam('stage_id', 0);
+
+        $this->view->row = $ob->work_read($stage_id)['value'];
+    }
+    public function workEditAction(){
+        $ob = new Application_Model_DbTable_Work();
+        $work_id = $this->_getParam('work_id', 0);
+        $this->view->work_id = $work_id;
+
+        $mode = $this->_getParam('mode', '');
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_upd($params);
+            return;
+        }
+        if ($mode == 'upd-measure-doc'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_measure_doc_upd($params);
+            return;
+        }
+        if ($mode == 'upd-project'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_project_upd($params);
+            return;
+        }
+        if ($mode == 'accept-project'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_project_accept($params['work_project_id'], $params['is_accepted']);
+            return;
+        }
+        if($mode == 'del-project'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->work_project_del($a['work_project_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-measure-doc'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->work_measure_doc_del($a['work_measure_doc_id']);
+            $this->view->result = $result;
+        }
+        if ($mode == 'get-price'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_cur_price_get($params['material_id']);
+            return;
+        }
+        if ($mode == 'upd-smeta'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_smeta_upd($params);
+            return;
+        }
+        if($mode == 'del-smeta'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->material_smeta_del($a['material_smeta_id']);
+            $this->view->result = $result;
+        }
+        if ($mode == 'upd-smeta-price'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->material_smeta_upd_price($params);
+            return;
+        }
+        if ($mode == 'upd-stage'){
+            $this->_helper->AjaxContext()->addActionContext('stage-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_stage_upd($params);
+            return;
+        }
+        if($mode == 'del-stage'){
+            $this->_helper->AjaxContext()->addActionContext('stage-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->work_stage_del($a['work_stage_id']);
+            $this->view->result = $result;
+        }
+        if ($mode == 'upd-mark'){
+            $this->_helper->AjaxContext()->addActionContext('work-edit', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->work_mark_upd($params);
+            return;
+        }
+        $this->view->row_measure = $ob->read_employee_fs('MEASURE')['value'];
+        $this->view->row_designer = $ob->read_employee_fs('DESIGNER')['value'];
+        $this->view->row_type = $ob->material_type_read_fs()['value'];
+        $this->view->row_stage = $ob->work_stage_read($work_id)['value'];
+        $this->view->row = $ob->work_get($work_id)['value'];
+    }
+    public function workMeasureDocAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->work_measure_doc_read($work_id)['value'];
+    }
+    public function workMeasureDocEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_measure_doc_id = $work_measure_doc_id = $this->_getParam('work_measure_doc_id', 0);
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->work_measure_doc_get($work_measure_doc_id)['value'];
+    }
+    public function workProjectListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->work_project_read($work_id)['value'];
+    }
+    public function workProjectEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_project_id = $work_project_id = $this->_getParam('work_project_id', 0);
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->work_project_get($work_project_id)['value'];
+    }
+
+    public function workSmetaListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->material_smeta_read($work_id)['value'];
+    }
+    public function materialSelectFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->material_type_id = $material_type_id = $this->_getParam('material_type_id', 0);
+
+        $this->view->row = $ob->material_read_fs($material_type_id)['value'];
+    }
+    public function workSmetaEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->material_smeta_id = $material_smeta_id = $this->_getParam('material_smeta_id', 0);
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->material_smeta_get($material_smeta_id)['value'];
+    }
+    public function workMarkListAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row = $ob->work_mark_read($this->view->work_id)['value'];
+    }
+    public function workStageFormAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->work_id = $work_id = $this->_getParam('work_id', 0);
+
+        $this->view->row_stage = $ob->stage_read_fs()['value'];
+        $this->view->row_stage_status = $ob->stage_status_read_fs()['value'];
     }
 }
 
