@@ -342,5 +342,69 @@ class WorkController extends ParentController{
         $this->view->row_stage = $ob->stage_read_fs()['value'];
         $this->view->row_stage_status = $ob->stage_status_read_fs()['value'];
     }
+    public function agreementDownloadAction(){
+        require 'phpword/vendor/autoload.php';
+        $ob = new Application_Model_DbTable_Work();
+        $request_id = $this->_getParam('client_request_id', 0);
+        $row = $ob->client_request_get($request_id)['value'];
+
+        require 'phpword/vendor/autoload.php';
+        $cur_date = date('d.m.Y');
+
+        $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($_SERVER['DOCUMENT_ROOT'] ."/templates_docs/client_agreement.docx");
+        $templateProcessor->setValue('contract_date', russian_date($cur_date));
+        $templateProcessor->setValue('client_fio', $row['client_fio']);
+        $templateProcessor->setValue('contract_num', $row['client_request_id']);
+        $templateProcessor->setValue('client_iin', $row['client_iin']);
+        $templateProcessor->setValue('client_doc_source', $row['client_doc_source']);
+        $templateProcessor->setValue('client_doc_num', $row['client_doc_num']);
+        $templateProcessor->setValue('client_phone', $row['client_phone']);
+        $templateProcessor->setValue('address', $row['address']);
+        $templateProcessor->setValue('total_price', tenge_text($row['total_price']));
+        $templateProcessor->setValue('total_price_txt',num2str($row['total_price']));
+
+        $filename = uniqid('request_agreement_', true) . '.docx';
+        if (check_ob_content()){
+            $this->_helper->layout->setLayout('layout-system');
+            $this->_helper->viewRenderer->setNoRender(true);
+            return;
+        };
+
+        $templateProcessor->saveAs($filename);
+
+        if ($this->getParam('is_pdf', 'false') == 'true'){
+            $filename_pdf = str_replace('docx', 'pdf', $filename);
+
+//            $output = shell_exec('lowriter --convert-to pdf -env:UserInstallation=file:///tmp/lohome '.escapeshellcmd($filename));
+            $output = shell_exec('libreoffice writer --convert-to pdf -env:UserInstallation=file:///tmp/lohome '.escapeshellcmd($filename));
+
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename='.'"Договор'. $row['client_fio']. '.pdf"');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filename_pdf));
+            flush();
+            readfile($filename_pdf);
+            unlink($filename);
+            unlink($filename_pdf);
+            exit;
+        }else{
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename='.'Договор'. $row['client_fio']. '.docx');
+            header('Content-Transfer-Encoding: binary');
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filename));
+            flush();
+            readfile($filename);
+            unlink($filename);
+            exit;
+        }
+    }
 }
 

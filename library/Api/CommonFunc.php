@@ -258,7 +258,77 @@ function russian_date($date, $year_short = false, $quotes = true){
         }
     }
 }
+function kazakh_date($date, $year_short = false, $quotes = true){
+    if($date == ''){
+        return 'РЕКВИЗИТТА КӨРСЕТІЛМЕГЕН';
+    }
+    $date=explode(".", $date);
+    switch ($date[1]){
+        case 1: $m='каңтар'; break;
+        case 2: $m='ақпан'; break;
+        case 3: $m='наурыз'; break;
+        case 4: $m='сәуір'; break;
+        case 5: $m='мамыр'; break;
+        case 6: $m='маусым'; break;
+        case 7: $m='шілде'; break;
+        case 8: $m='тамыз'; break;
+        case 9: $m='қыркүйек'; break;
+        case 10: $m='қазан'; break;
+        case 11: $m='қараша'; break;
+        case 12: $m='желтоқсан'; break;
+    }
+    if($year_short){
+        if($quotes){
+            return '«'.$date[0].'» '.$m.' '.$date[2].' ж.';
+        }else{
+            return $date[0].' '.$m.' '.$date[2].' ж.';
+        }
+    }else{
+        if($quotes){
+            return '«'.$date[0].'» '.$m.' '.$date[2].' жыл';
+        }else{
+            return $date[0].' '.$m.' '.$date[2].' жыл';
+        }
+    }
+}
 
+function num2strKz($num){
+    $nul = 'нөл';
+    $ten = array(
+        array('','бір','екі','үш','төрт','бес','алты','жеті', 'сегіз','тоғыз'),
+        array('','бір','екі','үш','төрт','бес','алты','жеті', 'сегіз','тоғыз'),
+    );
+    $a20 = array('он','он бір','он екі','он үш','он төрт' ,'он бес','он алты','он жеті','он сегіз','он тоғыз');
+    $tens = array(2=>'жиырма','отыз','қырық','елу','алпыс','жетпіс' ,'сексен','тоқсан');
+    $hundred = array('','жүз','екі жүз','үш жүз','төрт жүз','бес жүз','алты жүз', 'жеті жүз','сегіз жүз','тоғыз жүз');
+    $unit = array(
+        array('' ,'' ,'', 1),
+        array('' ,'' ,'' ,0),
+        array('мың' ,'мың' ,'мың' ,1),
+        array('миллион' ,'миллион','миллион' ,0),
+        array('миллиард','миллиард','миллиард',0),
+    );
+
+    list($n) = explode('.',sprintf("%015.2f", floatval($num)));
+    $out = array();
+    if (intval($n) > 0) {
+        foreach(str_split($n, 3) as $uk => $v)
+        {
+            if (!intval($v)) continue;
+            $uk = sizeof($unit)-$uk-1;
+            $gender = $unit[$uk][3];
+            list($i1,$i2,$i3) = array_map('intval',str_split($v,1));
+
+            $out[] = $hundred[$i1];
+            if ($i2>1) $out[]= $tens[$i2].' '.$ten[$gender][$i3];
+            else $out[]= $i2>0 ? $a20[$i3] : $ten[$gender][$i3];
+
+            if ($uk>1) $out[]= morph($v,$unit[$uk][0],$unit[$uk][1],$unit[$uk][2]);
+        }
+    }
+    else $out[] = $nul;
+    return trim(preg_replace('/ {2,}/', ' ', join(' ',$out)));
+}
 function short_fio($fio){
     if($fio == '' or is_null($fio)){
         return 'НЕ УКАЗАНО В РЕКВИЗИТАХ';
