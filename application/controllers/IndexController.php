@@ -43,18 +43,8 @@ class IndexController extends ParentController{
     }
 
     public function indexAction(){
-//        $this->_redirect('/system/login/');
-        $this->_helper->layout->disableLayout();
-        $ob = new Application_Model_DbTable_Remont();
-
-        $mode = $this->_getParam('mode', '');
-        if ($mode == 'upd'){
-            $this->_helper->AjaxContext()->addActionContext('index', 'json')->initContext('json');
-            $params = $this->getAllParams();
-            $this->view->result = $ob->create_landing_request($params);
-            return;
-        }
-        $this->view->row = $ob->package_read_fs()['value'];
+        $this->_redirect('/system/login/');
+     
     }
 }
 
