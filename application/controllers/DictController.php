@@ -273,4 +273,115 @@ class DictController extends ParentController{
 
         $this->view->row = $ob->stage_mark_read($this->view->stage_id)['value'];
     }
+    public function employeeRequestAction(){
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->row_created = $ob->employee_request_read(0)['value'];
+        $this->view->row_in_process = $ob->employee_request_read(1)['value'];
+        $this->view->row_done = $ob->employee_request_read(2)['value'];
+        $this->view->row_cancel = $ob->employee_request_read(3)['value'];
+    }
+    public function employeeRequestEditAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-doc'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_doc_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-doc'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_doc_del($a['employee_request_doc_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-list'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_list_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'del-list'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_list_del($a['employee_request_list_id']);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-status'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-edit', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_status_upd($a);
+            $this->view->result = $result;
+        }
+
+        $this->view->row = $ob->employee_request_get($this->view->employee_request_id)['value'];
+        $this->view->row_type = $ob->employee_request_type_read()['value'];
+        if ($this->view->employee_request_id <> 0){
+            $this->view->row_doc = $ob->employee_request_doc_read($this->view->employee_request_id)['value'];
+            $this->view->row_list = $ob->employee_request_list_read($this->view->employee_request_id)['value'];
+        }
+    }
+    function employeeRequestDocEditAction(){
+        $this->_helper->layout->disableLayout();
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+
+        $this->view->employee_request_doc_id = $this->_getParam("employee_request_doc_id", 0);
+    }
+    function employeeRequestListEditAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+        $this->view->employee_request_list_id = $this->_getParam("employee_request_list_id", 0);
+
+        $this->view->row_employee = $ob->employee_read_fs()['value'];
+    }
+    public function employeeRequestAcceptAction(){
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->row = $ob->employee_request_accept_read()['value'];
+    }
+    public function employeeRequestDetailAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+        $mode = $this->_getParam('mode', '');
+
+        if($mode == 'upd-status'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-detail', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_list_upd($a);
+            $this->view->result = $result;
+        }
+        if($mode == 'upd-list-status'){
+            $this->_helper->AjaxContext()->addActionContext('employee-request-detail', 'json')->initContext('json');
+            $a = $this->_getAllParams();
+            $result = $ob->employee_request_list_status_upd($a);
+
+            $this->view->result = $result;
+        }
+
+        $this->view->row = $ob->employee_request_get($this->view->employee_request_id)['value'];
+        $this->view->row_type = $ob->employee_request_type_read()['value'];
+        $this->view->row_doc = $ob->employee_request_doc_read($this->view->employee_request_id)['value'];
+        $this->view->row_list = $ob->employee_request_list_read($this->view->employee_request_id)['value'];
+    }
+    function employeeRequestListAcceptAction(){
+        $this->_helper->layout->disableLayout();
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->employee_request_list_id = $this->_getParam("employee_request_list_id", 0);
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+        $this->view->accept_type = $this->_getParam("accept_type", 0);
+
+        $this->view->row_employee = $ob->employee_read_fs()['value'];
+    }
 }

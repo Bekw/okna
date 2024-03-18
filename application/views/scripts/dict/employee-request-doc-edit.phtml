@@ -1,0 +1,58 @@
+<div class="modal-body" id="modal_body">
+    <form id="price_id">
+        <input type="hidden" value="<?=$this->employee_request_id?>" name="employee_request_id">
+
+        <div class="form-group">
+            <label class="control-label " for="discount_percent">Файл</label>
+            <div class="form-control no-padding">
+                <input type="file" name="upload" id="upload" >
+            </div>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="updDoc()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+5"
+        });
+    });
+
+    function updDoc(){
+        main_loader_show();
+        var send_data = new FormData($("#price_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/employee-request-edit/mode/upd-doc/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+</script>

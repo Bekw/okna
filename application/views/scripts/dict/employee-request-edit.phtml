@@ -1,0 +1,293 @@
+<?
+$this->headTitle('Редактирование запроса');
+$this->placeholder('page-header')->set("Редактирование запроса");
+?>
+<style>
+    .modal-body .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<div class="row">
+    <div class="col-lg-3" style="border-right: 1px solid #00a3d1">
+        <?if($this->row['request_status'] == 1){?>
+            <h3 style="color: cornflowerblue">Запущен</h3>
+        <?}elseif ($this->row['request_status'] == 2){?>
+            <h3 style="color: green">Согласован</h3>
+        <?}elseif ($this->row['request_status'] == 3){?>
+            <h3 style="color: coral">Отказан</h3>
+            <?
+        }?>
+
+        <form id="form_id">
+            <input type="hidden" value="<?=$this->employee_request_id?>" name="employee_request_id">
+            <div class="form-group">
+                <label class="control-label " for="employee_request_type_id">Тип</label>
+                <div>
+                    <select class="form-control" id="employee_request_type_id" name="employee_request_type_id" required>
+                        <option value="0">Выберите тип</option>
+                        <?foreach ($this->row_type as $value){?>
+                            <option value="<?=$value['employee_request_type_id']?>" <?=is_selected_html($value['employee_request_type_id'], $this->row['employee_request_type_id'] ?? null)?>><?=$value['employee_request_type_name']?></option>
+                            <?
+                        }?>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group">
+                <label class="control-label " for="description">Описание</label>
+                <textarea id="description" name="description" style="height: 200px;" class="autosize-transition form-control"><?=$this->row['description']?></textarea>
+                <div class="clearfix"></div>
+            </div>
+            <div class="clearfix"></div>
+            <hr>
+            <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="itemEdit()">Сохранить</button>
+            <a href="/dict/employee-request/" class="btn btn-sm px-4 btn-outline-danger mb-1">Закрыть</a>
+        </form>
+    </div>
+    <div class="col-lg-9">
+        <?if($this->employee_request_id <> 0){?>
+            <h3>Вложения</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Документ</th>
+                        <th>Дата создания</th>
+                        <th></th>
+                        <th>
+                            <a href="javascript:void(0)" class="card-toolbar-btn btn btn-xs radius-1 btn-outline-success mx-1px" draggable="false" onclick="showModalDoc(<?=$this->employee_request_id?>)">
+                                <i class="fas fa-plus w-2 mx-1px"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?
+                    if(mycount($this->row_doc) > 0){
+                        $i = 1;
+                        foreach ($this->row_doc as $key => $value){
+                            ?>
+                            <tr>
+                                <td class="text-right"><?=$i?></td>
+                                <td class="text-center"><?=$value['doc_name']?></td>
+                                <td class="text-center"><?=$value['date_create']?></td>
+                                <td class="text-center">
+                                    <a class="btn btn-xs btn-success" href="<?=$value['doc_url']?>" target="_blank" download="<?=$value['doc_name']?>">
+                                        <i class="fa fa-download" aria-hidden="true">
+                                        </i>  Скачать
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delDoc(<?=$value['employee_request_doc_id']?>, this)">
+                                            <i class="fa fa-trash" aria-hidden="true">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?
+                            $i = $i + 1;
+                        }
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Список ответственных</h3>
+            <div class="table-responsive">
+                <table class="table table-striped table-bordered hover-table no-margin-bottom no-border-top">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ответственный</th>
+                        <th>Сообщение</th>
+                        <th>Очередь</th>
+                        <th>Статус</th>
+                        <th>Ответ</th>
+                        <th>
+                            <a href="javascript:void(0)" class="card-toolbar-btn btn btn-xs radius-1 btn-outline-success mx-1px" draggable="false" onclick="showModalList(<?=$this->employee_request_id?>)">
+                                <i class="fas fa-plus w-2 mx-1px"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?
+                    if(mycount($this->row_list) > 0){
+                        $i = 1;
+                        foreach ($this->row_list as $key => $value){
+                            $status_name = '';
+                            $color = '';
+                            if($value['list_status'] == 2){
+                                $status_name = 'Согласован';
+                                $color = '#a7d5a7';
+                            }elseif ($value['list_status'] == 3){
+                                $status_name = 'Отказан';
+                                $color = '#e99788';
+                            }elseif ($value['list_status'] == 1){
+                                $status_name = 'Переназначен';
+                                $color = '#8899e9';
+                            }
+                            ?>
+                            <tr>
+                                <td class="text-right"><?=$i?></td>
+                                <td class="text-left"><?=$value['list_fio']?></td>
+                                <td class="text-left"><?=$value['request_text']?></td>
+                                <td class="text-center"><?=$value['order_num']?></td>
+                                <td class="text-center">
+                                    <span style="color: <?=$color?>"><?=$status_name?></span>
+                                    <br>
+                                    <?=$value['status_date']?>
+                                </td>
+                                <td class="text-left"><?=$value['status_comment']?></td>
+                                <td class="text-center">
+                                    <div class="action-buttons">
+                                        <a class="btn btn-xs btn-danger" href="javascript:void(0);" onclick="delList(<?=$value['employee_request_list_id']?>, this)">
+                                            <i class="fa fa-trash" aria-hidden="true">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?
+                            $i = $i + 1;
+                        }
+                    }
+                    ?>
+                    </tbody>
+                </table>
+            </div>
+            <?
+        }?>
+        <?if($this->row['request_status'] == 0 && isset($this->employee_request_id)){?>
+            <a class="btn btn-xs btn-success" href="javascript:void(0)" onclick="change_status(<?=$this->employee_request_id?>, 1)">
+                Запустить
+            </a>
+        <?}?>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function itemEdit(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/dict/employee-request-edit/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    window.location.href = '/dict/employee-request-edit/employee_request_id/' + data.result['value'];
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+
+    function showModalDoc(employee_request_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Вложения');
+        $.ajax({
+            type: 'POST',
+            url: "/dict/employee-request-doc-edit/",
+            data: {employee_request_id : employee_request_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+    function showModalList(employee_request_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Ответственные');
+        $.ajax({
+            type: 'POST',
+            url: "/dict/employee-request-list-edit/",
+            data: {employee_request_id : employee_request_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+    function delDoc(employee_request_doc_id, ob){
+        if (!confirm('Вы действительно хотите удалить?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/employee-request-edit/mode/del-doc/",
+            data:{"employee_request_doc_id" : employee_request_doc_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Материал удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function delList(employee_request_list_id, ob){
+        if (!confirm('Вы действительно хотите удалить?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/employee-request-edit/mode/del-list/",
+            data:{"employee_request_list_id" : employee_request_list_id},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Материал удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+    function change_status(employee_request_id, request_status){
+        if (!confirm('Вы действительно хотите запустить?')) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/dict/employee-request-edit/mode/upd-status/",
+            data:{"employee_request_id" : employee_request_id, "request_status" : request_status},
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Запрос запущен');
+                    location.reload();
+                }
+            }
+        });
+    }
+</script>
