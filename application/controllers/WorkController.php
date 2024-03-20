@@ -413,5 +413,13 @@ class WorkController extends ParentController{
             exit;
         }
     }
+    public function buhPaymentListAction(){
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->payment_status = $work_id = $this->_getParam('payment_status', -1);
+        $this->view->date_begin = $this->_getParam('date_begin', date('01.m.Y'));
+        $this->view->date_end = $this->_getParam('date_end', date('d.m.Y'));
+
+        $this->view->row = $ob->buh_read_payment($this->view->payment_status, $this->view->date_begin, $this->view->date_end)['value'];
+    }
 }
 

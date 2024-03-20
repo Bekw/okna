@@ -340,4 +340,11 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $result = $this->execSP(__FUNCTION__, "public.client_request_set_status(:client_request_id, :client_request_status_id)", $p);
         return $result;
     }
+    public function buh_read_payment($payment_status, $date_begin, $date_end){
+        $p['payment_status'] = $payment_status;
+        $p['date_begin'] = $date_begin;
+        $p['date_end'] = $date_end;
+        $result = $this->readSP(__FUNCTION__, "public.buh_read_payment('cur', :payment_status, to_date(:date_begin, 'dd.mm.yyyy'), to_date(:date_end, 'dd.mm.yyyy'))", $p);
+        return $result;
+    }
 }
