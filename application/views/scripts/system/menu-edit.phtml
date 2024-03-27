@@ -8,7 +8,7 @@
         <input type="hidden" value="<?=$this->menu_id?>" name="menu_id">
         <div class="form-group">
             <label class="control-label " for="menu_name">Название</label>
-            <input type="text" id="menu_name" placeholder="Название меню" class="form-control" value="<?=$this->row['menu_name']?>" name="menu_name">
+            <input type="text" id="menu_name" placeholder="Название меню" class="form-control" value="<?=$this->row['menu_name'] ?? null?>" name="menu_name">
             <div class="clearfix"></div>
         </div>
         <div class="form-group">
@@ -26,7 +26,7 @@
                                 $padding = 'padding-left: 10px; font-weight: bold;';
                             }
                             ?>
-                            <option style="<?=$padding?>" <?if($this->row['menu_pid'] == $value['menu_id']){echo ' selected';}?> value="<?=$value['menu_id']?>"><?=$value['menu_name']?></option>
+                            <option style="<?=$padding?>" <?if($this->row['menu_pid'] ?? null == $value['menu_id']){echo ' selected';}?> value="<?=$value['menu_id']?>"><?=$value['menu_name']?></option>
                             <?
                         }
                     }?>
@@ -36,12 +36,12 @@
         </div>
         <div class="form-group">
             <label class="control-label " for="menu_action">Action</label>
-            <input type="text" id="menu_action" placeholder="Action" class="form-control" value="<?=$this->row['menu_action']?>" name="menu_action">
+            <input type="text" id="menu_action" placeholder="Action" class="form-control" value="<?=$this->row['menu_action'] ?? null?>" name="menu_action">
             <div class="clearfix"></div>
         </div>
         <div class="form-group">
             <label class="control-label " for="order_num">Порядковый номер</label>
-            <input type="text" id="order_num" placeholder="Порядковый номер" class="form-control" value="<?=$this->row['order_num']?>" name="order_num">
+            <input type="text" id="order_num" placeholder="Порядковый номер" class="form-control" value="<?=$this->row['order_num'] ?? null?>" name="order_num">
             <div class="clearfix"></div>
         </div>
         <div class="form-group">
@@ -50,7 +50,7 @@
                 <?
                 $active = "";
                 $not_active = "";
-                if($this->row['is_active'] > 0){
+                if($this->row['is_active'] ?? null > 0){
                     $active = ' selected';
                 }else{
                     $not_active = ' selected';
@@ -65,7 +65,7 @@
         </div>
         <div class="form-group">
             <label class="control-label " for="icon">Иконка</label>
-            <input type="text" id="icon" placeholder="Иконка" class="form-control" value="<?=$this->row['icon']?>" name="icon">
+            <input type="text" id="icon" placeholder="Иконка" class="form-control" value="<?=$this->row['icon'] ?? null?>" name="icon">
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

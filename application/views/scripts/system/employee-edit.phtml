@@ -4,21 +4,21 @@
         <div>
             <div class="form-group">
                 <label class="control-label " for="fio">ФИО</label>
-                <input type="text" id="fio" placeholder="ФИО" class="form-control" value="<?=htmlspecialchars($this->row['fio'])?>" name="fio">
+                <input type="text" id="fio" placeholder="ФИО" class="form-control" value="<?=htmlspecialchars($this->row['fio'] ?? null)?>" name="fio">
                 <div class="clearfix"></div>
             </div>
         </div>
         <div>
             <div class="form-group">
                 <label class="control-label " for="email">Email</label>
-                <input type="email" id="email" placeholder="Email" class="form-control" value="<?=$this->row['email']?>" name="email">
+                <input type="email" id="email" placeholder="Email" class="form-control" value="<?=$this->row['email'] ?? null?>" name="email">
                 <div class="clearfix"></div>
             </div>
         </div>
         <div>
             <div class="form-group">
                 <label class="control-label " for="email">Телефон</label>
-                <input type="text" id="phone" placeholder="Телефон" class="form-control" value="<?=$this->row['phone']?>" name="phone">
+                <input type="text" id="phone" placeholder="Телефон" class="form-control" value="<?=$this->row['phone'] ?? null?>" name="phone">
                 <div class="clearfix"></div>
             </div>
         </div>
@@ -27,7 +27,7 @@
                 <label class="control-label " for="email">Должность</label>
                 <select class="form-control" id="position_id" name="position_id" required>
                     <?foreach ($this->row_position as $value){?>
-                        <option value="<?=$value['position_id']?>" <?if($value['position_id'] == $this->row['position_id']){?>selected<?}?>><?=$value['position_name']?></option>
+                        <option value="<?=$value['position_id']?>" <?if($value['position_id'] == $this->row['position_id'] ?? null){?>selected<?}?>><?=$value['position_name']?></option>
                     <?}?>
                 </select>
                 <div class="clearfix"></div>
@@ -40,7 +40,7 @@
                     <?
                     $active = "";
                     $not_active = "";
-                    if($this->row['is_active'] > 0){
+                    if($this->row['is_active'] ?? null > 0){
                         $active = ' selected';
                     }else{
                         $not_active = ' selected';
