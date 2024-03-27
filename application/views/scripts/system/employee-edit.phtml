@@ -26,8 +26,10 @@
             <div class="form-group">
                 <label class="control-label " for="email">Должность</label>
                 <select class="form-control" id="position_id" name="position_id" required>
-                    <?foreach ($this->row_position as $value){?>
-                        <option value="<?=$value['position_id']?>" <?if($value['position_id'] == $this->row['position_id'] ?? null){?>selected<?}?>><?=$value['position_name']?></option>
+                    <?
+                    $position = $this->row['position_id'] ?? null;
+                    foreach ($this->row_position as $value){?>
+                        <option value="<?=$value['position_id']?>" <?if($value['position_id'] == $position){?>selected<?}?>><?=$value['position_name']?></option>
                     <?}?>
                 </select>
                 <div class="clearfix"></div>

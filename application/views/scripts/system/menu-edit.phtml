@@ -17,6 +17,8 @@
                 <select class="chosen-select form-control" name="menu_pid" id="menu_pid" data-placeholder="Выберите родителя...">
                     <option value=""> </option>
                     <?
+                    $menu_pid = $this->row['menu_pid'] ?? null;
+
                     if(mycount($this->row_menu_for_select) > 0){
                         foreach ($this->row_menu_for_select as $key => $value){
                             $padding = '';
@@ -26,7 +28,7 @@
                                 $padding = 'padding-left: 10px; font-weight: bold;';
                             }
                             ?>
-                            <option style="<?=$padding?>" <?if($this->row['menu_pid'] ?? null == $value['menu_id']){echo ' selected';}?> value="<?=$value['menu_id']?>"><?=$value['menu_name']?></option>
+                            <option style="<?=$padding?>" <?if($menu_pid == $value['menu_id']){echo ' selected';}?> value="<?=$value['menu_id']?>"><?=$value['menu_name']?></option>
                             <?
                         }
                     }?>
