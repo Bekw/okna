@@ -9,12 +9,12 @@
         </div>
         <div class="form-group">
             <label class="control-label " for="date_start">Начало</label>
-            <input type="text" style="width: 166px; height: 34px" id="date_start" name="date_start" placeholder="Начало" class="form-control date-picker" value="<?=$this->row['date_start']?>" autocomplete="off">
+            <input type="text" style="width: 166px; height: 34px" id="date_start" name="date_start" placeholder="Начало" class="form-control date-picker" value="<?=$this->row['date_start'] ?? null?>" autocomplete="off">
             <div class="clearfix"></div>
         </div>
         <div class="form-group">
             <label class="control-label " for="date_end">Конец</label>
-            <input type="text" style="width: 166px; height: 34px" id="date_end" name="date_end" placeholder="Конец" class="form-control date-picker" value="<?=$this->row['date_end']?>" autocomplete="off">
+            <input type="text" style="width: 166px; height: 34px" id="date_end" name="date_end" placeholder="Конец" class="form-control date-picker" value="<?=$this->row['date_end'] ?? null?>" autocomplete="off">
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
