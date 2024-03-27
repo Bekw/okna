@@ -9,16 +9,17 @@ $this->placeholder('page-header')->set("Редактирование запро�
 </style>
 <div class="row">
     <div class="col-lg-3" style="border-right: 1px solid #00a3d1">
-        <?if($this->row['request_status'] == 1){?>
+        <?
+        $status = $this->row['request_status'] ?? null;
+
+        if($status == 1){?>
             <h3 style="color: cornflowerblue">Запущен</h3>
-        <?}elseif ($this->row['request_status'] == 2){?>
+        <?}elseif ($status == 2){?>
             <h3 style="color: green">Согласован</h3>
-        <?}elseif ($this->row['request_status'] == 3){?>
+        <?}elseif ($status == 3){?>
             <h3 style="color: coral">Отказан</h3>
             <?
-        }else{?>
-            <h3 style="color: coral">Новый</h3>
-        <?}?>
+        }?>
 
         <form id="form_id">
             <input type="hidden" value="<?=$this->employee_request_id?>" name="employee_request_id">
@@ -28,7 +29,7 @@ $this->placeholder('page-header')->set("Редактирование запро�
                     <select class="form-control" id="employee_request_type_id" name="employee_request_type_id" required>
                         <option value="0">Выберите тип</option>
                         <?foreach ($this->row_type as $value){?>
-                            <option value="<?=$value['employee_request_type_id']?>" <?=is_selected_html($value['employee_request_type_id'], $this->row['employee_request_type_id'])?>><?=$value['employee_request_type_name']?></option>
+                            <option value="<?=$value['employee_request_type_id']?>" <?=is_selected_html($value['employee_request_type_id'], $this->row['employee_request_type_id'] ?? null)?>><?=$value['employee_request_type_name']?></option>
                             <?
                         }?>
                     </select>
