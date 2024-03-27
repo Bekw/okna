@@ -38,7 +38,7 @@ $this->placeholder('page-header')->set("Редактирование запро�
             </div>
             <div class="form-group">
                 <label class="control-label " for="description">Описание</label>
-                <textarea id="description" name="description" style="height: 200px;" class="autosize-transition form-control"><?=$this->row['description']?></textarea>
+                <textarea id="description" name="description" style="height: 200px;" class="autosize-transition form-control"><?=$this->row['description'] ?? null?></textarea>
                 <div class="clearfix"></div>
             </div>
             <div class="clearfix"></div>
@@ -164,7 +164,7 @@ $this->placeholder('page-header')->set("Редактирование запро�
             </div>
             <?
         }?>
-        <?if($this->row['request_status'] == 0 && isset($this->employee_request_id)){?>
+        <?if($status == 0 && isset($this->employee_request_id)){?>
             <a class="btn btn-xs btn-success" href="javascript:void(0)" onclick="change_status(<?=$this->employee_request_id?>, 1)">
                 Запустить
             </a>
