@@ -423,7 +423,7 @@ class WorkController extends ParentController{
     }
     public function tabelListAction(){
         $ob = new Application_Model_DbTable_Work();
-        $this->view->cur_date = $this->_getParam('tabel_date', date('d.m.Y'));
+        $this->view->cur_date = $this->_getParam('cur_date', date('d.m.Y'));
         $mode = $this->_getParam('mode', '');
         if ($mode == 'upd'){
             $this->_helper->AjaxContext()->addActionContext('tabel-list', 'json')->initContext('json');
