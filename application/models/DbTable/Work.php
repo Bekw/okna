@@ -55,6 +55,7 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $p['document_type_id']  = $a['document_type_id'];
         $p['client_request_id']  = $a['client_request_id'];
         $p['document_url'] = null;
+        $p['doc_real_name'] = null;
 
         $tmpFilePath = $_FILES['upload']['tmp_name'];
         if ($tmpFilePath != ""){
@@ -65,12 +66,13 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
             }
             $filename = "/documents/".date('Y.m.d')."/request_documents/".uniqid('doc_',true)."." . $ext;
             $p['document_url'] = $filename;
+            $p['doc_real_name'] = $_FILES['upload']['name'];
             $newFilePath = $_SERVER['DOCUMENT_ROOT']. $filename;
 
             if(move_uploaded_file_smart($tmpFilePath, $newFilePath)) {
             }
         }
-        $result = $this->execSP(__FUNCTION__, "public.document_upd(:document_id, :document_name, :document_url, :document_type_id, :client_request_id)", $p);
+        $result = $this->execSP(__FUNCTION__, "public.document_upd(:document_id, :document_name, :document_url, :document_type_id, :client_request_id, :doc_real_name)", $p);
         return $result;
     }
     public function payment_read($client_request_id){
@@ -345,6 +347,34 @@ class Application_Model_DbTable_Work extends Application_Model_DbTable_Parent{
         $p['date_begin'] = $date_begin;
         $p['date_end'] = $date_end;
         $result = $this->readSP(__FUNCTION__, "public.buh_read_payment('cur', :payment_status, to_date(:date_begin, 'dd.mm.yyyy'), to_date(:date_end, 'dd.mm.yyyy'))", $p);
+        return $result;
+    }
+    public function report_tabel($date_begin, $date_end, $employee_id){
+        $p['date_begin'] = $date_begin;
+        $p['date_end'] = $date_end;
+        $p['employee_id'] = $employee_id;
+        $result = $this->readSP(__FUNCTION__, "public.report_tabel('cur', to_date(:date_begin, 'dd.mm.yyyy'), to_date(:date_end, 'dd.mm.yyyy'), :employee_id)", $p);
+        return $result;
+    }
+    public function tabel_read_by_date($tabel_date){
+        $p['tabel_date'] = $tabel_date;
+        $result = $this->readSP(__FUNCTION__, "public.tabel_read_by_date('cur', to_date(:tabel_date, 'dd.mm.yyyy'))", $p);
+        return $result;
+    }
+    public function tabel_upd($a){
+        $p['tabel_employee_id'] = $a['tabel_employee_id'];
+        $p['tabel_date'] = $a['tabel_date'];
+        $p['tabel_sum'] = $a['tabel_sum'];
+        $result = $this->execSP(__FUNCTION__, "public.tabel_upd(:tabel_employee_id, to_date(:tabel_date, 'dd.mm.yyyy'), :tabel_sum)", $p);
+        return $result;
+    }
+    public function tabel_del($tabel_id){
+        $p['tabel_id'] = $tabel_id;
+        $result = $this->execSP(__FUNCTION__, "public.tabel_del(:tabel_id)", $p);
+        return $result;
+    }
+    public function read_tabel_employee(){
+        $result = $this->readSP(__FUNCTION__, "public.read_tabel_employee('cur')");
         return $result;
     }
 }

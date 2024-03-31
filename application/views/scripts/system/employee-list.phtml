@@ -50,6 +50,7 @@ $this->placeholder('page-header')->set("Пользователи");
                         <span class="text-info">Нажмите чтобы войти</span>
                     </th>
                     <th>Активный</th>
+                    <th>Табель</th>
                     <th>Последний вход</th>
                     <th>Дата и время</br>изменения</th>
                     <th></th>
@@ -69,6 +70,13 @@ $this->placeholder('page-header')->set("Пользователи");
                             <td class="text-center">
                                 <?
                                 if($value['is_active'] == 1){?>
+                                    <i class="fas fa-check-square fa-lg text-success"></i>
+                                    <?
+                                }?>
+                            </td>
+                            <td class="text-center">
+                                <?
+                                if($value['is_tabel'] == 1){?>
                                     <i class="fas fa-check-square fa-lg text-success"></i>
                                     <?
                                 }?>

@@ -1,0 +1,129 @@
+<?
+$this->headTitle('Табель');
+$this->placeholder('page-header')->set("Табель");
+?>
+
+<style>
+    .product-img{
+        object-fit: contain;
+        border: 1px solid #f2f2f2;
+        width: 100px;
+        height: 100px;
+        padding: 3px;
+    }
+</style>
+
+<form method="get" class="float-left" style="margin-bottom: 10px;">
+    <div class="form-group float-left mr-2" style="width: 150px;">
+        <label class="control-label no-padding-right" for="cur_date">Дата</label>
+        <input type="text" id="cur_date" name="cur_date" style="width: 150px; height: 35px;" placeholder="Дата с" class="form-control date-picker" autocomplete="off" value="<?=$this->cur_date?>">
+    </div>
+    <button type="submit" name="search_employee" class="btn btn-primary float-left" style="margin-top: 24px;">
+        <i class="ace-icon fa fa-search bigger-125"></i>
+        Поиск
+    </button>
+    <div class="clearfix"></div>
+</form>
+<div class="clearfix"></div>
+
+<div class="hr hr-10 dotted hr-double"></div>
+<div class="row">
+    <div class="col-lg-5 p-0">
+        <div class="card dcard mb-3" id="card-5" draggable="false" style="">
+            <div class="card-header">
+                <h5 class="card-title text-120 text-primary-d2">
+                    Табель
+                </h5>
+                <div class="card-toolbar">
+                    <div class="card-toolbar no-border">
+                        <a href="javascript:void(0)" class="card-toolbar-btn btn btn-sm radius-1 btn-outline-success mx-2px" draggable="false" onclick="showModal(0)">
+                            <i class="fas fa-plus w-2 mx-1px"></i>
+                        </a>
+                    </div>
+                </div>
+            </div><!-- /.card-header -->
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="type_table">
+                            <thead>
+                            <tr class="text-primary-d3 text-95 text-center">
+                                <th class="py-3 pl-35">№</th>
+                                <th class="text-center">Работник</th>
+                                <th class="text-center">Дата рабочего дня</th>
+                                <th class="text-center">Сумма оплаты</th>
+                                <th class="text-center">Кто добавил</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <?
+                            $i = 0;
+                            if(mycount($this->row) > 0){
+                                foreach ($this->row as $key => $value){
+                                    $i++;
+                                    ?>
+                                    <tr class="bgc-h-orange-l4 text-600">
+                                        <td class="text-right"><?=$i?></td>
+                                        <td class="text-center"><?=$value['tabel_fio']?></td>
+                                        <td class="text-center"><?=$value['tabel_date']?></td>
+                                        <td class="text-center"><?=tenge_text($value['tabel_sum'])?></td>
+                                        <td class="text-center"><?=$value['fio']?> <br> <?=$value['create_date']?></td>
+                                        <td class="pr-35 text-center" style="white-space: nowrap">
+                                            <a href="javascript:void(0);" onclick="del_tabel(<?=$value['tabel_id']?>, this)" class="mx-2px btn radius-1 border-2 btn-xs btn-brc-tp btn-light-secondary btn-h-lighter-danger btn-a-lighter-danger">
+                                                <i class="fa fa-trash-alt"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?}
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+    });
+
+    function showModal(tabel_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование');
+        $.ajax({
+            type: 'POST',
+            url: "/work/tabel-edit/",
+            data: {tabel_id : tabel_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function del_tabel(tabel_id, ob){
+        if (!confirm("Вы действительно хотите удалить платеж из табеля ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/tabel-list/mode/del/tabel_id/" + tabel_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Платеж удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+</script>

@@ -421,5 +421,39 @@ class WorkController extends ParentController{
 
         $this->view->row = $ob->buh_read_payment($this->view->payment_status, $this->view->date_begin, $this->view->date_end)['value'];
     }
+    public function tabelListAction(){
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->cur_date = $this->_getParam('tabel_date', date('d.m.Y'));
+        $mode = $this->_getParam('mode', '');
+        if ($mode == 'upd'){
+            $this->_helper->AjaxContext()->addActionContext('tabel-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->tabel_upd($params);
+            return;
+        }
+        if ($mode == 'del'){
+            $this->_helper->AjaxContext()->addActionContext('tabel-list', 'json')->initContext('json');
+            $params = $this->getAllParams();
+            $this->view->result = $ob->tabel_del($params['tabel_id']);
+            return;
+        }
+        $this->view->row = $ob->tabel_read_by_date($this->view->cur_date)['value'];
+    }
+    public function tabelEditAction(){
+        $this->_helper->layout->disableLayout();
+
+        $ob = new Application_Model_DbTable_Work();
+
+        $this->view->row_employee = $ob->read_tabel_employee()['value'];
+    }
+    public function tabelReportAction(){
+        $ob = new Application_Model_DbTable_Work();
+        $this->view->date_begin = $this->_getParam('date_begin', date('01.m.Y'));
+        $this->view->date_end = $this->_getParam('date_end', date('t.m.Y'));
+        $this->view->employee_id = $this->_getParam('employee_id', 0);
+        $this->view->row_employee = $ob->read_tabel_employee()['value'];
+
+        $this->view->row = $ob->report_tabel($this->view->date_begin, $this->view->date_end, $this->view->employee_id)['value'];
+    }
 }
 

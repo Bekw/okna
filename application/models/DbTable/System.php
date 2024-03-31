@@ -183,7 +183,8 @@ class Application_Model_DbTable_System extends Application_Model_DbTable_Parent{
         $p['is_active'] = $a['is_active'];
         $p['phone'] = zeroToNull($a['phone']);
         $p['position_id'] = $a['position_id'];
-        $result = $this->execSP(__FUNCTION__, 'admin.upd_employee(:employee_id, :email, :fio, :is_active, :phone, :position_id) id', $p, 'id');
+        $p['is_tabel'] = $a['is_tabel'];
+        $result = $this->execSP(__FUNCTION__, 'admin.upd_employee(:employee_id, :email, :fio, :is_active, :phone, :position_id, :is_tabel) id', $p, 'id');
         return $result;
     }
 

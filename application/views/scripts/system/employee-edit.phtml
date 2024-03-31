@@ -56,6 +56,27 @@
                 <div class="clearfix"></div>
             </div>
         </div>
+        <div>
+            <div class="form-group">
+                <label class="control-label " for="is_tabel">Табель</label>
+                <div>
+                    <?
+                    $tabel = "";
+                    $not_tabel = "";
+                    if($this->row['is_tabel'] ?? null > 0){
+                        $tabel = ' selected';
+                    }else{
+                        $not_tabel = ' selected';
+                    }
+                    ?>
+                    <select class="form-control" id="is_tabel" name="is_tabel" required>
+                        <option value="0" <?=$not_tabel?>>Нет</option>
+                        <option value="1" <?=$tabel?>>Да</option>
+                    </select>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
         <div class="clearfix"></div>
     </form>
 </div>

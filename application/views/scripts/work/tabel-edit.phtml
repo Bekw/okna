@@ -1,0 +1,67 @@
+<div class="modal-body" id="modal_body">
+    <form id="form_id">
+        <div class="form-group pull-left margin-right-10">
+            <label class="control-label no-padding-right">Работник</label>
+            <select class="form-control chosen-select" id="platform" name="tabel_employee_id">
+                <option value="0">Выберите работника</option>
+                <?foreach ($this->row_employee as $value){?>
+                    <option value="<?=$value['employee_id']?>"><?=$value['fio']?></option>
+                    <?
+                }?>
+            </select>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group pull-left margin-right-10">
+            <label class="control-label no-padding-right" for="tabel_date">Дата</label>
+            <input type="text" style="width: 166px; height: 34px" id="tabel_date" name="tabel_date" placeholder="Дата" class="form-control date-picker"autocomplete="off">
+        </div>
+        <div class="form-group pull-left margin-right-10">
+            <label class="control-label no-padding-right" for="tabel_sum">Сумма</label>
+            <input type="number" step="any" style="width: 166px; height: 34px" id="tabel_sum" name="tabel_sum" placeholder="Сумма" class="form-control" autocomplete="off">
+        </div>
+        <div class="clearfix"></div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-sm px-4 btn-outline-success mb-1" onclick="upd_tabel()">Сохранить</button>
+    <button type="button" class="btn btn-sm px-4 btn-outline-danger mb-1" data-dismiss="modal">Закрыть</button>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+        $(".date-picker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            yearRange: "-80:+5"
+        });
+    });
+
+    function upd_tabel(){
+        main_loader_show();
+        var send_data = new FormData($("#form_id")[0]);
+
+        $.ajax({
+            type: 'POST',
+            data: send_data,
+            url: "/work/tabel-list/mode/upd/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    $('.modal').modal('hide');
+                    toastSucces('Успех');
+                    location.reload();
+                }
+                main_loader_hide();
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    }
+</script>

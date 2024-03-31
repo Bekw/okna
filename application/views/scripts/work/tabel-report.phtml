@@ -1,0 +1,140 @@
+<?
+$this->headTitle('Платежи по табелю');
+$this->placeholder('page-header')->set("Платежи по табелю");
+?>
+
+<style>
+    .product-img{
+        object-fit: contain;
+        border: 1px solid #f2f2f2;
+        width: 100px;
+        height: 100px;
+        padding: 3px;
+    }
+</style>
+
+<form method="get" class="float-left" style="margin-bottom: 10px;">
+    <div class="form-group float-left mr-2" style="width: 150px;">
+        <label class="control-label no-padding-right" for="date_begin">Дата с</label>
+        <input type="text" id="date_begin" name="date_begin" style="width: 150px; height: 35px;" placeholder="Дата с" class="form-control date-picker" autocomplete="off" value="<?=$this->date_begin?>">
+    </div>
+    <div class="form-group float-left mr-2" style="width: 150px;">
+        <label class="control-label no-padding-right" for="date_end">Дата по</label>
+        <input type="text" id="date_end" name="date_end" style="width: 150px; height: 35px;" placeholder="Дата с" class="form-control date-picker" autocomplete="off" value="<?=$this->date_end?>">
+    </div>
+    <div class="form-group float-left mr-2" style="width: 150px;">
+        <label class="control-label no-padding-right">Работник</label>
+        <select class="form-control chosen-select" id="platform" name="employee_id">
+            <option value="0">Все</option>
+            <?foreach ($this->row_employee as $value){?>
+                <option value="<?=$value['employee_id']?>" <?if($this->employee_id == $value['employee_id']){?>selected<?}?>><?=$value['fio']?></option>
+                <?
+            }?>
+        </select>
+    </div>
+    <button type="submit" name="search_employee" class="btn btn-primary float-left" style="margin-top: 24px;">
+        <i class="ace-icon fa fa-search bigger-125"></i>
+        Поиск
+    </button>
+    <div class="clearfix"></div>
+</form>
+<div class="clearfix"></div>
+
+<div class="hr hr-10 dotted hr-double"></div>
+<div class="row">
+    <div class="col-lg-5 p-0">
+        <div class="card dcard mb-3" id="card-5" draggable="false" style="">
+            <div class="card-header">
+
+            </div><!-- /.card-header -->
+            <div class="card-body p-0">
+                <div class="p-3">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="type_table">
+                            <thead>
+                            <tr class="text-primary-d3 text-95 text-center">
+                                <th class="py-3 pl-35">№</th>
+                                <th class="text-center">Работник</th>
+                                <th class="text-center">Дата рабочего дня</th>
+                                <th class="text-center">Сумма оплаты</th>
+                                <th class="text-center">Кто добавил</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            <?
+                            $i = 0;
+                            $sum = 0;
+                            if(mycount($this->row) > 0){
+                                foreach ($this->row as $key => $value){
+                                    $i++;
+                                    $sum = $sum + $value['tabel_sum'];
+                                    ?>
+                                    <tr class="bgc-h-orange-l4 text-600">
+                                        <td class="text-right"><?=$i?></td>
+                                        <td class="text-center"><?=$value['tabel_fio']?></td>
+                                        <td class="text-center"><?=$value['tabel_date']?></td>
+                                        <td class="text-center"><?=tenge_text($value['tabel_sum'])?></td>
+                                        <td class="text-center"><?=$value['fio']?> <br> <?=$value['create_date']?></td>
+                                    </tr>
+                                <?
+                                }
+                            }?>
+                            <tr class="bgc-h-orange-l4 text-600">
+                                <td class="text-right" colspan="3">Общая сумма:</td>
+                                <td class="text-center"><?=tenge_text($sum)?></td>
+                                <td class="text-center"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".chosen-select").chosen({
+            allow_single_deselect: true,
+            no_results_text: "Ничего не найдено..."
+        });
+    });
+
+    function showModal(tabel_id){
+        $('#modal-container').find('.modal-dialog').addClass('modal-md');
+        $("#modal-header-container").empty();
+        $("#modal-body-container").empty();
+        $('#modal-header-container').append('Редактирование');
+        $.ajax({
+            type: 'POST',
+            url: "/work/tabel-edit/",
+            data: {tabel_id : tabel_id},
+            async: true,
+            success: function(data){
+                $("#modal-body-container").html(data);
+            }
+        });
+        $(".modal").modal('show');
+    }
+
+    function del_tabel(tabel_id, ob){
+        if (!confirm("Вы действительно хотите удалить платеж из табеля ?")) {
+            return false;
+        }
+        $.ajax({
+            type: 'POST',
+            url: "/work/tabel-list/mode/del/tabel_id/" + tabel_id + "/",
+            success: function(data){
+                if(data.result['status'] == false){
+                    bootboxAlert(data.result['error']);
+                }
+                else{
+                    toastSucces('Платеж удален');
+                    $(ob).closest("tr").remove();
+                }
+            }
+        });
+    }
+</script>
