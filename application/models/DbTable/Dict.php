@@ -182,6 +182,11 @@ class Application_Model_DbTable_Dict extends Application_Model_DbTable_Parent{
         $result = $this->readSP(__FUNCTION__, "public.employee_request_read('cur', :request_status)", $p);
         return $result;
     }
+    public function employee_request_all_read($request_status){
+        $p['request_status'] = $request_status;
+        $result = $this->readSP(__FUNCTION__, "public.employee_request_all_read('cur', :request_status)", $p);
+        return $result;
+    }
     public function employee_request_get($employee_request_id){
         $p['employee_request_id'] = $employee_request_id;
         $result = $this->getSP(__FUNCTION__, "public.employee_request_get('cur', :employee_request_id)", $p);

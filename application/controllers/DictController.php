@@ -281,6 +281,23 @@ class DictController extends ParentController{
         $this->view->row_done = $ob->employee_request_read(2)['value'];
         $this->view->row_cancel = $ob->employee_request_read(3)['value'];
     }
+    public function employeeRequestAllAction(){
+        $ob = new Application_Model_DbTable_Dict();
+
+        $this->view->row_created = $ob->employee_request_all_read(0)['value'];
+        $this->view->row_in_process = $ob->employee_request_all_read(1)['value'];
+        $this->view->row_done = $ob->employee_request_all_read(2)['value'];
+        $this->view->row_cancel = $ob->employee_request_all_read(3)['value'];
+    }
+    public function employeeRequestAllDetailAction(){
+        $ob = new Application_Model_DbTable_Dict();
+        $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);
+
+        $this->view->row = $ob->employee_request_get($this->view->employee_request_id)['value'];
+        $this->view->row_type = $ob->employee_request_type_read()['value'];
+        $this->view->row_doc = $ob->employee_request_doc_read($this->view->employee_request_id)['value'];
+        $this->view->row_list = $ob->employee_request_list_read($this->view->employee_request_id)['value'];
+    }
     public function employeeRequestEditAction(){
         $ob = new Application_Model_DbTable_Dict();
         $this->view->employee_request_id = $this->_getParam("employee_request_id", 0);

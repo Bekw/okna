@@ -1,0 +1,206 @@
+<?
+$this->headTitle('Все запросы');
+$this->placeholder('page-header')->set("Все запросы");
+?>
+<div class="row">
+    <div class="col-12 col-md-12">
+        <div class="dcard">
+            <ul class="nav nav-tabs bgc-secondary-l3 border-y-1 brc-secondary-l3" role="tablist">
+                <li class="nav-item mr-2px">
+                    <a id="home1-tab-btn" class="d-style active btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#created" role="tab" aria-controls="home1" aria-selected="true">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Создан
+                        <span class="m-1 bgc-blue-l3 border-1 brc-blue-m3 text-dark-tp3 text-90 px-25 py-3px radius-round">
+                            <?=mycount($this->row_created)?>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item mr-2px">
+                    <a id="profile1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#in_process" role="tab" aria-controls="profile1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        В процессе
+                        <span class="m-1 bgc-blue-l3 border-1 brc-blue-m3 text-dark-tp3 text-90 px-25 py-3px radius-round">
+                            <?=mycount($this->row_in_process)?>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#done" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Принят
+                        <span class="m-1 bgc-blue-l3 border-1 brc-blue-m3 text-dark-tp3 text-90 px-25 py-3px radius-round">
+                            <?=mycount($this->row_done)?>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a id="more1-tab-btn" class="d-style btn btn-tp btn-light-secondary btn-h-white btn-a-text-dark btn-a-white text-95 px-3 px-sm-4 py-25 radius-0 border-0" data-toggle="tab" href="#cancel" role="tab" aria-controls="more1" aria-selected="false">
+                        <span class="v-active position-tl w-100 border-t-3 brc-blue mt-n2px"></span>
+                        Отказан
+                        <span class="m-1 bgc-blue-l3 border-1 brc-blue-m3 text-dark-tp3 text-90 px-25 py-3px radius-round">
+                            <?=mycount($this->row_cancel)?>
+                        </span>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="tab-content bgc-white p-35 border-0">
+                <div class="tab-pane fade show active text-95" id="created" role="tabpanel" aria-labelledby="home1-tab-btn">
+                    <div id="common" class="tab-pane ">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered hover-table" id="type_table">
+                                <thead>
+                                <tr class="text-primary-d3 text-95 text-center">
+                                    <th class="py-3 pl-35">ID</th>
+                                    <th class="text-center">Тип</th>
+                                    <th class="text-center">Описание</th>
+                                    <th class="text-center">Автор</th>
+                                    <th class="text-center">Дата</th>
+                                    <th class="text-center">Дата последнего статуса</th>
+                                    <th class="text-center"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?
+                                if(mycount($this->row_created) > 0){
+                                    foreach ($this->row_created as $key => $value){?>
+                                        <tr class="bgc-h-orange-l4 text-600">
+                                            <td class="text-center"><?=$value['employee_request_id']?></td>
+                                            <td class="text-center"><?=$value['employee_request_type_name']?></td>
+                                            <td class="text-center"><?=$value['description']?></td>
+                                            <td class="text-center"><?=$value['fio']?></td>
+                                            <td class="text-center"><?=$value['date_create']?></td>
+                                            <td class="text-center"><?=$value['last_status_date']?></td>
+                                            <td class="text-center">
+                                                <a href="/dict/employee-request-all-detail/employee_request_id/<?=$value['employee_request_id']?>/" class="btn btn-success btn-xs float-left">
+                                                    Открыть
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?}
+                                }?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade text-95" id="in_process" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="type_table">
+                            <thead>
+                            <tr class="text-primary-d3 text-95 text-center">
+                                <th class="py-3 pl-35">ID</th>
+                                <th class="text-center">Тип</th>
+                                <th class="text-center">Описание</th>
+                                <th class="text-center">Автор</th>
+                                <th class="text-center">Дата</th>
+                                <th class="text-center">Дата последнего статуса</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_in_process) > 0){
+                                foreach ($this->row_in_process as $key => $value){?>
+                                    <tr class="bgc-h-orange-l4 text-600">
+                                        <td class="text-center"><?=$value['employee_request_id']?></td>
+                                        <td class="text-center"><?=$value['employee_request_type_name']?></td>
+                                        <td class="text-center"><?=$value['description']?></td>
+                                        <td class="text-center"><?=$value['fio']?></td>
+                                        <td class="text-center"><?=$value['date_create']?></td>
+                                        <td class="text-center"><?=$value['last_status_date']?></td>
+                                        <td class="text-center">
+                                            <a href="/dict/employee-request-all-detail/employee_request_id/<?=$value['employee_request_id']?>/" class="btn btn-success btn-xs float-left">
+                                                Открыть
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?}
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-pane fade text-95" id="done" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="type_table">
+                            <thead>
+                            <tr class="text-primary-d3 text-95 text-center">
+                                <th class="py-3 pl-35">ID</th>
+                                <th class="text-center">Тип</th>
+                                <th class="text-center">Описание</th>
+                                <th class="text-center">Автор</th>
+                                <th class="text-center">Дата</th>
+                                <th class="text-center">Дата последнего статуса</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_done) > 0){
+                                foreach ($this->row_done as $key => $value){?>
+                                    <tr class="bgc-h-orange-l4 text-600">
+                                        <td class="text-center"><?=$value['employee_request_id']?></td>
+                                        <td class="text-center"><?=$value['employee_request_type_name']?></td>
+                                        <td class="text-center"><?=$value['description']?></td>
+                                        <td class="text-center"><?=$value['fio']?></td>
+                                        <td class="text-center"><?=$value['date_create']?></td>
+                                        <td class="text-center"><?=$value['last_status_date']?></td>
+                                        <td class="text-center">
+                                            <a href="/dict/employee-request-all-detail/employee_request_id/<?=$value['employee_request_id']?>/" class="btn btn-success btn-xs float-left">
+                                                Открыть
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?}
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="tab-pane fade text-95" id="cancel" role="tabpanel" aria-labelledby="profile1-tab-btn">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered hover-table" id="type_table">
+                            <thead>
+                            <tr class="text-primary-d3 text-95 text-center">
+                                <th class="py-3 pl-35">ID</th>
+                                <th class="text-center">Тип</th>
+                                <th class="text-center">Описание</th>
+                                <th class="text-center">Автор</th>
+                                <th class="text-center">Дата</th>
+                                <th class="text-center">Дата последнего статуса</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?
+                            if(mycount($this->row_cancel) > 0){
+                                foreach ($this->row_cancel as $key => $value){?>
+                                    <tr class="bgc-h-orange-l4 text-600">
+                                        <td class="text-center"><?=$value['employee_request_id']?></td>
+                                        <td class="text-center"><?=$value['employee_request_type_name']?></td>
+                                        <td class="text-center"><?=$value['description']?></td>
+                                        <td class="text-center"><?=$value['fio']?></td>
+                                        <td class="text-center"><?=$value['date_create']?></td>
+                                        <td class="text-center"><?=$value['last_status_date']?></td>
+                                        <td class="text-center">
+                                            <a href="/dict/employee-request-all-detail/employee_request_id/<?=$value['employee_request_id']?>/" class="btn btn-success btn-xs float-left">
+                                                Открыть
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?}
+                            }?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
